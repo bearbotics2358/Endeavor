@@ -6,6 +6,7 @@
 #include <IterativeRobot.h>
 #include "SmartDashboard/SmartDashboard.h"
 #include "SmartDashboard/SendableChooser.h"
+#include "ctre/Phoenix.h"
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -25,6 +26,19 @@ public:
 
 private:
 	Joystick a_Joystick;
+	WPI_TalonSRX a_leftDriveOne;
+	WPI_TalonSRX a_leftDriveTwo;
+	WPI_TalonSRX a_leftDriveThree;
+
+	WPI_TalonSRX a_rightDriveOne;
+	WPI_TalonSRX a_rightDriveTwo;
+	WPI_TalonSRX a_rightDriveThree;
+
+	SpeedControllerGroup a_leftDrive;
+	SpeedControllerGroup a_rightDrive;
+
+	DifferentialDrive a_Drivetrain;
+
 	/*
 	CANTalon.h is now deprecated, we have to use the new Phoenix framework.
 	Apparently it's not a drop in replacement. Great.
@@ -39,7 +53,7 @@ private:
 
 	We still have to:
 	-Check for new firmware on the Talons
-	-Reimage the Rios
+	-Reimage the Rios (1/4 done)
 	-Make sure the 2018 control system is installed on all dev-tops
 	*/
 };
