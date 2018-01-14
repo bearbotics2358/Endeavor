@@ -8,6 +8,7 @@
 #include "SmartDashboard/SendableChooser.h"
 #include "ctre/Phoenix.h"
 #include <Collector.h>
+#include <DiffDrive.h>
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -27,18 +28,8 @@ public:
 
 private:
 	Joystick a_Joystick;
-	WPI_TalonSRX a_leftDriveOne;
-	WPI_TalonSRX a_leftDriveTwo;
-	WPI_TalonSRX a_leftDriveThree;
 
-	WPI_TalonSRX a_rightDriveOne;
-	WPI_TalonSRX a_rightDriveTwo;
-	WPI_TalonSRX a_rightDriveThree;
-
-	SpeedControllerGroup a_leftDrive;
-	SpeedControllerGroup a_rightDrive;
-
-	DifferentialDrive a_Drivetrain;
+	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
 	Collector a_Collector;
 

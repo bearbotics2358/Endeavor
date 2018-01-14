@@ -14,17 +14,7 @@ SmokeyXI::SmokeyXI(void):
 
 a_Joystick(JOYSTICK_PORT), // this should be the gamepad - list on port 1
 
-a_leftDriveOne(LEFT_DRIVE_TALON_ONE),
-a_leftDriveTwo(LEFT_DRIVE_TALON_TWO),
-a_leftDriveThree(LEFT_DRIVE_TALON_THREE),
-
-a_rightDriveOne(RIGHT_DRIVE_TALON_ONE),
-a_rightDriveTwo(RIGHT_DRIVE_TALON_TWO),
-a_rightDriveThree(RIGHT_DRIVE_TALON_THREE),
-
-a_leftDrive(a_leftDriveOne, a_leftDriveTwo, a_leftDriveThree),
-a_rightDrive(a_rightDriveOne, a_rightDriveTwo, a_rightDriveThree),
-a_Drivetrain(a_leftDrive, a_rightDrive),
+a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, RIGHT_DRIVE_TALON_ONE, RIGHT_DRIVE_TALON_TWO, RIGHT_DRIVE_TALON_THREE),
 
 a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON)
 
@@ -67,7 +57,7 @@ void SmokeyXI::TeleopInit()
 
 void SmokeyXI::TeleopPeriodic()
 {
-	a_Drivetrain.ArcadeDrive(a_Joystick.GetRawAxis(0), a_Joystick.GetRawAxis(1));
+	a_DiffDrive.Update(a_Joystick.GetRawAxis(1), a_Joystick.GetRawAxis(0));
 	a_Collector.Update(a_Joystick.GetRawButton(0));
 }
 
