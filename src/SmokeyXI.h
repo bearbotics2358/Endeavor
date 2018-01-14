@@ -7,6 +7,7 @@
 #include "SmartDashboard/SmartDashboard.h"
 #include "SmartDashboard/SendableChooser.h"
 #include "ctre/Phoenix.h"
+#include <Collector.h>
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -39,6 +40,8 @@ private:
 
 	DifferentialDrive a_Drivetrain;
 
+	Collector a_Collector;
+
 	/*
 	CANTalon.h is now deprecated, we have to use the new Phoenix framework.
 	Apparently it's not a drop in replacement. Great.
@@ -51,10 +54,6 @@ private:
 	If we end up using WPILib's drives, apparently we can cast the new talon object to a speedcontroller object.
 	We should test that function out.
 
-	We still have to:
-	-Check for new firmware on the Talons
-	-Reimage the Rios (1/4 done)
-	-Make sure the 2018 control system is installed on all dev-tops
 	*/
 };
 
