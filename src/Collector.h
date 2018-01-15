@@ -10,7 +10,9 @@ class Collector
 public:
 	Collector(int TalonPortLeft, int TalonPortRight);
 	virtual ~Collector() = default;
+	void Init();
 	void Update(float val);
+	void Disable();
 private:
 	WPI_TalonSRX a_leftCollector;
 	WPI_TalonSRX a_rightCollector;

@@ -15,4 +15,6 @@
 #define LEFT_COLLECTOR_TALON 6
 #define RIGHT_COLLECTOR_TALON 7
 
+#define COLLECTOR_ARM_TALON 8
+
 #endif /* SRC_PREFS_H_ */

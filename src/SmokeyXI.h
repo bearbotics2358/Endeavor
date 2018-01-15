@@ -7,8 +7,9 @@
 #include "SmartDashboard/SmartDashboard.h"
 #include "SmartDashboard/SendableChooser.h"
 #include "ctre/Phoenix.h"
-#include <Collector.h>
 #include <DiffDrive.h>
+#include <Collector.h>
+#include <CollectorArm.h>
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -32,6 +33,8 @@ private:
 	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
 	Collector a_Collector;
+
+	CollectorArm a_CollectorArm;
 
 	/*
 	CANTalon.h is now deprecated, we have to use the new Phoenix framework.
