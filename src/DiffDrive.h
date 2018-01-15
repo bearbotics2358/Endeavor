@@ -10,7 +10,8 @@ class DiffDrive
 public:
 	DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree);
 	virtual ~DiffDrive() = default;
-	void Update(float StickX, float StickY);
+	void SetDriveType(int type);
+	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 private:
 	WPI_TalonSRX a_leftDriveOne;
 	WPI_TalonSRX a_leftDriveTwo;
@@ -24,6 +25,8 @@ private:
 	SpeedControllerGroup a_rightDrive;
 
 	DifferentialDrive a_Drivetrain;
+
+	int driveType;
 };
 
 #endif

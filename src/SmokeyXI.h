@@ -28,7 +28,11 @@ public:
 	void AutonomousPeriodicSimple(void);
 
 private:
-	Joystick a_Joystick;
+	// I'm putting all sticks in the code until we determine which one we like to drive with. -AR
+	Joystick a_GamePad;
+	Joystick a_Joystick1;
+	Joystick a_Joystick2;
+	Joystick a_JoystickZ;
 
 	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
@@ -45,9 +49,7 @@ private:
 	https://www.chiefdelphi.com/forums/showthread.php?p=1717815
 
 	Really hope this new library actually works.
-	If we end up using WPILib's drives, apparently we can cast the new talon object to a speedcontroller object.
-	We should test that function out.
-
+	-AR
 	*/
 };
 

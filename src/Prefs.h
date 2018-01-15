@@ -1,7 +1,10 @@
 #ifndef SRC_PREFS_H_
 #define SRC_PREFS_H_
 
-#define JOYSTICK_PORT 1
+#define GAMEPAD_PORT 0
+#define JOYSTICK1_PORT 1
+#define JOYSTICK2_PORT 2
+#define JOYSTICKZ_PORT 3
 
 // Need to update CAN IDs once we get wiring. They should be correct, theoretically
 #define LEFT_DRIVE_TALON_ONE 0
