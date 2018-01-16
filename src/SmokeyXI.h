@@ -40,6 +40,8 @@ private:
 
 	CollectorArm a_CollectorArm;
 
+	SerialPort a_Arduino;
+
 	/*
 	CANTalon.h is now deprecated, we have to use the new Phoenix framework.
 	Apparently it's not a drop in replacement. Great.

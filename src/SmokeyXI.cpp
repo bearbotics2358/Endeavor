@@ -24,7 +24,9 @@ a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, 
 
 a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
 
-a_CollectorArm(COLLECTOR_ARM_TALON)
+a_CollectorArm(COLLECTOR_ARM_TALON),
+
+a_Arduino(BAUD_RATE, SerialPort::kOnboard, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One)
 
 
 {
@@ -62,7 +64,9 @@ void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.SetDriveType(0); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	a_Arduino.Write("B",1);
 }
+
 
 void SmokeyXI::TeleopPeriodic()
 {

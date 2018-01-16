@@ -20,4 +20,7 @@
 
 #define COLLECTOR_ARM_TALON 8
 
+#define BAUD_RATE 9600
+#define DATA_BITS 8
+
 #endif /* SRC_PREFS_H_ */
