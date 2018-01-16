@@ -26,8 +26,8 @@ a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
 
 a_CollectorArm(COLLECTOR_ARM_TALON),
 
-a_Arduino(BAUD_RATE, SerialPort::kOnboard, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One)
-
+a_Arduino(BAUD_RATE, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One)
+// USB1 is the onboard port closest to the center of the rio
 
 {
 	SmartDashboard::init();
@@ -46,7 +46,7 @@ void SmokeyXI::RobotPeriodic()
 
 void SmokeyXI::DisabledInit()
 {
-
+	a_Arduino.Write("P", 1);
 }
 
 void SmokeyXI::DisabledPeriodic()
@@ -64,14 +64,14 @@ void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.SetDriveType(0); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
-	a_Arduino.Write("B",1);
+	a_Arduino.Write("B", 1);
 }
 
 
 void SmokeyXI::TeleopPeriodic()
 {
 	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder passing four sticks impacts latency
-	a_Collector.Update(a_JoystickZ.GetRawButton(0));
+	a_Collector.Update(a_JoystickZ.GetRawButton(1)); // apparently buttons aren't zero indexed, but axes are???
 }
 
 void SmokeyXI::TestInit()
