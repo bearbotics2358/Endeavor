@@ -10,6 +10,7 @@
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>
+#include "JrimmyGyro.h"
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -39,6 +40,8 @@ private:
 	Collector a_Collector;
 
 	CollectorArm a_CollectorArm;
+
+	JrimmyGyro a_Gyro;
 
 	SerialPort a_Arduino;
 
