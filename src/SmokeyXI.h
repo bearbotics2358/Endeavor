@@ -48,15 +48,9 @@ private:
 	DoubleSolenoid a_Solenoid;
 
 	/*
-	CANTalon.h is now deprecated, we have to use the new Phoenix framework.
-	Apparently it's not a drop in replacement. Great.
-
 	https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-is-new--kickoff
 	https://github.com/CrossTheRoadElec/Phoenix-Documentation/blob/master/Migration%20Guide.md
 	https://www.chiefdelphi.com/forums/showthread.php?p=1717815
-
-	Really hope this new library actually works.
-	-AR
 	*/
 };
 
