@@ -7,18 +7,23 @@
 #define JOYSTICKZ_PORT 3
 
 // Need to update CAN IDs once we get wiring. They should be correct, theoretically
-#define LEFT_DRIVE_TALON_ONE 0
-#define LEFT_DRIVE_TALON_TWO 1
-#define LEFT_DRIVE_TALON_THREE 2
+#define LEFT_DRIVE_TALON_ONE 1
+#define LEFT_DRIVE_TALON_TWO 2
+#define LEFT_DRIVE_TALON_THREE 3
 
-#define RIGHT_DRIVE_TALON_ONE 3
-#define RIGHT_DRIVE_TALON_TWO 4
-#define RIGHT_DRIVE_TALON_THREE 5
+#define RIGHT_DRIVE_TALON_ONE 8
+#define RIGHT_DRIVE_TALON_TWO 9
+#define RIGHT_DRIVE_TALON_THREE 10
 
 #define LEFT_COLLECTOR_TALON 6
 #define RIGHT_COLLECTOR_TALON 7
 
-#define COLLECTOR_ARM_TALON 8
+#define COLLECTOR_ARM_TALON 5
+
+#define PCM_PORT 12
+
+#define SOL_PORT_ONE 0 // PCM Port ID
+#define SOL_PORT_TWO 1
 
 #define BAUD_RATE 9600
 #define DATA_BITS 8

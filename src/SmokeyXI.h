@@ -43,7 +43,9 @@ private:
 
 	JrimmyGyro a_Gyro;
 
-	SerialPort a_Arduino;
+	// SerialPort a_Arduino;
+
+	DoubleSolenoid a_Solenoid;
 
 	/*
 	CANTalon.h is now deprecated, we have to use the new Phoenix framework.

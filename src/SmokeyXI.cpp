@@ -28,9 +28,12 @@ a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Gyro(I2C::kMXP),
 
-a_Arduino(BAUD_RATE, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One)
+// a_Arduino(BAUD_RATE, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One),
+
+a_Solenoid(PCM_PORT, SOL_PORT_ONE, SOL_PORT_TWO)
+
 // USB1 is the onboard port closest to the center of the rio
-// It also l
+// It also??? what was i writing??????
 
 
 {
@@ -49,7 +52,7 @@ void SmokeyXI::RobotPeriodic()
 
 void SmokeyXI::DisabledInit()
 {
-	a_Arduino.Write("R", 1);
+	// a_Arduino.Write("R", 1);
 }
 
 void SmokeyXI::DisabledPeriodic()
@@ -67,12 +70,18 @@ void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.SetDriveType(0); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
-	a_Arduino.Write("B", 1);
+	// a_Arduino.Write("B", 1);
 }
 
 
 void SmokeyXI::TeleopPeriodic()
 {
+	if (a_JoystickZ.GetRawButton(3)){
+		a_Solenoid.Set(DoubleSolenoid::kForward);
+	}
+	if (a_JoystickZ.GetRawButton(4)){
+		a_Solenoid.Set(DoubleSolenoid::kReverse);
+	}
 	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder passing four sticks impacts latency
 	a_Collector.Update(a_JoystickZ.GetRawButton(1)); // apparently buttons aren't zero indexed, but axes are???
 }
