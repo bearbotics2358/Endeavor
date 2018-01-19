@@ -26,11 +26,11 @@ void DiffDrive::Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joy
 {
 	switch (driveType) {
 	  case 0: // ArcadeDrive from the flightstick with a Z
-		  a_Drivetrain.ArcadeDrive((-1 * stick4.GetRawAxis(1)), stick4.GetRawAxis(0), false);
+		  a_Drivetrain.ArcadeDrive((stick1.GetRawAxis(5)), stick1.GetRawAxis(4), false);
 	    break;
 	  case 1: // CurvatureDrive works better at high speeds.
 		  	  // Using flightstick with a z
-			a_Drivetrain.CurvatureDrive(stick4.GetRawAxis(0), stick4.GetRawAxis(1), false);
+			a_Drivetrain.CurvatureDrive(stick1.GetRawAxis(0), stick1.GetRawAxis(1), false);
 	    break;
 	  case 2: // Traditional Two Stick Tank.
 		  	  // Uses the two flightsticks without z axes.
