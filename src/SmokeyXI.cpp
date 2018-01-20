@@ -43,6 +43,7 @@ a_Solenoid(PCM_PORT, SOL_PORT_ONE, SOL_PORT_TWO)
 void SmokeyXI::RobotInit()
 {
 	a_Gyro.Cal();
+	a_DiffDrive.Init();
 }
 
 void SmokeyXI::RobotPeriodic()
@@ -89,13 +90,14 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
 
-
-
 	if (a_GamePad.GetRawButton(1)){
 		a_Solenoid.Set(DoubleSolenoid::kForward);
 	}
 	if (a_GamePad.GetRawButton(2)){
 		a_Solenoid.Set(DoubleSolenoid::kReverse);
+	}
+	if (a_GamePad.GetRawButton(3)){
+		a_DiffDrive.GoDistance(0.2); // 10 rotations?
 	}
 	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder passing four sticks impacts latency
 	a_Collector.Update(a_GamePad.GetRawButton(5)); // apparently buttons aren't zero indexed, but axes are???
