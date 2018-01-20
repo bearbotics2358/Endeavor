@@ -66,18 +66,31 @@ void SmokeyXI::AutonomousInit()
 }
 
 void SmokeyXI::AutonomousPeriodic()
-{}
+{
+
+}
 
 void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.SetDriveType(0); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	a_Arduino.Write("B", 1);
+
+	a_Gyro.Cal();
 }
 
 
 void SmokeyXI::TeleopPeriodic()
 {
+	a_Gyro.Update();
+	float gyroValue = a_Gyro.GetAngle();
+	SmartDashboard::PutNumber("Gyro Angle: ", gyroValue);
+	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
+	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
+	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
+
+
+
 	if (a_GamePad.GetRawButton(1)){
 		a_Solenoid.Set(DoubleSolenoid::kForward);
 	}

@@ -1,15 +1,11 @@
-/* JrimmyGyro.cpp
-
- */
-
-
+#include <WPILib.h>
 #include <Prefs.h>
 #include "JrimmyGyro.h"
 #include <I2C.h>
 #include <HAL/HAL.h>
 #include <LiveWindow/LiveWindow.h>
 
-// const uint8_t JrimmyGyro::kPowerMgmRegister;
+const uint8_t JrimmyGyro::kPowerMgmRegister;
 // const uint8_t JrimmyGyro::kDataFormatRegister;
 // const uint8_t JrimmyGyro::kDataRegister;
 // constexpr double JrimmyGyro::kGsPerLSB;
@@ -25,8 +21,8 @@ JrimmyGyro::JrimmyGyro(Port port):
 	// uint8_t Buff[256];
 	lastUpdate = 0;
 	Init();
-	printf("Reg 0 is: %d", GetReg0());
-	//m_i2c = new I2C((I2C::Port)port, kAddress);
+	// printf("Reg 0 is: %d", GetReg0());
+	// m_i2c = new I2C((I2C::Port)port, kAddress);
 	// int ret = Read(0, 1, Buff);
 	// printf("Jake Buff: %2.2X\n", Buff[0] & 0x00ff);
 
@@ -39,8 +35,8 @@ JrimmyGyro::JrimmyGyro(Port port):
 
 JrimmyGyro::~JrimmyGyro()
 {
-	//delete m_i2c;
-	//m_i2c = NULL;
+	// delete m_i2c;
+	// m_i2c = NULL;
 }
 
 void JrimmyGyro::WaitForValues()
@@ -92,17 +88,17 @@ void JrimmyGyro::Cal()
 		angleBias[1] += YAxis;
 		angleBias[2] += ZAxis;
 
-		printf("XAxis: %6.2lf  ", XAxis);
-		printf("YAxis: %6.2lf  ", YAxis);
-		printf("ZAxis: %6.2lf\n", ZAxis);
+		// printf("XAxis: %6.2lf  ", XAxis);
+		// printf("YAxis: %6.2lf  ", YAxis);
+		// printf("ZAxis: %6.2lf\n", ZAxis);
 	}
 
 	for(i = 0; i < 3; i++) {
 		angleBias[i] /= 10;
 		angle[i] = 0;
 	}
-	printf("Bias read time %6.3lf\n", GetTime() - tstart);
-	printf("AngleBias: %6.3lf %6.3lf %6.3lf\n", angleBias[0], angleBias[1], angleBias[2]);
+	// printf("Bias read time %6.3lf\n", GetTime() - tstart);
+	// printf("AngleBias: %6.3lf %6.3lf %6.3lf\n", angleBias[0], angleBias[1], angleBias[2]);
 	// SmartDashboard::PutNumber("Angle Bias X", angleBias[0]);
 	// SmartDashboard::PutNumber("Angle Bias Y", angleBias[1]);
 	// SmartDashboard::PutNumber("Angle Bias Z", angleBias[2]);
@@ -186,7 +182,7 @@ int JrimmyGyro::GetTemp() {
 
 double JrimmyGyro::GetAngle(int xyz)
 {
-	return angle[xyz] * -1.0; //-1 is temporary- gyro is mounted upside down on the comp bot
+	return angle[xyz];
 }
 
 void JrimmyGyro::Zero() {
