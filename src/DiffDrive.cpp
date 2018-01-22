@@ -35,11 +35,13 @@ void DiffDrive::Init()
 
 	// int absolutePositionLeft = a_leftDriveTwo.GetSelectedSensorPosition(0) & 0xFFF;
 	a_leftDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
+	a_leftDriveTwo.SetSensorPhase(true);
 	a_leftDriveOne.Follow(a_leftDriveTwo);
 	a_leftDriveThree.Follow(a_leftDriveTwo);
 
 	// int absolutePositionRight = a_rightDriveTwo.GetSelectedSensorPosition(0) & 0xFFF;
 	a_rightDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
+	a_rightDriveTwo.SetSensorPhase(true);
 	a_rightDriveOne.Follow(a_rightDriveTwo);
 	a_rightDriveThree.Follow(a_rightDriveTwo);
 }
@@ -73,8 +75,20 @@ void DiffDrive::GoDistance(float targetDistance){
 	a_rightDriveTwo.Set(ControlMode::Position, targetDistance * 10.0 * 4096); // 50 rotations? fingers crossed!
 }
 
-float DiffDrive::GetDistance(){
-	// a_leftDriveTwo.GetDistance()?
+float DiffDrive::GetDistanceLeft(){
+	return a_leftDriveTwo.GetSensorCollection().GetPulseWidthPosition();
+	// theo?
+}
 
-	return 0;
+float DiffDrive::GetDistanceRight(){
+	return a_rightDriveTwo.GetSensorCollection().GetPulseWidthPosition();
+}
+
+float DiffDrive::GetVelocityLeft(){
+	return a_leftDriveTwo.GetSensorCollection().GetPulseWidthVelocity();
+	// theo part two
+}
+
+float DiffDrive::GetVelocityRight(){
+	return a_rightDriveTwo.GetSensorCollection().GetPulseWidthVelocity();
 }

@@ -10,7 +10,8 @@
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>
-#include "JrimmyGyro.h"
+#include <JrimmyGyro.h>
+#include <AutonomousHelper.h>
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -46,6 +47,8 @@ private:
 	SerialPort a_Arduino;
 
 	DoubleSolenoid a_Solenoid;
+
+	AutonomousHelper a_AutoBot;
 
 	/*
 	https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-is-new--kickoff

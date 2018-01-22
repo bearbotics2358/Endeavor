@@ -28,22 +28,20 @@ a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Gyro(I2C::kMXP),
 
-a_Arduino(BAUD_RATE, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One),
+a_Arduino(BAUD_RATE, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
-a_Solenoid(PCM_PORT, SOL_PORT_ONE, SOL_PORT_TWO)
+a_Solenoid(PCM_PORT, SOL_PORT_ONE, SOL_PORT_TWO),
 
-// USB1 is the onboard port closest to the center of the rio
-// It also??? what was i writing??????
-
+a_AutoBot() // AutoBot Methods return true for left.
 
 {
-	SmartDashboard::init();
+
 }
 
 void SmokeyXI::RobotInit()
 {
 	a_Gyro.Cal();
-	a_DiffDrive.Init();
+	SmartDashboard::init();
 }
 
 void SmokeyXI::RobotPeriodic()
@@ -63,20 +61,25 @@ void SmokeyXI::DisabledPeriodic()
 
 void SmokeyXI::AutonomousInit()
 {
-	a_Arduino.Write("F", 1);
+	a_Arduino.Write("N", 1); // strips off
 }
 
 void SmokeyXI::AutonomousPeriodic()
 {
-
+	if (a_AutoBot.GetAllianceScale()){
+		a_Arduino.Write("B", 1); // Left side, Blue leds for indicators
+	}
+	else{
+		a_Arduino.Write("M", 1); // Right side, Red leds for indicators
+	}
 }
 
 void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
+	a_DiffDrive.Init();
 	a_DiffDrive.SetDriveType(0); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	a_Arduino.Write("B", 1);
-
 	a_Gyro.Cal();
 }
 
@@ -97,9 +100,9 @@ void SmokeyXI::TeleopPeriodic()
 		a_Solenoid.Set(DoubleSolenoid::kReverse);
 	}
 	if (a_GamePad.GetRawButton(3)){
-		a_DiffDrive.GoDistance(0.2); // 10 rotations?
+		a_DiffDrive.GoDistance(0.2); // 10 rotations? theo af
 	}
-	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder passing four sticks impacts latency
+	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 	a_Collector.Update(a_GamePad.GetRawButton(5)); // apparently buttons aren't zero indexed, but axes are???
 }
 

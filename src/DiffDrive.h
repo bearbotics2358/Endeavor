@@ -14,7 +14,10 @@ public:
 	void SetDriveType(int type);
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void GoDistance(float targetDistance);
-	float GetDistance();
+	float GetDistanceLeft();
+	float GetDistanceRight();
+	float GetVelocityLeft();
+	float GetVelocityRight();
 
 private:
 	WPI_TalonSRX a_leftDriveOne;
