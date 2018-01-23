@@ -14,6 +14,7 @@ public:
 	void SetDriveType(int type);
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void GoDistance(float targetDistance);
+	void ArcTurn(float turnRadius, float turnAngle, bool direction);
 	float GetDistanceLeft();
 	float GetDistanceRight();
 	float GetVelocityLeft();

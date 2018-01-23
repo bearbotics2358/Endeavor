@@ -6,6 +6,8 @@
 #define JOYSTICK2_PORT 2
 #define JOYSTICKZ_PORT 3
 
+#define WHEEL_DISTANCE 24 // distance in inches pls
+
 // Need to update CAN IDs once we get wiring. They should be correct, theoretically
 #define LEFT_DRIVE_TALON_ONE 1
 #define LEFT_DRIVE_TALON_TWO 2
@@ -25,7 +27,7 @@
 #define SOL_PORT_ONE 0 // PCM Port ID
 #define SOL_PORT_TWO 1
 
-#define BAUD_RATE 9600
+#define BAUD_RATE_ARDUINO 9600
 #define DATA_BITS 8
 
 #endif /* SRC_PREFS_H_ */

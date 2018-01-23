@@ -12,6 +12,7 @@
 #include <CollectorArm.h>
 #include <JrimmyGyro.h>
 #include <AutonomousHelper.h>
+#include <UltrasonicSerial.h>
 
 class SmokeyXI : public IterativeRobot {
 public:
@@ -49,6 +50,8 @@ private:
 	DoubleSolenoid a_Solenoid;
 
 	AutonomousHelper a_AutoBot;
+
+	UltrasonicSerial a_UltraSoul;
 
 	/*
 	https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-is-new--kickoff

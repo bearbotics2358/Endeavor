@@ -13,6 +13,12 @@ public:	AutonomousHelper();
 	bool GetAllianceScale();
 	bool GetOpponentSwitch();
 
+	/*
+	 * Alexis' Documentation:
+	 * Call each method after auto begins
+	 * call each get method individually when needed to get a specific value.
+	 */
+
 private:
 	std::string GetGameData();
 	std::string gameData;
