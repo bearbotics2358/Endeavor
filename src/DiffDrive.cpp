@@ -1,9 +1,6 @@
 #include <WPILib.h>
 #include "DiffDrive.h"
 
-// making sure github isn't broke
-// also doing this to ensure that i stay somewhat sane
-
 DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree)
 : a_leftDriveOne(leftDriveOne),
   a_leftDriveTwo(leftDriveTwo),
