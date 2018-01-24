@@ -14,6 +14,50 @@
 #include <AutonomousHelper.h>
 #include <UltrasonicSerial.h>
 
+enum AutoStateV1 {
+	kMoveToSwitch = 0,
+	kReleaseCube,
+	kAutoIdle
+};
+
+enum AutoStateV2 {
+	kMoveToSideOfSwitch = 0,
+	kTurnLeft2,
+	kMoveToEdgeOfSwitch,
+	kReleaseCube2,
+	kAutoIdle2
+};
+
+enum AutoStateV3 {
+	kMoveToSideOfScale = 0,
+	kTurnLeft3,
+	kMoveToEdgeOfScale,
+	kReleaseCube3,
+	kAutoIdle3
+};
+
+enum AutoStateV4
+{
+	kMoveHalfToSwitch = 0,
+	kTurnRight4,
+	kMoveFlushWithSwitch,
+	kTurnLeft4,
+	kMoveToFrontOfSwitch,
+	kReleaseCube4,
+	kAutoIdle4
+};
+
+enum AutoStateV5
+{
+	kMoveTopOfSwitch = 0,
+	kTurnRight5,
+	kMoveFlushWithScale,
+	kTurnLeft5,
+	kMoveToFrontOfScale,
+	kReleaseCube5,
+	kAutoIdle5
+};
+
 class SmokeyXI : public IterativeRobot {
 public:
 	SmokeyXI(void);
@@ -26,9 +70,13 @@ public:
 	void TestInit(void);
 	void TestPeriodic(void);
 	void AutonomousInit(void);
-	void AutonomousPeriodicFull(void);
 	void AutonomousPeriodic(void);
 	void AutonomousPeriodicSimple(void);
+    void AutonomousPeriodicV1(void);
+    void AutonomousPeriodicV2(void);
+    void AutonomousPeriodicV3(void);
+    void AutonomousPeriodicV4(void);
+    void AutonomousPeriodicV5(void);
 
 private:
 	// I'm putting all sticks in the code until we determine which one we like to drive with. -AR
@@ -50,6 +98,12 @@ private:
 	DoubleSolenoid a_Solenoid;
 
 	AutonomousHelper a_AutoBot;
+
+    AutoStateV1 a_AutoStateV1;
+    AutoStateV2 a_AutoStateV2;
+    AutoStateV3 a_AutoStateV3;
+    AutoStateV4 a_AutoStateV4;
+    AutoStateV5 a_AutoStateV5;
 
 	UltrasonicSerial a_UltraSoul;
 
