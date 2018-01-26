@@ -24,7 +24,7 @@ a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, 
 
 a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
 
-a_CollectorArm(COLLECTOR_ARM_TALON),
+// a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Gyro(I2C::kMXP),
 
@@ -305,14 +305,15 @@ void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.Init();
-	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	a_DiffDrive.SetDriveType(1); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	a_Gyro.Init();
-	a_Arduino.Write("B", 1);
+	// a_Arduino.Write("B", 1);
 }
 
 
 void SmokeyXI::TeleopPeriodic()
 {
+	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 	a_Gyro.Update();
 	float gyroValue = a_Gyro.GetAngle();
 	SmartDashboard::PutNumber("Gyro Angle: ", gyroValue);
@@ -329,8 +330,12 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_GamePad.GetRawButton(3)){
 		a_DiffDrive.GoDistance(0.2); // 10 rotations? theo af
 	}
-	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
-	// a_Collector.Update(a_GamePad.GetRawButton(5)); // apparently buttons aren't zero indexed, but axes are???
+	if (a_GamePad.GetRawButton(4)){
+		a_Collector.Update(a_GamePad.GetRawAxis(2)); // apparently buttons aren't zero indexed, but axes are???
+	}
+	else{
+		a_Collector.Update(-1 * a_GamePad.GetRawAxis(3));
+	}
 	SmartDashboard::PutNumber("Left Encoder: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder: ", a_DiffDrive.GetDistanceRight());
 }

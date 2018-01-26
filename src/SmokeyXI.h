@@ -89,7 +89,7 @@ private:
 
 	Collector a_Collector;
 
-	CollectorArm a_CollectorArm;
+	// CollectorArm a_CollectorArm;
 
 	JrimmyGyro a_Gyro;
 
