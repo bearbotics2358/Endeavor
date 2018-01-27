@@ -24,7 +24,7 @@ a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, 
 
 a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
 
-// a_CollectorArm(COLLECTOR_ARM_TALON),
+a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Gyro(I2C::kMXP),
 
@@ -305,7 +305,7 @@ void SmokeyXI::TeleopInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.Init();
-	a_DiffDrive.SetDriveType(1); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	a_Gyro.Init();
 	// a_Arduino.Write("B", 1);
 }
@@ -334,7 +334,11 @@ void SmokeyXI::TeleopPeriodic()
 		a_Collector.Update(a_GamePad.GetRawAxis(2)); // apparently buttons aren't zero indexed, but axes are???
 	}
 	else{
-		a_Collector.Update(-1 * a_GamePad.GetRawAxis(3));
+		a_Collector.Update(-1 * a_GamePad.GetRawAxis(3)); // apparently this axis only goes from 0 to -1
+	}
+
+	if (a_GamePad.GetRawButton(5)){
+		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
 	}
 	SmartDashboard::PutNumber("Left Encoder: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder: ", a_DiffDrive.GetDistanceRight());

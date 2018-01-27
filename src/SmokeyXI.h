@@ -89,13 +89,15 @@ private:
 
 	Collector a_Collector;
 
-	// CollectorArm a_CollectorArm;
+	CollectorArm a_CollectorArm;
 
 	JrimmyGyro a_Gyro;
 
 	SerialPort a_Arduino;
 
 	DoubleSolenoid a_Solenoid;
+
+	// DoubleSolenoid a_ArmSolenoid;
 
 	AutonomousHelper a_AutoBot;
 

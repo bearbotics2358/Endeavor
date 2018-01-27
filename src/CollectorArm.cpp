@@ -14,7 +14,7 @@ void CollectorArm::Init()
 
 void CollectorArm::Update(float angle)
 {
-	// a_pivotMotor.SetAngle(angle);
+	a_pivotMotor.Set(angle);
 }
 
 float CollectorArm::GetAngle()
