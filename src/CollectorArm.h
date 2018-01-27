@@ -12,10 +12,13 @@ public:
 	virtual ~CollectorArm() = default;
 	void Init();
 	void Update(float angle);
+	void CollectorPos(int state);
 	float GetAngle();
 	void Disable();
 private:
 	WPI_TalonSRX a_pivotMotor;
+	DoubleSolenoid a_ArmSolenoidOne;
+	DoubleSolenoid a_ArmSolenoidTwo;
 };
 
 #endif

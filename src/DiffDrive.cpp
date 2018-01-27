@@ -1,5 +1,6 @@
 #include <WPILib.h>
 #include "DiffDrive.h"
+#include <Math.h>
 
 DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree)
 : a_leftDriveOne(leftDriveOne),
@@ -12,7 +13,9 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
 
   // a_leftDrive(a_leftDriveOne, a_leftDriveTwo, a_leftDriveThree),
   // a_rightDrive(a_rightDriveOne, a_rightDriveTwo, a_rightDriveThree),
-  a_Drivetrain(a_leftDriveTwo, a_rightDriveTwo)
+  a_Drivetrain(a_leftDriveTwo, a_rightDriveTwo),
+
+  a_DriveSolenoid(PCM_PORT, SOL_PORT_ZRO, SOL_PORT_ONE)
 {
 	driveType = 0;
 	targetPositionRotations = 10.0 * 4096; /* 10 Rotations in either direction??? */
@@ -66,9 +69,28 @@ void DiffDrive::Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joy
 		  	  // Uses the two flightsticks without z axes.
 		  a_Drivetrain.TankDrive((-1.0 * stick2.GetRawAxis(1)), (-1.0 * stick3.GetRawAxis(1)), false);
 		break;
-	  default :
-		 a_Drivetrain.TankDrive(0, 0, false); // theo disable
+	  default:
+		  a_Drivetrain.TankDrive(0, 0, false); // theo disable
 	}
+}
+
+void DiffDrive::Shift(){
+	if (a_DriveSolenoid.Get() == DoubleSolenoid::kReverse){
+		a_DriveSolenoid.Set(DoubleSolenoid::kForward);
+	}
+	else if (a_DriveSolenoid.Get() == DoubleSolenoid::kForward){
+		a_DriveSolenoid.Set(DoubleSolenoid::kReverse);
+	}
+}
+
+bool DiffDrive::GetShiftState(){
+	if (a_DriveSolenoid.Get() == DoubleSolenoid::kReverse){
+		return false;
+	}
+	else if (a_DriveSolenoid.Get() == DoubleSolenoid::kForward){
+		return true;
+	}
+	return false;
 }
 
 void DiffDrive::GoDistance(float targetDistance){
@@ -85,6 +107,14 @@ void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // r
 	else{
 		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
 		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
+	}
+
+	// even more fancy math
+	if (direction){
+		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
+		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
+	}
+	else{
 	}
 }
 

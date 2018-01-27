@@ -24,8 +24,12 @@
 
 #define PCM_PORT 12
 
-#define SOL_PORT_ONE 0 // PCM Port ID
-#define SOL_PORT_TWO 1
+#define SOL_PORT_ZRO 0 // PCM Port ID
+#define SOL_PORT_ONE 1
+#define SOL_PORT_TWO 2
+#define SOL_PORT_THR 3
+#define SOL_PORT_FOU 4
+#define SOL_PORT_FIV 5
 
 #define BAUD_RATE_ARDUINO 9600
 #define DATA_BITS 8

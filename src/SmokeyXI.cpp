@@ -30,7 +30,7 @@ a_Gyro(I2C::kMXP),
 
 a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
-a_Solenoid(PCM_PORT, SOL_PORT_ONE, SOL_PORT_TWO),
+a_UltraSoul(),
 
 a_AutoBot(), // AutoBot Methods return true for left.
 
@@ -42,9 +42,7 @@ a_AutoStateV3(kAutoIdle3),
 
 a_AutoStateV4(kAutoIdle4),
 
-a_AutoStateV5(kAutoIdle5),
-
-a_UltraSoul()
+a_AutoStateV5(kAutoIdle5)
 
 {
 
@@ -321,12 +319,16 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
 
+	if (a_GamePad.GetRawButton(4)){
+		a_CollectorArm.CollectorPos(0);
+	}
+	if (a_GamePad.GetRawButton(3)){
+		a_CollectorArm.CollectorPos(1);
+	}
 	if (a_GamePad.GetRawButton(1)){
-		a_Solenoid.Set(DoubleSolenoid::kForward);
+		a_CollectorArm.CollectorPos(2);
 	}
-	if (a_GamePad.GetRawButton(2)){
-		a_Solenoid.Set(DoubleSolenoid::kReverse);
-	}
+
 	if (a_GamePad.GetRawButton(3)){
 		a_DiffDrive.GoDistance(0.2); // 10 rotations? theo af
 	}
@@ -336,12 +338,13 @@ void SmokeyXI::TeleopPeriodic()
 	else{
 		a_Collector.Update(-1 * a_GamePad.GetRawAxis(3)); // apparently this axis only goes from 0 to -1
 	}
-
 	if (a_GamePad.GetRawButton(5)){
 		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
 	}
-	SmartDashboard::PutNumber("Left Encoder: ", a_DiffDrive.GetDistanceLeft());
-	SmartDashboard::PutNumber("Right Encoder: ", a_DiffDrive.GetDistanceRight());
+	SmartDashboard::PutNumber("Left Encoder Pos: ", a_DiffDrive.GetDistanceLeft());
+	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
+	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
+	SmartDashboard::PutNumber("Right Encoder Velo : ", a_DiffDrive.GetVelocityRight());
 }
 
 void SmokeyXI::TestInit()

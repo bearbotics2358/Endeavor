@@ -13,6 +13,8 @@ public:
 	void Init();
 	void SetDriveType(int type);
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
+	void Shift();
+	bool GetShiftState();
 	void GoDistance(float targetDistance);
 	void ArcTurn(float turnRadius, float turnAngle, bool direction);
 	float GetDistanceLeft();
@@ -33,6 +35,8 @@ private:
 	// SpeedControllerGroup a_rightDrive;
 
 	DifferentialDrive a_Drivetrain;
+
+	DoubleSolenoid a_DriveSolenoid;
 
 	int driveType;
 	int targetPositionRotations;

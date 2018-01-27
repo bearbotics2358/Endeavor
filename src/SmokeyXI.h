@@ -95,9 +95,9 @@ private:
 
 	SerialPort a_Arduino;
 
-	DoubleSolenoid a_Solenoid;
-
 	// DoubleSolenoid a_ArmSolenoid;
+
+	UltrasonicSerial a_UltraSoul;
 
 	AutonomousHelper a_AutoBot;
 
@@ -106,8 +106,6 @@ private:
     AutoStateV3 a_AutoStateV3;
     AutoStateV4 a_AutoStateV4;
     AutoStateV5 a_AutoStateV5;
-
-	UltrasonicSerial a_UltraSoul;
 
 	/*
 	https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-is-new--kickoff
