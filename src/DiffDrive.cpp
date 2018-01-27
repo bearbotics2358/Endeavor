@@ -11,8 +11,6 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
   a_rightDriveTwo(rightDriveTwo),
   a_rightDriveThree(rightDriveThree),
 
-  // a_leftDrive(a_leftDriveOne, a_leftDriveTwo, a_leftDriveThree),
-  // a_rightDrive(a_rightDriveOne, a_rightDriveTwo, a_rightDriveThree),
   a_Drivetrain(a_leftDriveTwo, a_rightDriveTwo),
 
   a_DriveSolenoid(PCM_PORT, SOL_PORT_ZRO, SOL_PORT_ONE)
@@ -107,14 +105,6 @@ void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // r
 	else{
 		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
 		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
-	}
-
-	// even more fancy math
-	if (direction){
-		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
-		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
-	}
-	else{
 	}
 }
 

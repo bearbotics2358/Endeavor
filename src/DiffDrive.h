@@ -31,9 +31,6 @@ private:
 	WPI_TalonSRX a_rightDriveTwo;
 	WPI_TalonSRX a_rightDriveThree;
 
-	// SpeedControllerGroup a_leftDrive;
-	// SpeedControllerGroup a_rightDrive;
-
 	DifferentialDrive a_Drivetrain;
 
 	DoubleSolenoid a_DriveSolenoid;

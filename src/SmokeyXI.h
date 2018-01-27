@@ -95,8 +95,6 @@ private:
 
 	SerialPort a_Arduino;
 
-	// DoubleSolenoid a_ArmSolenoid;
-
 	UltrasonicSerial a_UltraSoul;
 
 	AutonomousHelper a_AutoBot;
