@@ -108,6 +108,9 @@ void SmokeyXI::AutonomousPeriodic()
 	/*
 	void SmokeyXI::AutonomousPeriodicV1()
 	{
+
+		const float SWITCH_DISTANCE;
+
 	    AutoStateV1 nextState = a_AutoStateV1;
 
 	    switch(a_AutoStateV1){
@@ -133,6 +136,10 @@ void SmokeyXI::AutonomousPeriodic()
 
 	void SmokeyXI::AutonomousPeriodicV2()
 	{
+		const float SIDE_OF_SWITCH_DISTANCE;
+		const float TURN_ANGLE;
+		const float EDGE_OF_SWITCH_DISTANCE;
+
 	    AutoStateV2 nextState = a_AutoStateV2;
 
 	    switch(a_AutoStateV2){
@@ -170,6 +177,10 @@ void SmokeyXI::AutonomousPeriodic()
 
 	void SmokeyXI::AutonomousPeriodicV3()
 	{
+		const float SIDE_OF_SCALE_DISTANCE;
+		const float TURN_ANGLE3;
+		const float EDGE_OF_SCALE_DISTANCE;
+
 	    AutoStateV3 nextState = a_AutoStateV3;
 
 	    switch(a_AutoStateV3){
@@ -182,7 +193,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        }
 	        break;
 	    case kTurnLeft3:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE);
+	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE3);
 	        nextState = kMoveToEdgeOfScale;
 	        break;
 	    case kMoveToEdgeOfScale:
@@ -205,7 +216,14 @@ void SmokeyXI::AutonomousPeriodic()
 	    a_AutoStateV3 = nextState;
 	}
 
-	void SmokeyXI::AutonomousPeriodicV4() {
+	void SmokeyXI::AutonomousPeriodicV4()
+	{
+		const float HALF_OF_SWITCH_DISTANCE;
+		const float TURN_ANGLE4A;
+		const float FLUSH_WITH_SWITCH;
+		const float TURN_ANGLE4B;
+		const float FRONT_OF_SWITCH_DISTANCE;
+
 	    AutoStateV4 nextState = a_AutoStateV4;
 
 	    switch (a_AutoStateV4) {
@@ -218,7 +236,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        }
 	        break;
 	    case kTurnRight:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE);
+	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE4);
 	        nextState = kMoveFlushWithSwitch;
 	        break;
 	    case kMoveFlushWithSwitch:
@@ -230,7 +248,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        }
 	        break;
 	    case kTurnLeft4:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE);
+	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE4B);
 	        nextState = kMoveToFrontOfSwitch;
 	        break;
 	    case kMoveToFrontOfSwitch:
@@ -253,7 +271,14 @@ void SmokeyXI::AutonomousPeriodic()
 	    a_AutoStateV4 = nextState;
 	}
 
-	void SmokeyXI::AutonomousPeriodicV5() {
+	void SmokeyXI::AutonomousPeriodicV5()
+	{
+		const float TOP_OF_SWITCH_DISTANCE;
+		const float TURN_ANGLE5A;
+		const float FLUSH_WITH_SCALE;
+		const float TURN_ANGLE5B;
+		const float FRONT_OF_SCALE_DISTANCE;
+
 	    AutoStateV5 nextState = a_AutoStateV5;
 
 	    switch (a_AutoStateV5) {
@@ -266,7 +291,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        }
 	        break;
 	    case kTurnRight5:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE);
+	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE5A);
 	        nextState = kMoveFlushWithScale;
 	        break;
 	    case kMoveFlushWithScale:
@@ -278,7 +303,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        }
 	        break;
 	    case kTurnLeft5:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE);
+	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE5B);
 	        nextState = kMoveToFrontOfScale;
 	        break;
 	    case kMoveToFrontOfScale:
