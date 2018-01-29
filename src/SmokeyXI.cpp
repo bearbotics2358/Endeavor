@@ -328,16 +328,13 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_GamePad.GetRawButton(1)){
 		a_CollectorArm.CollectorPos(2);
 	}
-
+	/*
 	if (a_GamePad.GetRawButton(3)){
 		a_DiffDrive.GoDistance(0.2); // 10 rotations? theo af
 	}
-	if (a_GamePad.GetRawButton(4)){
-		a_Collector.Update(a_GamePad.GetRawAxis(2)); // apparently buttons aren't zero indexed, but axes are???
-	}
-	else{
-		a_Collector.Update(-1 * a_GamePad.GetRawAxis(3)); // apparently this axis only goes from 0 to -1
-	}
+	*/
+	a_Collector.Update(a_GamePad.GetRawAxis(5)); // apparently buttons aren't zero indexed, but axes are???
+
 	if (a_GamePad.GetRawButton(5)){
 		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
 	}

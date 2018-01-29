@@ -2,7 +2,6 @@
 #include "AutonomousHelper.h"
 
 AutonomousHelper::AutonomousHelper(){
-	gameData = "";
 	/*
 	 * We can test the AutoHelper using smartdashboard and the "GameData" field.
 	 * Just put in 3 letters indicating field layout

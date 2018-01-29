@@ -21,7 +21,6 @@ public:	AutonomousHelper();
 
 private:
 	std::string GetGameData();
-	std::string gameData;
 };
 
 #endif
