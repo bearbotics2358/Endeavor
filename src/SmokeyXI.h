@@ -87,8 +87,6 @@ private:
 
 	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
-	Collector a_Collector;
-
 	CollectorArm a_CollectorArm;
 
 	JrimmyGyro a_Gyro;

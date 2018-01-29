@@ -4,7 +4,8 @@
 CollectorArm::CollectorArm(int pivotMotorPort)
 : a_pivotMotor(pivotMotorPort),
   a_ArmSolenoidOne(PCM_PORT, SOL_PORT_TWO, SOL_PORT_THR),
-  a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV)
+  a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
+  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON)
 {
 
 }
@@ -19,7 +20,12 @@ void CollectorArm::Update(float angle)
 	a_pivotMotor.Set(angle);
 }
 
-void CollectorArm::CollectorPos(int state){
+void CollectorArm::UpdateRollers(float velo)
+{
+	a_Collector.Update(velo);
+}
+
+void CollectorArm::RollerPos(int state){
 	switch(state){
 	case 0: // theo rest?
 		a_ArmSolenoidOne.Set(DoubleSolenoid::kForward);

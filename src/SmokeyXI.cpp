@@ -22,8 +22,6 @@ a_JoystickZ(JOYSTICKZ_PORT), // this is the flightstick WITH a z axis, port 3
 
 a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, RIGHT_DRIVE_TALON_ONE, RIGHT_DRIVE_TALON_TWO, RIGHT_DRIVE_TALON_THREE),
 
-a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
-
 a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Gyro(I2C::kMXP),
@@ -320,24 +318,24 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
 
 	if (a_GamePad.GetRawButton(4)){
-		a_CollectorArm.CollectorPos(0);
+		a_CollectorArm.RollerPos(0);
 	}
 	if (a_GamePad.GetRawButton(3)){
-		a_CollectorArm.CollectorPos(1);
+		a_CollectorArm.RollerPos(1);
 	}
 	if (a_GamePad.GetRawButton(1)){
-		a_CollectorArm.CollectorPos(2);
+		a_CollectorArm.RollerPos(2);
 	}
 	/*
 	if (a_GamePad.GetRawButton(3)){
 		a_DiffDrive.GoDistance(0.2); // 10 rotations? theo af
 	}
 	*/
-	a_Collector.Update(a_GamePad.GetRawAxis(5)); // apparently buttons aren't zero indexed, but axes are???
-
 	if (a_GamePad.GetRawButton(5)){
 		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
 	}
+	a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(5)); // apparently buttons aren't zero indexed, but axes are???
+
 	SmartDashboard::PutNumber("Left Encoder Pos: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
