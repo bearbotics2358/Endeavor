@@ -10,6 +10,13 @@
 #include <SmartDashboard/SmartDashboard.h>
 #include <SmokeyXI.h>
 
+
+/*
+ *
+ * Check out the Smokey XI Repository on GitHub for documentation.
+ *
+ */
+
 SmokeyXI::SmokeyXI(void):
 
 a_GamePad(GAMEPAD_PORT), // this should be the gamepad - list on port 0

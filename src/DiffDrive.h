@@ -16,6 +16,7 @@ public:
 	void Shift();
 	bool GetShiftState();
 	void GoDistance(float targetDistance);
+	void DriveStraight(float left, float right);
 	void ArcTurn(float turnRadius, float turnAngle, bool direction);
 	float GetDistanceLeft();
 	float GetDistanceRight();

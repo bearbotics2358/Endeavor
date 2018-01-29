@@ -96,6 +96,27 @@ void DiffDrive::GoDistance(float targetDistance){
 	a_rightDriveTwo.Set(ControlMode::Position, targetDistance * 10.0 * 4096); // 50 rotations? fingers crossed!
 }
 
+void DiffDrive::DriveStraight(float left, float right){
+	double leftDistance = GetDistanceLeft();
+	double rightDistance = GetDistanceRight();
+	SmartDashboard::PutNumber("left auto", leftDistance);
+	SmartDashboard::PutNumber("right auto", rightDistance);
+	// difference in inches:
+	double diff = (leftDistance - rightDistance);
+	if(diff < 0.10) {
+		a_leftDriveTwo.Set(left);
+		a_rightDriveTwo.Set(right);
+	} else if(diff < 0) {
+		// turn right
+		a_leftDriveTwo.Set((9.0/7.0) * left);
+		a_rightDriveTwo.Set((7.0/9.0) * right);
+	} else {
+		//turn left
+		a_leftDriveTwo.Set((7.0/9.0) * left);
+		a_rightDriveTwo.Set((9.0/7.0) * right);
+	}
+}
+
 void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // radius dictates how gradual turn is, angle dictates how far it goes, direction indicates left vs right
 	// do some fancy math here to find the arc length (if its just a circle, then use 2*pi*turnRadius*(turnangle/360)
 	if (direction){
@@ -110,7 +131,7 @@ void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // r
 
 float DiffDrive::GetDistanceLeft(){
 	return (a_leftDriveTwo.GetSelectedSensorPosition(0) & 0xFFF);
-	// theo?
+	// works but rollover is a thing.
 }
 
 float DiffDrive::GetDistanceRight(){
