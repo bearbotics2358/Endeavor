@@ -358,11 +358,18 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_GamePad.GetRawButton(1)){
 		a_CollectorArm.RollerPos(2);
 	}
-	/*
-	if (a_GamePad.GetRawButton(3)){
-		a_DiffDrive.GoDistance(0.2); // 10 rotations? theo af
+	if (a_Joystick1.GetRawButton(3)){
+		a_DiffDrive.DriveStraight(0.6,-0.6);
 	}
-	*/
+	if (a_Joystick2.GetRawButton(3)){
+		a_DiffDrive.DriveStraight(-0.6,0.6);
+	}
+	if (a_Joystick1.GetRawButton(1)){
+		a_DiffDrive.ArcTurn(10.0,90.0,true); // 10 rotations? theo af
+	}
+	if (a_Joystick2.GetRawButton(1)){
+		a_DiffDrive.ArcTurn(10.0,90.0,false); // 10 rotations? theo af
+	}
 	if (a_GamePad.GetRawButton(5)){
 		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
 	}
