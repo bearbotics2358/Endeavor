@@ -116,7 +116,7 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch(a_AutoStateV1){
 	    case kMoveToSwitch:
 	        if (robotDistance < SWITCH_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0,0);
 	            nextState = kReleaseCube;
@@ -145,19 +145,19 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch(a_AutoStateV2){
 	    case kMoveToSideOfSwitch:
 	        if (robotDistance < SIDE_OF_SWITCH_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0,0);
 	            nextState = kTurnLeft2;
 	        }
 	        break;
 	    case kTurnLeft2:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE);
+			a_DiffDrive.ArcTurn(18, 90, true);
 	        nextState = kMoveToEdgeOfSwitch;
 	        break;
 	    case kMoveToEdgeOfSwitch:
 	        if (robotDistance < EDGE_OF_SWITCH_DISTANCE) {
-	                    a_Robot.AutonUpdateDriveStraight();
+	                    a_DiffDrive.DriveStraight(0.6, -0.6);
 	                } else {
 	                    a_Robot.AutonUpdate(0,0);
 	                    nextState = kReleaseCube2;
@@ -186,19 +186,19 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch(a_AutoStateV3){
 	    case kMoveToSideOfScale:
 	        if (robotDistance < SIDE_OF_SCALE_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0,0);
 	            nextState = kTurnLeft3;
 	        }
 	        break;
 	    case kTurnLeft3:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE3);
+	        a_DiffDrive.ArcTurn(18, 90, true);
 	        nextState = kMoveToEdgeOfScale;
 	        break;
 	    case kMoveToEdgeOfScale:
 	        if (robotDistance < EDGE_OF_SCALE_DISTANCE) {
-	                    a_Robot.AutonUpdateDriveStraight();
+	                    a_DiffDrive.DriveStraight(0.6, -0.6);
 	                } else {
 	                    a_Robot.AutonUpdate(0,0);
 	                    nextState = kReleaseCube3;
@@ -229,31 +229,31 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch (a_AutoStateV4) {
 	    case kMoveHalfToSwitch:
 	        if (robotDistance < HALF_OF_SWITCH_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnRight;
 	        }
 	        break;
 	    case kTurnRight:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE4);
+	        a_DiffDrive.ArcTurn(18, 90, false);
 	        nextState = kMoveFlushWithSwitch;
 	        break;
 	    case kMoveFlushWithSwitch:
 	        if (robotDistance < FLUSH_WITH_SWITCH) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnLeft4;
 	        }
 	        break;
 	    case kTurnLeft4:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE4B);
+	        a_DiffDrive.ArcTurn(18, 90, true);
 	        nextState = kMoveToFrontOfSwitch;
 	        break;
 	    case kMoveToFrontOfSwitch:
 	        if (robotDistance < FRONT_OF_SWITCH_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kReleaseCube4;
@@ -284,31 +284,31 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch (a_AutoStateV5) {
 	    case kMoveTopOfSwitch:
 	        if (robotDistance < TOP_OF_SWITCH_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnRight5;
 	        }
 	        break;
 	    case kTurnRight5:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE5A);
+			a_DiffDrive.ArcTurn(10, 90, false);
 	        nextState = kMoveFlushWithScale;
 	        break;
 	    case kMoveFlushWithScale:
 	        if (robotDistance < FLUSH_WITH_SCALE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnLeft5;
 	        }
 	        break;
 	    case kTurnLeft5:
-	        a_Robot.SetAngle(a_Gyro.GetAngle(), TURN_ANGLE5B);
+	        a_DiffDrive.ArcTurn(10, 90, true);
 	        nextState = kMoveToFrontOfScale;
 	        break;
 	    case kMoveToFrontOfScale:
 	        if (robotDistance < FRONT_OF_SCALE_DISTANCE) {
-	            a_Robot.AutonUpdateDriveStraight();
+	            a_DiffDrive.DriveStraight(0.6, -0.6);
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kReleaseCube5;
