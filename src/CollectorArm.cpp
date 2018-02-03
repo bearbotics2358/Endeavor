@@ -13,6 +13,7 @@ CollectorArm::CollectorArm(int pivotMotorPort)
 void CollectorArm::Init()
 {
 	Update(0);
+	a_Collector.Init();
 }
 
 void CollectorArm::Update(float angle)

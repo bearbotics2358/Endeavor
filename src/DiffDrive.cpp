@@ -43,7 +43,7 @@ void DiffDrive::Init()
 
 	// int absolutePositionRight = a_rightDriveTwo.GetSelectedSensorPosition(0) & 0xFFF;
 	a_rightDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
-	// a_rightDriveTwo.SetSensorPhase(true);
+	a_rightDriveTwo.SetSensorPhase(false);
 	a_rightDriveOne.Follow(a_rightDriveTwo);
 	a_rightDriveThree.Follow(a_rightDriveTwo);
 }

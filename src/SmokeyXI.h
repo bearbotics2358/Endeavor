@@ -13,6 +13,7 @@
 #include <JrimmyGyro.h>
 #include <AutonomousHelper.h>
 #include <UltrasonicSerial.h>
+#include <Lifter.h>
 
 enum AutoStateV1 {
 	kMoveToSwitch = 0,
@@ -88,6 +89,8 @@ private:
 	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
 	CollectorArm a_CollectorArm;
+
+	Lifter a_Lifter;
 
 	JrimmyGyro a_Gyro;
 

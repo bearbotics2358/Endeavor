@@ -31,6 +31,8 @@ a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, 
 
 a_CollectorArm(COLLECTOR_ARM_TALON),
 
+a_Lifter(LIFTER_TALON),
+
 a_Gyro(I2C::kMXP),
 
 a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
@@ -334,6 +336,8 @@ void SmokeyXI::TeleopInit()
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.Init();
 	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	a_Lifter.Init();
+	a_CollectorArm.Init();
 	a_Gyro.Init();
 	// a_Arduino.Write("B", 1);
 }
@@ -343,8 +347,12 @@ void SmokeyXI::TeleopPeriodic()
 {
 	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 	a_Gyro.Update();
-	float gyroValue = a_Gyro.GetAngle();
-	SmartDashboard::PutNumber("Gyro Angle: ", gyroValue);
+	float gyroValue1 = a_Gyro.GetAngle(0);
+	float gyroValue2 = a_Gyro.GetAngle(1);
+	float gyroValue3 = a_Gyro.GetAngle(2);
+	SmartDashboard::PutNumber("Gyro Angle X: ", gyroValue1);
+	SmartDashboard::PutNumber("Gyro Angle 2: ", gyroValue2);
+	SmartDashboard::PutNumber("Gyro Angle 3: ", gyroValue3);
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
