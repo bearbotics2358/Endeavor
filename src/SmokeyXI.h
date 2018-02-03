@@ -92,6 +92,8 @@ private:
 
 	Lifter a_Lifter;
 
+	Compressor a_Compressor;
+
 	JrimmyGyro a_Gyro;
 
 	SerialPort a_Arduino;

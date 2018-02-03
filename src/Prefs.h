@@ -26,6 +26,8 @@
 
 #define PCM_PORT 12
 
+#define POTENTIOMETER_PORT 0
+
 #define SOL_PORT_ZRO 0 // PCM Port ID
 #define SOL_PORT_ONE 1
 #define SOL_PORT_TWO 2

@@ -33,6 +33,8 @@ a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Lifter(LIFTER_TALON),
 
+a_Compressor(PCM_PORT),
+
 a_Gyro(I2C::kMXP),
 
 a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
@@ -339,6 +341,7 @@ void SmokeyXI::TeleopInit()
 	a_Lifter.Init();
 	a_CollectorArm.Init();
 	a_Gyro.Init();
+	a_Compressor.SetClosedLoopControl(true);
 	// a_Arduino.Write("B", 1);
 }
 
@@ -356,6 +359,8 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
+	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
+	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 
 	if (a_GamePad.GetRawButton(4)){
 		a_CollectorArm.RollerPos(0);

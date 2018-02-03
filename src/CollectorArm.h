@@ -15,13 +15,15 @@ public:
 	void Update(float angle);
 	void UpdateRollers(float velo);
 	void RollerPos(int state);
-	float GetAngle();
+	float GetAngle1();
+	float GetAngle2();
 	void Disable();
 private:
 	WPI_TalonSRX a_pivotMotor;
 	DoubleSolenoid a_ArmSolenoidOne;
 	DoubleSolenoid a_ArmSolenoidTwo;
 	Collector a_Collector;
+	AnalogInput a_Potentiometer;
 };
 
 #endif

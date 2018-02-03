@@ -13,6 +13,7 @@ public:
 	void Init();
 	void SetDriveType(int type);
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
+	void UpdateVal(float left, float right);
 	void Shift();
 	bool GetShiftState();
 	void GoDistance(float targetDistance);

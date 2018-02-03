@@ -5,7 +5,8 @@ CollectorArm::CollectorArm(int pivotMotorPort)
 : a_pivotMotor(pivotMotorPort),
   a_ArmSolenoidOne(PCM_PORT, SOL_PORT_TWO, SOL_PORT_THR),
   a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
-  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON)
+  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
+  a_Potentiometer(POTENTIOMETER_PORT)
 {
 
 }
@@ -14,6 +15,7 @@ void CollectorArm::Init()
 {
 	Update(0);
 	a_Collector.Init();
+	a_Potentiometer.InitAccumulator();
 }
 
 void CollectorArm::Update(float angle)
@@ -49,9 +51,14 @@ void CollectorArm::RollerPos(int state){
 	}
 }
 
-float CollectorArm::GetAngle()
+float CollectorArm::GetAngle1()
 {
-	return (0);
+	return (a_Potentiometer.GetValue());
+}
+
+float CollectorArm::GetAngle2()
+{
+	return (a_Potentiometer.GetAccumulatorValue());
 }
 
 void CollectorArm::Disable()
