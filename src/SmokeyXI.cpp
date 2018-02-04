@@ -37,7 +37,7 @@ a_Compressor(PCM_PORT),
 
 a_Gyro(I2C::kMXP),
 
-a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
+// a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
 a_UltraSoul(),
 
@@ -71,7 +71,7 @@ void SmokeyXI::RobotPeriodic()
 
 void SmokeyXI::DisabledInit()
 {
-	a_Arduino.Write("E", 1);
+	// a_Arduino.Write("E", 1);
 }
 
 void SmokeyXI::DisabledPeriodic()
@@ -82,7 +82,7 @@ void SmokeyXI::DisabledPeriodic()
 void SmokeyXI::AutonomousInit()
 {
 	SmartDashboard::PutString("Enabled: ", "True");
-	a_Arduino.Write("N", 1); // strips off
+	// a_Arduino.Write("N", 1); // strips off
 }
 
 void SmokeyXI::AutonomousPeriodic()
@@ -362,7 +362,7 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 
-	if (a_GamePad.GetRawButton(4)){
+	if (a_GamePad.GetRawButton(4)){ // Change Collector Position
 		a_CollectorArm.RollerPos(0);
 	}
 	if (a_GamePad.GetRawButton(3)){
@@ -371,23 +371,31 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_GamePad.GetRawButton(1)){
 		a_CollectorArm.RollerPos(2);
 	}
+	if (a_GamePad.GetRawButton(2)){
+		a_CollectorArm.RollerPos(3);
+	}
+	if (a_Joystick1.GetRawButton(2)){ // Clamp on a box
+		a_CollectorArm.Clamp();
+	}
+	/*
 	if (a_Joystick1.GetRawButton(3)){
 		a_DiffDrive.DriveStraight(0.6,-0.6);
 	}
 	if (a_Joystick2.GetRawButton(3)){
 		a_DiffDrive.DriveStraight(-0.6,0.6);
 	}
-	if (a_Joystick1.GetRawButton(1)){
-		a_DiffDrive.ArcTurn(10.0,90.0,true); // 10 rotations? theo af
+	*/
+	if (a_Joystick2.GetRawButton(1)){ // Compressor!
+		a_Lifter.Update(1);
 	}
 	if (a_Joystick2.GetRawButton(1)){
-		a_DiffDrive.ArcTurn(10.0,90.0,false); // 10 rotations? theo af
+		a_Lifter.Update(-1);
 	}
-	if (a_GamePad.GetRawButton(5)){
+	if (a_GamePad.GetRawButton(5)){ // Move the ARM
 		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
 	}
 	a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(5)); // apparently buttons aren't zero indexed, but axes are???
-
+	// Roll the rollers ^
 	SmartDashboard::PutNumber("Left Encoder Pos: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
@@ -396,7 +404,7 @@ void SmokeyXI::TeleopPeriodic()
 
 void SmokeyXI::TestInit()
 {
-	a_Arduino.Write("R", 1);
+	// a_Arduino.Write("R", 1);
 }
 
 void SmokeyXI::TestPeriodic()

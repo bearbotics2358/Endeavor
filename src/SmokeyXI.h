@@ -96,7 +96,7 @@ private:
 
 	JrimmyGyro a_Gyro;
 
-	SerialPort a_Arduino;
+	// SerialPort a_Arduino;
 
 	UltrasonicSerial a_UltraSoul;
 

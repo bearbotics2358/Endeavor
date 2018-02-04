@@ -15,6 +15,7 @@ public:
 	void Update(float angle);
 	void UpdateRollers(float velo);
 	void RollerPos(int state);
+	void Clamp();
 	float GetAngle1();
 	float GetAngle2();
 	void Disable();
@@ -22,6 +23,7 @@ private:
 	WPI_TalonSRX a_pivotMotor;
 	DoubleSolenoid a_ArmSolenoidOne;
 	DoubleSolenoid a_ArmSolenoidTwo;
+	DoubleSolenoid a_ArmSolenoidThree;
 	Collector a_Collector;
 	AnalogInput a_Potentiometer;
 };

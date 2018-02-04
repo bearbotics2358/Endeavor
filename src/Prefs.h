@@ -34,6 +34,8 @@
 #define SOL_PORT_THR 3
 #define SOL_PORT_FOU 4
 #define SOL_PORT_FIV 5
+#define SOL_PORT_SIX 6
+#define SOL_PORT_SEV 7
 
 #define BAUD_RATE_ARDUINO 9600
 #define DATA_BITS 8
