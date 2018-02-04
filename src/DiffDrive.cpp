@@ -73,7 +73,7 @@ void DiffDrive::Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joy
 }
 
 void DiffDrive::UpdateVal(float left, float right){
-	a_Drivetrain.TankDrive(left, right);
+	a_Drivetrain.TankDrive(left, right, false);
 }
 
 void DiffDrive::Shift(){

@@ -60,6 +60,7 @@ a_AutoStateV5(kAutoIdle5)
 void SmokeyXI::RobotInit()
 {
 	SmartDashboard::init();
+	a_Gyro.Init();
 	// Things go to the SmartDashboard object but I want to try and use Shuffleboard instead.
 	// It uses the same method calls to the SmartDashboard, but is much cleaner and easier to interpret data that comes in.
 }
@@ -71,7 +72,7 @@ void SmokeyXI::RobotPeriodic()
 
 void SmokeyXI::DisabledInit()
 {
-	// a_Arduino.Write("E", 1);
+
 }
 
 void SmokeyXI::DisabledPeriodic()
@@ -89,11 +90,11 @@ void SmokeyXI::AutonomousPeriodic()
 {
 	// Following lines are to test AutoPeriodic and the AutoBot autohelper i wrote.
 	if (a_AutoBot.GetAllianceSwitch()){
-		a_Arduino.Write("B", 1); // Left side, Blue leds for indicators
+		// a_Arduino.Write("B", 1); // Left side, Blue leds for indicators
 		SmartDashboard::PutBoolean("Our Switch Left? ", true);
 	}
 	else{
-		a_Arduino.Write("M", 1); // Right side, Red leds for indicators
+		// a_Arduino.Write("M", 1); // Right side, Red leds for indicators
 		SmartDashboard::PutBoolean("Our Switch Left? ", false);
 	}
 	if (a_AutoBot.GetAllianceScale()){
@@ -340,7 +341,7 @@ void SmokeyXI::TeleopInit()
 	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	a_Lifter.Init();
 	a_CollectorArm.Init();
-	a_Gyro.Init();
+	a_Gyro.Cal();
 	a_Compressor.SetClosedLoopControl(true);
 	// a_Arduino.Write("B", 1);
 }
@@ -348,7 +349,44 @@ void SmokeyXI::TeleopInit()
 
 void SmokeyXI::TeleopPeriodic()
 {
-	a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
+	// apparently buttons aren't zero indexed, but axes are???
+
+	if (a_Joystick1.GetRawButton(2)){ // Change Collector Position
+		a_CollectorArm.RollerPos(0);
+	}
+	if (a_Joystick1.GetRawButton(3)){
+		a_CollectorArm.RollerPos(1);
+	}
+	if (a_Joystick1.GetRawButton(4)){
+		a_CollectorArm.RollerPos(2);
+	}
+	if (a_Joystick1.GetRawButton(5)){
+		a_CollectorArm.RollerPos(3);
+	}
+	if (a_Joystick2.GetRawButton(2)){a_CollectorArm.Clamp();}
+	if (a_Joystick2.GetRawButton(3)){a_CollectorArm.Release();}	
+
+	if (a_Joystick1.GetRawButton(1) && a_Joystick2.GetRawButton(1)){
+		a_CollectorArm.Update(a_Joystick1.GetRawAxis(1));
+		a_CollectorArm.UpdateRollers(-1.0 * a_Joystick2.GetRawAxis(1));
+	}
+	else {
+		a_DiffDrive.UpdateVal((-1.0 * a_Joystick1.GetRawAxis(1)), (-1.0 * a_Joystick2.GetRawAxis(1)));
+	}
+
+	// Roll the rollers ^
+
+	/*
+	if (a_Joystick1.GetRawButton(3)){
+		a_DiffDrive.DriveStraight(0.6,-0.6);
+	}
+	if (a_Joystick2.GetRawButton(3)){
+		a_DiffDrive.DriveStraight(-0.6,0.6);
+	}
+	*/
+
+	/// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
+	
 	a_Gyro.Update();
 	float gyroValue1 = a_Gyro.GetAngle(0);
 	float gyroValue2 = a_Gyro.GetAngle(1);
@@ -359,43 +397,10 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
+
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 
-	if (a_GamePad.GetRawButton(4)){ // Change Collector Position
-		a_CollectorArm.RollerPos(0);
-	}
-	if (a_GamePad.GetRawButton(3)){
-		a_CollectorArm.RollerPos(1);
-	}
-	if (a_GamePad.GetRawButton(1)){
-		a_CollectorArm.RollerPos(2);
-	}
-	if (a_GamePad.GetRawButton(2)){
-		a_CollectorArm.RollerPos(3);
-	}
-	if (a_Joystick1.GetRawButton(2)){ // Clamp on a box
-		a_CollectorArm.Clamp();
-	}
-	/*
-	if (a_Joystick1.GetRawButton(3)){
-		a_DiffDrive.DriveStraight(0.6,-0.6);
-	}
-	if (a_Joystick2.GetRawButton(3)){
-		a_DiffDrive.DriveStraight(-0.6,0.6);
-	}
-	*/
-	if (a_Joystick2.GetRawButton(1)){ // Compressor!
-		a_Lifter.Update(1);
-	}
-	if (a_Joystick2.GetRawButton(1)){
-		a_Lifter.Update(-1);
-	}
-	if (a_GamePad.GetRawButton(5)){ // Move the ARM
-		a_CollectorArm.Update(a_GamePad.GetRawAxis(4)); // this axis goes from -1 to 1
-	}
-	a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(5)); // apparently buttons aren't zero indexed, but axes are???
-	// Roll the rollers ^
 	SmartDashboard::PutNumber("Left Encoder Pos: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
@@ -404,12 +409,16 @@ void SmokeyXI::TeleopPeriodic()
 
 void SmokeyXI::TestInit()
 {
-	// a_Arduino.Write("R", 1);
+	// test is currently only used to run the compressor
+	SmartDashboard::PutString("Enabled: ", "True");
+
 }
 
 void SmokeyXI::TestPeriodic()
 {
-
+	if (a_Joystick2.GetRawButton(1)){
+		a_Lifter.Update(-1); // this actually doesn't do anything to the lifter lol, it runs the compressor for now
+	}
 }
 
 START_ROBOT_CLASS(SmokeyXI);

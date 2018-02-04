@@ -17,6 +17,11 @@ void CollectorArm::Init()
 	Update(0);
 	a_Collector.Init();
 	a_Potentiometer.InitAccumulator();
+
+	/* Notes:
+	 * SolOne is for the fingers
+	 * SolsTwo and Three are for the CollectorPosition.
+	 */
 }
 
 void CollectorArm::Update(float angle)
@@ -31,34 +36,38 @@ void CollectorArm::UpdateRollers(float velo)
 
 void CollectorArm::RollerPos(int state){
 	switch(state){
-	case 0: // theo rest?
+	case 0: // theo af?
+		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
-		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
 		break;
 
-	case 1: // theo middle
-		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
-		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
+	case 1: // theo af?
+		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
+		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
 		break;
 
-	case 2: // theo up
-		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
+	case 2: // theo af?
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
-		break;
-	case 3: // theo nothing?
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
+		break;
+	case 3: // theo af?
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
+		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
 		break;
 	}
 }
 
 void CollectorArm::Clamp(){
-	if (a_ArmSolenoidOne.Get() == DoubleSolenoid::kReverse){
-		a_ArmSolenoidOne.Set(DoubleSolenoid::kForward);
-	}
-	else if (a_ArmSolenoidOne.Get() == DoubleSolenoid::kForward){
-		a_ArmSolenoidOne.Set(DoubleSolenoid::kReverse);
-	}
+	a_ArmSolenoidOne.Set(DoubleSolenoid::kForward);
+}
+
+void CollectorArm::Release(){
+	a_ArmSolenoidOne.Set(DoubleSolenoid::kReverse);
+}
+
+bool CollectorArm::GetCubeStatus(){
+	// returns true if the cube is in the collector
+	return true;
 }
 
 float CollectorArm::GetAngle1()

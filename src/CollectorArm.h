@@ -16,6 +16,8 @@ public:
 	void UpdateRollers(float velo);
 	void RollerPos(int state);
 	void Clamp();
+	void Release();
+	bool GetCubeStatus();
 	float GetAngle1();
 	float GetAngle2();
 	void Disable();
