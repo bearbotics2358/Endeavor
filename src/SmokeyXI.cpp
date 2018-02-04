@@ -1,4 +1,3 @@
-#include <Prefs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -6,6 +5,7 @@
 #include <string>
 #include <IterativeRobot.h>
 #include <LiveWindow/LiveWindow.h>
+#include <PracticePrefs.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <SmokeyXI.h>
@@ -339,6 +339,7 @@ void SmokeyXI::TeleopInit()
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.Init();
 	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	a_DiffDrive.DisableMotorSafetyTraitor();
 	a_Lifter.Init();
 	a_CollectorArm.Init();
 	a_Gyro.Cal();

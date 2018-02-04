@@ -1,9 +1,9 @@
 #ifndef SRC_DIFFDRIVE_H_
 #define SRC_DIFFDRIVE_H_
 
+#include <PracticePrefs.h>
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
-#include "Prefs.h"
 
 class DiffDrive
 {
@@ -12,6 +12,7 @@ public:
 	virtual ~DiffDrive() = default;
 	void Init();
 	void SetDriveType(int type);
+	void DisableMotorSafetyTraitor();
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void UpdateVal(float left, float right);
 	void Shift();

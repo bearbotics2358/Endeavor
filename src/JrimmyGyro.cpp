@@ -1,9 +1,9 @@
 #include <WPILib.h>
-#include <Prefs.h>
 #include "JrimmyGyro.h"
 #include <I2C.h>
 #include <HAL/HAL.h>
 #include <LiveWindow/LiveWindow.h>
+#include <PracticePrefs.h>
 
 const uint8_t JrimmyGyro::kPowerMgmRegister;
 // const uint8_t JrimmyGyro::kDataFormatRegister;

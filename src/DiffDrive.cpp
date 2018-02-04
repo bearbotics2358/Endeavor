@@ -53,6 +53,16 @@ void DiffDrive::SetDriveType(int type)
 	driveType = type;
 }
 
+void DiffDrive::DisableMotorSafetyTraitor(){
+	a_leftDriveOne.SetSafetyEnabled(false);
+	a_leftDriveTwo.SetSafetyEnabled(false);
+	a_leftDriveThree.SetSafetyEnabled(false);
+	a_rightDriveOne.SetSafetyEnabled(false);
+	a_rightDriveTwo.SetSafetyEnabled(false);
+	a_rightDriveThree.SetSafetyEnabled(false);
+	// bás, feithidí!
+}
+
 void DiffDrive::Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4)
 {
 	switch (driveType) {
