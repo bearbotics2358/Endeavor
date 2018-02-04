@@ -78,6 +78,9 @@ void SmokeyXI::DisabledInit()
 void SmokeyXI::DisabledPeriodic()
 {
 	SmartDashboard::PutString("Enabled: ", "False");
+	if(a_GamePad.GetRawButton(1)) {
+		a_Gyro.Cal(); // you can use cal here b/c you have the time to
+	}
 }
 
 void SmokeyXI::AutonomousInit()
@@ -339,10 +342,11 @@ void SmokeyXI::TeleopInit()
 	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.Init();
 	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
-	a_DiffDrive.DisableMotorSafetyTraitor();
+	// a_DiffDrive.DisableMotorSafetyTraitor();
 	a_Lifter.Init();
 	a_CollectorArm.Init();
-	a_Gyro.Cal();
+	// a_Gyro.Cal();
+	a_Gyro.Zero();
 	a_Compressor.SetClosedLoopControl(true);
 	// a_Arduino.Write("B", 1);
 }
