@@ -98,9 +98,11 @@ private:
 
 	// SerialPort a_Arduino;
 
-	UltrasonicSerial a_UltraSoul;
+	// UltrasonicSerial a_UltraSoul;
 
 	AutonomousHelper a_AutoBot;
+
+	PowerDistributionPanel a_PDP;
 
     AutoStateV1 a_AutoStateV1;
     AutoStateV2 a_AutoStateV2;
@@ -108,11 +110,6 @@ private:
     AutoStateV4 a_AutoStateV4;
     AutoStateV5 a_AutoStateV5;
 
-	/*
-	https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-is-new--kickoff
-	https://github.com/CrossTheRoadElec/Phoenix-Documentation/blob/master/Migration%20Guide.md
-	https://www.chiefdelphi.com/forums/showthread.php?p=1717815
-	*/
 };
 
 #endif

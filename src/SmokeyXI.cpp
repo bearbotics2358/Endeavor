@@ -39,9 +39,11 @@ a_Gyro(I2C::kMXP),
 
 // a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
-a_UltraSoul(),
+// a_UltraSoul(),
 
 a_AutoBot(), // AutoBot Methods return true for left.
+
+a_PDP(),
 
 a_AutoStateV1(kAutoIdle),
 
@@ -59,10 +61,8 @@ a_AutoStateV5(kAutoIdle5)
 
 void SmokeyXI::RobotInit()
 {
-	SmartDashboard::init();
+	SmartDashboard::init();  // dont forget, shuffleboard over sd
 	a_Gyro.Init();
-	// Things go to the SmartDashboard object but I want to try and use Shuffleboard instead.
-	// It uses the same method calls to the SmartDashboard, but is much cleaner and easier to interpret data that comes in.
 }
 
 void SmokeyXI::RobotPeriodic()
@@ -72,20 +72,28 @@ void SmokeyXI::RobotPeriodic()
 
 void SmokeyXI::DisabledInit()
 {
-
+	a_Gyro.Cal();
 }
 
 void SmokeyXI::DisabledPeriodic()
 {
-	SmartDashboard::PutString("Enabled: ", "False");
 	if(a_GamePad.GetRawButton(1)) {
 		a_Gyro.Cal(); // you can use cal here b/c you have the time to
 	}
+	a_Gyro.Update();
+	float gyroValue1 = a_Gyro.GetAngle(0);
+	float gyroValue2 = a_Gyro.GetAngle(1);
+	float gyroValue3 = a_Gyro.GetAngle(2);
+	SmartDashboard::PutNumber("Gyro Angle X: ", gyroValue1);
+	SmartDashboard::PutNumber("Gyro Angle 2: ", gyroValue2);
+	SmartDashboard::PutNumber("Gyro Angle 3: ", gyroValue3);
+	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
+	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
+	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
 }
 
 void SmokeyXI::AutonomousInit()
 {
-	SmartDashboard::PutString("Enabled: ", "True");
 	// a_Arduino.Write("N", 1); // strips off
 }
 
@@ -124,7 +132,7 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch(a_AutoStateV1){
 	    case kMoveToSwitch:
 	        if (robotDistance < SWITCH_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0,0);
 	            nextState = kReleaseCube;
@@ -153,7 +161,7 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch(a_AutoStateV2){
 	    case kMoveToSideOfSwitch:
 	        if (robotDistance < SIDE_OF_SWITCH_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0,0);
 	            nextState = kTurnLeft2;
@@ -165,7 +173,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        break;
 	    case kMoveToEdgeOfSwitch:
 	        if (robotDistance < EDGE_OF_SWITCH_DISTANCE) {
-	                    a_DiffDrive.DriveStraight(0.6, -0.6);
+					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	                } else {
 	                    a_Robot.AutonUpdate(0,0);
 	                    nextState = kReleaseCube2;
@@ -194,7 +202,7 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch(a_AutoStateV3){
 	    case kMoveToSideOfScale:
 	        if (robotDistance < SIDE_OF_SCALE_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0,0);
 	            nextState = kTurnLeft3;
@@ -206,7 +214,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        break;
 	    case kMoveToEdgeOfScale:
 	        if (robotDistance < EDGE_OF_SCALE_DISTANCE) {
-	                    a_DiffDrive.DriveStraight(0.6, -0.6);
+					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	                } else {
 	                    a_Robot.AutonUpdate(0,0);
 	                    nextState = kReleaseCube3;
@@ -237,7 +245,7 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch (a_AutoStateV4) {
 	    case kMoveHalfToSwitch:
 	        if (robotDistance < HALF_OF_SWITCH_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnRight;
@@ -249,7 +257,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        break;
 	    case kMoveFlushWithSwitch:
 	        if (robotDistance < FLUSH_WITH_SWITCH) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnLeft4;
@@ -261,7 +269,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        break;
 	    case kMoveToFrontOfSwitch:
 	        if (robotDistance < FRONT_OF_SWITCH_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kReleaseCube4;
@@ -292,7 +300,7 @@ void SmokeyXI::AutonomousPeriodic()
 	    switch (a_AutoStateV5) {
 	    case kMoveTopOfSwitch:
 	        if (robotDistance < TOP_OF_SWITCH_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnRight5;
@@ -304,7 +312,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        break;
 	    case kMoveFlushWithScale:
 	        if (robotDistance < FLUSH_WITH_SCALE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kTurnLeft5;
@@ -316,7 +324,7 @@ void SmokeyXI::AutonomousPeriodic()
 	        break;
 	    case kMoveToFrontOfScale:
 	        if (robotDistance < FRONT_OF_SCALE_DISTANCE) {
-	            a_DiffDrive.DriveStraight(0.6, -0.6);
+				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	        } else {
 	            a_Robot.AutonUpdate(0, 0);
 	            nextState = kReleaseCube5;
@@ -339,7 +347,6 @@ void SmokeyXI::AutonomousPeriodic()
 
 void SmokeyXI::TeleopInit()
 {
-	SmartDashboard::PutString("Enabled: ", "True");
 	a_DiffDrive.Init();
 	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	// a_DiffDrive.DisableMotorSafetyTraitor();
@@ -371,7 +378,10 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(2)){a_CollectorArm.Clamp();}
 	if (a_Joystick2.GetRawButton(3)){a_CollectorArm.Release();}	
 
-	if (a_Joystick1.GetRawButton(1) && a_Joystick2.GetRawButton(1)){
+	if (a_Joystick2.GetRawButton(4)){a_DiffDrive.ShiftLow();}
+	if (a_Joystick2.GetRawButton(5)){a_DiffDrive.ShiftHigh();}
+
+	if (a_Joystick1.GetRawButton(1) && a_Joystick2.GetRawButton(1)){ // pull both triggers to activate the super secret control mode!
 		a_CollectorArm.Update(a_Joystick1.GetRawAxis(1));
 		a_CollectorArm.UpdateRollers(-1.0 * a_Joystick2.GetRawAxis(1));
 	}
@@ -379,16 +389,16 @@ void SmokeyXI::TeleopPeriodic()
 		a_DiffDrive.UpdateVal((-1.0 * a_Joystick1.GetRawAxis(1)), (-1.0 * a_Joystick2.GetRawAxis(1)));
 	}
 
-	// Roll the rollers ^
-
 	/*
 	if (a_Joystick1.GetRawButton(3)){
-		a_DiffDrive.DriveStraight(0.6,-0.6);
+	a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	}
 	if (a_Joystick2.GetRawButton(3)){
-		a_DiffDrive.DriveStraight(-0.6,0.6);
+	a_DiffDrive.DriveStraight((-1 * (LEFT_AGGRO)),(1 * (RIGHT_AGGRO)));
 	}
 	*/
+
+
 
 	/// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 	
@@ -410,13 +420,27 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
 	SmartDashboard::PutNumber("Right Encoder Velo : ", a_DiffDrive.GetVelocityRight());
+
+	SmartDashboard::PutNumber("LeftDriveOne: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_ONE));
+	SmartDashboard::PutNumber("LeftDriveTwo: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_TWO));
+	SmartDashboard::PutNumber("LeftDriveThr: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_THREE));
+
+	SmartDashboard::PutNumber("RightDriveOne: ", a_PDP.GetCurrent(RIGHT_DRIVE_TALON_ONE));
+	SmartDashboard::PutNumber("RightDriveTwo: ", a_PDP.GetCurrent(RIGHT_DRIVE_TALON_TWO));
+	SmartDashboard::PutNumber("RightDriveThr: ", a_PDP.GetCurrent(RIGHT_DRIVE_TALON_THREE));
+
+	SmartDashboard::PutNumber("ArmDrive C: ", a_PDP.GetCurrent(COLLECTOR_ARM_TALON));
+
+	SmartDashboard::PutNumber("Compressor (temp): ", a_PDP.GetCurrent(LIFTER_TALON)); // temporary until I stop being lazy and actually get the compressor running from the PCM and not a talon
+
+	SmartDashboard::PutBoolean("Finger State", a_CollectorArm.GetClampState());
+
+	SmartDashboard::PutBoolean("Shift State", a_DiffDrive.GetShiftState());
 }
 
 void SmokeyXI::TestInit()
 {
 	// test is currently only used to run the compressor
-	SmartDashboard::PutString("Enabled: ", "True");
-
 }
 
 void SmokeyXI::TestPeriodic()

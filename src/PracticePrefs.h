@@ -37,6 +37,9 @@
 #define SOL_PORT_SIX 6
 #define SOL_PORT_SEV 7
 
+#define LEFT_AGGRO 0.6 // used to change how aggressive drive straight correction is on both sides.
+#define RIGHT_AGGRO 0.6
+
 #define BAUD_RATE_ARDUINO 9600
 #define DATA_BITS 8
 
