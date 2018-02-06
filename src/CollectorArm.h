@@ -17,6 +17,7 @@ public:
 	void RollerPos(int state);
 	void Clamp();
 	void Release();
+	bool GetClampState();
 	bool GetCubeStatus();
 	float GetAngle1();
 	float GetAngle2();
@@ -27,7 +28,8 @@ private:
 	DoubleSolenoid a_ArmSolenoidTwo;
 	DoubleSolenoid a_ArmSolenoidThree;
 	Collector a_Collector;
-	AnalogInput a_Potentiometer;
+	AnalogInput *a_Potentiometer;
+	Potentiometer *a_Potent;
 };
 
 #endif

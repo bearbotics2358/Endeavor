@@ -7,7 +7,8 @@ CollectorArm::CollectorArm(int pivotMotorPort)
   a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
   a_ArmSolenoidThree(PCM_PORT, SOL_PORT_SIX, SOL_PORT_SEV),
   a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
-  a_Potentiometer(POTENTIOMETER_PORT)
+  a_Potentiometer(POTENTIOMETER_PORT),
+  a_Potent(POTENTIOMETER_PORT)
 {
 
 }
@@ -16,7 +17,7 @@ void CollectorArm::Init()
 {
 	Update(0);
 	a_Collector.Init();
-	a_Potentiometer.InitAccumulator();
+	a_Potentiometer->InitAccumulator();
 
 	/* Notes:
 	 * SolOne is for the fingers
@@ -65,6 +66,10 @@ void CollectorArm::Release(){
 	a_ArmSolenoidOne.Set(DoubleSolenoid::kReverse);
 }
 
+bool CollectorArm::GetClampState(){
+	return (a_ArmSolenoidOne.Get() == DoubleSolenoid::kForward); // is forward low or high? dunno.
+}
+
 bool CollectorArm::GetCubeStatus(){
 	// returns true if the cube is in the collector
 	return true;
@@ -72,12 +77,12 @@ bool CollectorArm::GetCubeStatus(){
 
 float CollectorArm::GetAngle1()
 {
-	return (a_Potentiometer.GetValue());
+	return (a_Potentiometer->GetValue());
 }
 
 float CollectorArm::GetAngle2()
 {
-	return (a_Potentiometer.GetAccumulatorValue());
+	return (a_Potent->Get());
 }
 
 void CollectorArm::Disable()
