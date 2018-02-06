@@ -86,23 +86,16 @@ void DiffDrive::UpdateVal(float left, float right){
 	a_Drivetrain.TankDrive(left, right, false);
 }
 
-void DiffDrive::Shift(){
-	if (a_DriveSolenoid.Get() == DoubleSolenoid::kReverse){
-		a_DriveSolenoid.Set(DoubleSolenoid::kForward);
-	}
-	else if (a_DriveSolenoid.Get() == DoubleSolenoid::kForward){
-		a_DriveSolenoid.Set(DoubleSolenoid::kReverse);
-	}
+void DiffDrive::ShiftLow(){
+	a_DriveSolenoid.Set(DoubleSolenoid::kForward);
+}
+
+void DiffDrive::ShiftHigh(){
+	a_DriveSolenoid.Set(DoubleSolenoid::kReverse);
 }
 
 bool DiffDrive::GetShiftState(){
-	if (a_DriveSolenoid.Get() == DoubleSolenoid::kReverse){
-		return false;
-	}
-	else if (a_DriveSolenoid.Get() == DoubleSolenoid::kForward){
-		return true;
-	}
-	return false;
+	return (a_DriveSolenoid.Get() == DoubleSolenoid::kForward); // is forward low or high? dunno.
 }
 
 void DiffDrive::GoDistance(float targetDistance){

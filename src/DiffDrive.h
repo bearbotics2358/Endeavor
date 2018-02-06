@@ -15,7 +15,8 @@ public:
 	void DisableMotorSafetyTraitor();
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void UpdateVal(float left, float right);
-	void Shift();
+	void ShiftLow();
+	void ShiftHigh();
 	bool GetShiftState();
 	void GoDistance(float targetDistance);
 	void DriveStraight(float left, float right);
