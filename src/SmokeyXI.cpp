@@ -43,7 +43,7 @@ a_Gyro(I2C::kMXP),
 
 a_AutoBot(), // AutoBot Methods return true for left.
 
-a_PDP(),
+// a_PDP(),
 
 a_AutoStateV1(kAutoIdle),
 
@@ -72,24 +72,12 @@ void SmokeyXI::RobotPeriodic()
 
 void SmokeyXI::DisabledInit()
 {
-	a_Gyro.Cal();
+
 }
 
 void SmokeyXI::DisabledPeriodic()
 {
-	if(a_GamePad.GetRawButton(1)) {
-		a_Gyro.Cal(); // you can use cal here b/c you have the time to
-	}
-	a_Gyro.Update();
-	float gyroValue1 = a_Gyro.GetAngle(0);
-	float gyroValue2 = a_Gyro.GetAngle(1);
-	float gyroValue3 = a_Gyro.GetAngle(2);
-	SmartDashboard::PutNumber("Gyro Angle X: ", gyroValue1);
-	SmartDashboard::PutNumber("Gyro Angle 2: ", gyroValue2);
-	SmartDashboard::PutNumber("Gyro Angle 3: ", gyroValue3);
-	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
-	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
-	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
+
 }
 
 void SmokeyXI::AutonomousInit()
@@ -420,7 +408,7 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
 	SmartDashboard::PutNumber("Right Encoder Velo : ", a_DiffDrive.GetVelocityRight());
-
+/*
 	SmartDashboard::PutNumber("LeftDriveOne: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_ONE));
 	SmartDashboard::PutNumber("LeftDriveTwo: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_TWO));
 	SmartDashboard::PutNumber("LeftDriveThr: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_THREE));
@@ -432,7 +420,7 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("ArmDrive C: ", a_PDP.GetCurrent(COLLECTOR_ARM_TALON));
 
 	SmartDashboard::PutNumber("Compressor (temp): ", a_PDP.GetCurrent(LIFTER_TALON)); // temporary until I stop being lazy and actually get the compressor running from the PCM and not a talon
-
+	*/
 	SmartDashboard::PutBoolean("Finger State", a_CollectorArm.GetClampState());
 
 	SmartDashboard::PutBoolean("Shift State", a_DiffDrive.GetShiftState());

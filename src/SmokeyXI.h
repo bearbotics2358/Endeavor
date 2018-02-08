@@ -102,7 +102,7 @@ private:
 
 	AutonomousHelper a_AutoBot;
 
-	PowerDistributionPanel a_PDP;
+	// PowerDistributionPanel a_PDP;
 
     AutoStateV1 a_AutoStateV1;
     AutoStateV2 a_AutoStateV2;
