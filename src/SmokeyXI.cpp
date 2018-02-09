@@ -33,9 +33,9 @@ a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Lifter(LIFTER_TALON),
 
-a_Compressor(PCM_PORT),
+// a_Compressor(PCM_PORT),
 
-a_Gyro(I2C::kMXP),
+// a_Gyro(I2C::kMXP),
 
 // a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
@@ -61,8 +61,8 @@ a_AutoStateV5(kAutoIdle5)
 
 void SmokeyXI::RobotInit()
 {
-	SmartDashboard::init();  // dont forget, shuffleboard over sd
-	a_Gyro.Init();
+	// SmartDashboard::init();  // dont forget, shuffleboard over sd
+	// a_Gyro.Init();
 }
 
 void SmokeyXI::RobotPeriodic()
@@ -341,8 +341,8 @@ void SmokeyXI::TeleopInit()
 	a_Lifter.Init();
 	a_CollectorArm.Init();
 	// a_Gyro.Cal();
-	a_Gyro.Zero();
-	a_Compressor.SetClosedLoopControl(true);
+	// a_Gyro.Zero();
+	// a_Compressor.SetClosedLoopControl(true);
 	// a_Arduino.Write("B", 1);
 }
 
@@ -389,7 +389,7 @@ void SmokeyXI::TeleopPeriodic()
 
 
 	/// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
-	
+	/*
 	a_Gyro.Update();
 	float gyroValue1 = a_Gyro.GetAngle(0);
 	float gyroValue2 = a_Gyro.GetAngle(1);
@@ -400,6 +400,7 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
+	*/
 
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
