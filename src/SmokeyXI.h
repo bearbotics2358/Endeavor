@@ -86,11 +86,11 @@ private:
 	Joystick a_Joystick2;
 	Joystick a_JoystickZ;
 
-	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
+	// DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
-	CollectorArm a_CollectorArm;
+	// CollectorArm a_CollectorArm;
 
-	Lifter a_Lifter;
+	// Lifter a_Lifter;
 
 	// Compressor a_Compressor;
 

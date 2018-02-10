@@ -27,11 +27,11 @@ a_Joystick2(JOYSTICK2_PORT), // this is the flightstick without a z axis, port 2
 
 a_JoystickZ(JOYSTICKZ_PORT), // this is the flightstick WITH a z axis, port 3
 
-a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, RIGHT_DRIVE_TALON_ONE, RIGHT_DRIVE_TALON_TWO, RIGHT_DRIVE_TALON_THREE),
+// a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, RIGHT_DRIVE_TALON_ONE, RIGHT_DRIVE_TALON_TWO, RIGHT_DRIVE_TALON_THREE),
 
-a_CollectorArm(COLLECTOR_ARM_TALON),
+// a_CollectorArm(COLLECTOR_ARM_TALON),
 
-a_Lifter(LIFTER_TALON),
+// a_Lifter(LIFTER_TALON),
 
 // a_Compressor(PCM_PORT),
 
@@ -56,13 +56,13 @@ a_AutoStateV4(kAutoIdle4),
 a_AutoStateV5(kAutoIdle5)
 
 {
-
+	SmartDashboard::init();  // dont forget, shuffleboard over sd
+	// a_Gyro.Init();
 }
 
 void SmokeyXI::RobotInit()
 {
-	// SmartDashboard::init();  // dont forget, shuffleboard over sd
-	// a_Gyro.Init();
+
 }
 
 void SmokeyXI::RobotPeriodic()
@@ -87,6 +87,7 @@ void SmokeyXI::AutonomousInit()
 
 void SmokeyXI::AutonomousPeriodic()
 {
+	/*
 	// Following lines are to test AutoPeriodic and the AutoBot autohelper i wrote.
 	if (a_AutoBot.GetAllianceSwitch()){
 		// a_Arduino.Write("B", 1); // Left side, Blue leds for indicators
@@ -108,6 +109,7 @@ void SmokeyXI::AutonomousPeriodic()
 	else{
 		SmartDashboard::PutBoolean("Opp Switch Left?", true);
 	}
+	*/
 
 	/*
 	void SmokeyXI::AutonomousPeriodicV1()
@@ -335,11 +337,11 @@ void SmokeyXI::AutonomousPeriodic()
 
 void SmokeyXI::TeleopInit()
 {
-	a_DiffDrive.Init();
-	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	// a_DiffDrive.Init();
+	// a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	// a_DiffDrive.DisableMotorSafetyTraitor();
-	a_Lifter.Init();
-	a_CollectorArm.Init();
+	// a_Lifter.Init();
+	// a_CollectorArm.Init();
 	// a_Gyro.Cal();
 	// a_Gyro.Zero();
 	// a_Compressor.SetClosedLoopControl(true);
@@ -351,6 +353,7 @@ void SmokeyXI::TeleopPeriodic()
 {
 	// apparently buttons aren't zero indexed, but axes are???
 
+	/*
 	if (a_Joystick1.GetRawButton(2)){ // Change Collector Position
 		a_CollectorArm.RollerPos(0);
 	}
@@ -377,7 +380,6 @@ void SmokeyXI::TeleopPeriodic()
 		a_DiffDrive.UpdateVal((-1.0 * a_Joystick1.GetRawAxis(1)), (-1.0 * a_Joystick2.GetRawAxis(1)));
 	}
 
-	/*
 	if (a_Joystick1.GetRawButton(3)){
 	a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	}
@@ -402,6 +404,11 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
 	*/
 
+
+
+
+
+	/*
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 
@@ -409,7 +416,7 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
 	SmartDashboard::PutNumber("Right Encoder Velo : ", a_DiffDrive.GetVelocityRight());
-/*
+
 	SmartDashboard::PutNumber("LeftDriveOne: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_ONE));
 	SmartDashboard::PutNumber("LeftDriveTwo: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_TWO));
 	SmartDashboard::PutNumber("LeftDriveThr: ", a_PDP.GetCurrent(LEFT_DRIVE_TALON_THREE));
@@ -421,10 +428,11 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("ArmDrive C: ", a_PDP.GetCurrent(COLLECTOR_ARM_TALON));
 
 	SmartDashboard::PutNumber("Compressor (temp): ", a_PDP.GetCurrent(LIFTER_TALON)); // temporary until I stop being lazy and actually get the compressor running from the PCM and not a talon
-	*/
+
 	SmartDashboard::PutBoolean("Finger State", a_CollectorArm.GetClampState());
 
 	SmartDashboard::PutBoolean("Shift State", a_DiffDrive.GetShiftState());
+		*/
 }
 
 void SmokeyXI::TestInit()
@@ -434,9 +442,11 @@ void SmokeyXI::TestInit()
 
 void SmokeyXI::TestPeriodic()
 {
+	/*
 	if (a_Joystick2.GetRawButton(1)){
 		a_Lifter.Update(-1); // this actually doesn't do anything to the lifter lol, it runs the compressor for now
 	}
+	*/
 }
 
 START_ROBOT_CLASS(SmokeyXI);
