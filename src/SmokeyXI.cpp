@@ -37,9 +37,9 @@ a_JoystickZ(JOYSTICKZ_PORT), // this is the flightstick WITH a z axis, port 3
 
 // a_Gyro(I2C::kMXP),
 
-// a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
+a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
-// a_UltraSoul(),
+a_UltraSoul(),
 
 a_AutoBot(), // AutoBot Methods return true for left.
 
@@ -58,6 +58,7 @@ a_AutoStateV5(kAutoIdle5)
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
 	// a_Gyro.Init();
+	a_Arduino.Write("Z", 1);
 }
 
 void SmokeyXI::RobotInit()
@@ -82,34 +83,24 @@ void SmokeyXI::DisabledPeriodic()
 
 void SmokeyXI::AutonomousInit()
 {
-	// a_Arduino.Write("N", 1); // strips off
+	a_Arduino.Write("F", 1); // strips off
 }
 
 void SmokeyXI::AutonomousPeriodic()
 {
-	/*
 	// Following lines are to test AutoPeriodic and the AutoBot autohelper i wrote.
-	if (a_AutoBot.GetAllianceSwitch()){
-		// a_Arduino.Write("B", 1); // Left side, Blue leds for indicators
-		SmartDashboard::PutBoolean("Our Switch Left? ", true);
+	if (a_AutoBot.GetAllianceSide()){
+		a_Arduino.Write("P", 1);
+		SmartDashboard::PutBoolean("Blue?", true);
 	}
 	else{
-		// a_Arduino.Write("M", 1); // Right side, Red leds for indicators
-		SmartDashboard::PutBoolean("Our Switch Left? ", false);
+		a_Arduino.Write("Q", 1);
+		SmartDashboard::PutBoolean("Blue?", false);
 	}
-	if (a_AutoBot.GetAllianceScale()){
-		SmartDashboard::PutBoolean("Scale Left? ", true);
-	}
-	else{
-		SmartDashboard::PutBoolean("Scale Left? ", false);
-	}
-	if (a_AutoBot.GetOpponentSwitch()){
-		SmartDashboard::PutBoolean("Opp Switch Left?", true);
-	}
-	else{
-		SmartDashboard::PutBoolean("Opp Switch Left?", true);
-	}
-	*/
+	SmartDashboard::PutNumber("Station Number", a_AutoBot.GetAllianceStation());
+	SmartDashboard::PutBoolean("Our Switch Left? ", a_AutoBot.GetAllianceSwitch());
+	SmartDashboard::PutBoolean("Scale Left? ", a_AutoBot.GetAllianceScale());
+	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 
 	/*
 	void SmokeyXI::AutonomousPeriodicV1()
@@ -345,7 +336,14 @@ void SmokeyXI::TeleopInit()
 	// a_Gyro.Cal();
 	// a_Gyro.Zero();
 	// a_Compressor.SetClosedLoopControl(true);
-	// a_Arduino.Write("B", 1);
+	if (a_AutoBot.GetAllianceSide()){
+		a_Arduino.Write("P", 1);
+		SmartDashboard::PutBoolean("Blue?", true);
+	}
+	else{
+		a_Arduino.Write("Q", 1);
+		SmartDashboard::PutBoolean("Blue?", false);
+	}
 }
 
 
