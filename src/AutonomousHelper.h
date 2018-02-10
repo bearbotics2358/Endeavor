@@ -8,7 +8,8 @@ class AutonomousHelper
 {
 public:	AutonomousHelper();
 	virtual ~AutonomousHelper() = default;
-	bool GetAllianceSide();
+	bool GetAllianceSide(); // blue is true
+	int GetAllianceStation(); // returns alliance station as int (0,1,2)
 	bool GetAllianceSwitch();
 	bool GetAllianceScale();
 	bool GetOpponentSwitch();

@@ -6,13 +6,17 @@ AutonomousHelper::AutonomousHelper(){
 	 * We can test the AutoHelper using smartdashboard and the "GameData" field.
 	 * Just put in 3 letters indicating field layout
 	 * "LRL"
-	 * and the code should interpret it properly
+	 * and the code interprets it properly
 	 */
 
 }
 
 bool AutonomousHelper::GetAllianceSide(){
-	return (true);
+	return (frc::DriverStation::GetInstance().DriverStation::Alliance::kBlue == frc::DriverStation::GetInstance().DriverStation::GetAlliance());
+}
+
+int AutonomousHelper::GetAllianceStation(){
+	return (frc::DriverStation::GetInstance().DriverStation::GetLocation());
 }
 
 bool AutonomousHelper::GetAllianceSwitch(){
