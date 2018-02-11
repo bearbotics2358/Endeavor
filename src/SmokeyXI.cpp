@@ -35,25 +35,17 @@ a_Lifter(LIFTER_TALON),
 
 // a_Compressor(PCM_PORT),
 
-// a_Gyro(I2C::kMXP),
+a_Gyro(I2C::kMXP),
 
 a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
 
-// a_UltraSoul(),
-
-a_AutoBot(), // AutoBot Methods return true for left.
+a_UltraSoul(),
 
 // a_PDP(PDP_PORT),
 
-a_AutoStateV1(kAutoIdle),
+a_AutoBot(), // AutoBot Methods return true for left.
 
-a_AutoStateV2(kAutoIdle2),
-
-a_AutoStateV3(kAutoIdle3),
-
-a_AutoStateV4(kAutoIdle4),
-
-a_AutoStateV5(kAutoIdle5)
+a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
 
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
@@ -101,229 +93,6 @@ void SmokeyXI::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Our Switch Left? ", a_AutoBot.GetAllianceSwitch());
 	SmartDashboard::PutBoolean("Scale Left? ", a_AutoBot.GetAllianceScale());
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
-
-	/*
-	void SmokeyXI::AutonomousPeriodicV1()
-	{
-
-		const float SWITCH_DISTANCE;
-
-	    AutoStateV1 nextState = a_AutoStateV1;
-
-	    switch(a_AutoStateV1){
-	    case kMoveToSwitch:
-	        if (robotDistance < SWITCH_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0,0);
-	            nextState = kReleaseCube;
-	        }
-	        break;
-	    case kReleaseCube:
-	        a_Robot.ReleaseCube;
-	        nextState = kAutoIdle;
-	        break;
-	    case kAutoIdle:
-	        a_Robot.AutonUpdate(0,0);
-	        a_Robot.ResetEncoders();
-	        break;
-	    }
-	    a_AutoStateV1 = nextState;
-	}
-
-	void SmokeyXI::AutonomousPeriodicV2()
-	{
-		const float SIDE_OF_SWITCH_DISTANCE;
-		const float TURN_ANGLE;
-		const float EDGE_OF_SWITCH_DISTANCE;
-
-	    AutoStateV2 nextState = a_AutoStateV2;
-
-	    switch(a_AutoStateV2){
-	    case kMoveToSideOfSwitch:
-	        if (robotDistance < SIDE_OF_SWITCH_DISTANCE) {
-					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0,0);
-	            nextState = kTurnLeft2;
-	        }
-	        break;
-	    case kTurnLeft2:
-			a_DiffDrive.ArcTurn(18, 90, true);
-	        nextState = kMoveToEdgeOfSwitch;
-	        break;
-	    case kMoveToEdgeOfSwitch:
-	        if (robotDistance < EDGE_OF_SWITCH_DISTANCE) {
-					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	                } else {
-	                    a_Robot.AutonUpdate(0,0);
-	                    nextState = kReleaseCube2;
-	                }
-	        break;
-	    case kReleaseCube2:
-	        a_Robot.ReleaseCube;
-	        nextState = kAutoIdle2;
-	        break;
-	    case kAutoIdle2:
-	        a_Robot.AutonUpdate(0,0);
-	        a_Robot.ResetEncoders();
-	        break;
-	    }
-	    a_AutoStateV2 = nextState;
-	}
-
-	void SmokeyXI::AutonomousPeriodicV3()
-	{
-		const float SIDE_OF_SCALE_DISTANCE;
-		const float TURN_ANGLE3;
-		const float EDGE_OF_SCALE_DISTANCE;
-
-	    AutoStateV3 nextState = a_AutoStateV3;
-
-	    switch(a_AutoStateV3){
-	    case kMoveToSideOfScale:
-	        if (robotDistance < SIDE_OF_SCALE_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0,0);
-	            nextState = kTurnLeft3;
-	        }
-	        break;
-	    case kTurnLeft3:
-	        a_DiffDrive.ArcTurn(18, 90, true);
-	        nextState = kMoveToEdgeOfScale;
-	        break;
-	    case kMoveToEdgeOfScale:
-	        if (robotDistance < EDGE_OF_SCALE_DISTANCE) {
-					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	                } else {
-	                    a_Robot.AutonUpdate(0,0);
-	                    nextState = kReleaseCube3;
-	                }
-	        break;
-	    case kReleaseCube3:
-	        a_Robot.ReleaseCube;
-	        nextState = kAutoIdle3;
-	        break;
-	    case kAutoIdle3:
-	        a_Robot.AutonUpdate(0,0);
-	        a_Robot.ResetEncoders();
-	        break;
-	    }
-	    a_AutoStateV3 = nextState;
-	}
-
-	void SmokeyXI::AutonomousPeriodicV4()
-	{
-		const float HALF_OF_SWITCH_DISTANCE;
-		const float TURN_ANGLE4A;
-		const float FLUSH_WITH_SWITCH;
-		const float TURN_ANGLE4B;
-		const float FRONT_OF_SWITCH_DISTANCE;
-
-	    AutoStateV4 nextState = a_AutoStateV4;
-
-	    switch (a_AutoStateV4) {
-	    case kMoveHalfToSwitch:
-	        if (robotDistance < HALF_OF_SWITCH_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0, 0);
-	            nextState = kTurnRight;
-	        }
-	        break;
-	    case kTurnRight:
-	        a_DiffDrive.ArcTurn(18, 90, false);
-	        nextState = kMoveFlushWithSwitch;
-	        break;
-	    case kMoveFlushWithSwitch:
-	        if (robotDistance < FLUSH_WITH_SWITCH) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0, 0);
-	            nextState = kTurnLeft4;
-	        }
-	        break;
-	    case kTurnLeft4:
-	        a_DiffDrive.ArcTurn(18, 90, true);
-	        nextState = kMoveToFrontOfSwitch;
-	        break;
-	    case kMoveToFrontOfSwitch:
-	        if (robotDistance < FRONT_OF_SWITCH_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0, 0);
-	            nextState = kReleaseCube4;
-	        }
-	        break;
-	    case kReleaseCube4:
-	        a_Robot.ReleaseCube;
-	        nextState = kAutoIdle4;
-	        break;
-	    case kAutoIdle4:
-	        a_Robot.AutonUpdate(0, 0);
-	        a_Robot.ResetEncoders();
-	        break;
-	    }
-	    a_AutoStateV4 = nextState;
-	}
-
-	void SmokeyXI::AutonomousPeriodicV5()
-	{
-		const float TOP_OF_SWITCH_DISTANCE;
-		const float TURN_ANGLE5A;
-		const float FLUSH_WITH_SCALE;
-		const float TURN_ANGLE5B;
-		const float FRONT_OF_SCALE_DISTANCE;
-
-	    AutoStateV5 nextState = a_AutoStateV5;
-
-	    switch (a_AutoStateV5) {
-	    case kMoveTopOfSwitch:
-	        if (robotDistance < TOP_OF_SWITCH_DISTANCE) {
-					a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0, 0);
-	            nextState = kTurnRight5;
-	        }
-	        break;
-	    case kTurnRight5:
-			a_DiffDrive.ArcTurn(10, 90, false);
-	        nextState = kMoveFlushWithScale;
-	        break;
-	    case kMoveFlushWithScale:
-	        if (robotDistance < FLUSH_WITH_SCALE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0, 0);
-	            nextState = kTurnLeft5;
-	        }
-	        break;
-	    case kTurnLeft5:
-	        a_DiffDrive.ArcTurn(10, 90, true);
-	        nextState = kMoveToFrontOfScale;
-	        break;
-	    case kMoveToFrontOfScale:
-	        if (robotDistance < FRONT_OF_SCALE_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	        } else {
-	            a_Robot.AutonUpdate(0, 0);
-	            nextState = kReleaseCube5;
-	        }
-	        break;
-	    case kReleaseCube5:
-	        a_Robot.ReleaseCube;
-	        nextState = kAutoIdle5;
-	        break;
-	    case kAutoIdle5:
-	        a_Robot.AutonUpdate(0, 0);
-	        a_Robot.ResetEncoders();
-	        break;
-	    }
-	    a_AutoStateV5 = nextState;
-	}
-	*/
-
 }
 
 void SmokeyXI::TeleopInit()
@@ -334,7 +103,7 @@ void SmokeyXI::TeleopInit()
 	a_Lifter.Init();
 	a_CollectorArm.Init();
 	// a_Gyro.Cal();
-	// a_Gyro.Zero();
+	a_Gyro.Zero();
 	// a_Compressor.SetClosedLoopControl(true);
 	if (a_AutoBot.GetAllianceSide()){
 		a_Arduino.Write("P", 1);
@@ -364,19 +133,6 @@ void SmokeyXI::TeleopPeriodic()
 	else{
 		a_DiffDrive.UpdateVal((-1.0 * a_Joystick1.GetRawAxis(1)), (-1.0 * a_Joystick2.GetRawAxis(1)));
 	}
-	if (a_Joystick2.GetRawButton(6)){
-		a_CollectorArm.UpdateAngle(45);
-	}
-	if (a_Joystick2.GetRawButton(7)){
-		a_CollectorArm.UpdateAngle(90);
-	}
-	if (a_Joystick2.GetRawButton(10)){
-		a_CollectorArm.UpdateAngle(135);
-	}
-	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
-	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
-
-	// apparently buttons aren't zero indexed, but axes are???
 
 	if (a_Joystick1.GetRawButton(2)){ // Change Collector Position
 		a_CollectorArm.RollerPos(0);
@@ -395,9 +151,20 @@ void SmokeyXI::TeleopPeriodic()
 
 	if (a_Joystick2.GetRawButton(4)){a_DiffDrive.ShiftLow();}
 	if (a_Joystick2.GetRawButton(5)){a_DiffDrive.ShiftHigh();}
-	if (a_Joystick1.GetRawButton(1) && a_Joystick2.GetRawButton(1)){ // pull both triggers to activate the super secret control mode!
-		// a_CollectorArm.UpdateRollers(-1.SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());0 * a_Joystick2.GetRawAxis(1));
+
+	if (a_Joystick2.GetRawButton(6)){
+		a_CollectorArm.UpdateAngle(45);
 	}
+	if (a_Joystick2.GetRawButton(7)){
+		a_CollectorArm.UpdateAngle(90);
+	}
+	if (a_Joystick2.GetRawButton(10)){
+		a_CollectorArm.UpdateAngle(135);
+	}
+	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
+	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
+
+	// apparently buttons aren't zero indexed, but axes are???
 	/*
 	if (a_Joystick1.GetRawButton(3)){
 	a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
@@ -407,7 +174,7 @@ void SmokeyXI::TeleopPeriodic()
 	}
 	*/
 	// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
-	/*
+
 	a_Gyro.Update();
 	float gyroValue1 = a_Gyro.GetAngle(0);
 	float gyroValue2 = a_Gyro.GetAngle(1);
@@ -418,18 +185,18 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
-
+	/*
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 
 	SmartDashboard::PutNumber("Left Encoder Pos: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
 	SmartDashboard::PutNumber("Right Encoder Velo : ", a_DiffDrive.GetVelocityRight());
-
+	*/
 	SmartDashboard::PutBoolean("Finger State", a_CollectorArm.GetClampState());
 
 	SmartDashboard::PutBoolean("Shift State", a_DiffDrive.GetShiftState());
-	*/
+
 }
 
 void SmokeyXI::TestInit()
