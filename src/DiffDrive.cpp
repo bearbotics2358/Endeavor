@@ -46,6 +46,8 @@ void DiffDrive::Init()
 	a_rightDriveTwo.SetSensorPhase(false);
 	a_rightDriveOne.Follow(a_rightDriveTwo);
 	a_rightDriveThree.Follow(a_rightDriveTwo);
+
+	UpdateVal(0.0,0.0);
 }
 
 void DiffDrive::SetDriveType(int type)

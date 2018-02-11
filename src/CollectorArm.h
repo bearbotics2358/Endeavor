@@ -12,7 +12,8 @@ public:
 	CollectorArm(int pivotArmPort);
 	virtual ~CollectorArm() = default;
 	void Init();
-	void Update(float angle);
+	void UpdateValue(float val);
+	void UpdateAngle(float angle);
 	void UpdateRollers(float velo);
 	void RollerPos(int state);
 	void Clamp();
@@ -23,13 +24,13 @@ public:
 	float GetAngle2();
 	void Disable();
 private:
+	float Map(float x, float in_min, float in_max, float out_min, float out_max);
 	WPI_TalonSRX a_pivotMotor;
 	DoubleSolenoid a_ArmSolenoidOne;
 	DoubleSolenoid a_ArmSolenoidTwo;
 	DoubleSolenoid a_ArmSolenoidThree;
 	Collector a_Collector;
-	AnalogInput *a_Potentiometer;
-	Potentiometer *a_Potent;
+	AnalogInput a_Potentiometer;
 };
 
 #endif

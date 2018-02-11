@@ -7,17 +7,17 @@ CollectorArm::CollectorArm(int pivotMotorPort)
   a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
   a_ArmSolenoidThree(PCM_PORT, SOL_PORT_SIX, SOL_PORT_SEV),
   a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
-  a_Potentiometer(POTENTIOMETER_PORT),
-  a_Potent(POTENTIOMETER_PORT)
+  a_Potentiometer(POTENTIOMETER_PORT)
+  // a_Potent(POTENTIOMETER_PORT)
 {
 
 }
 
 void CollectorArm::Init()
 {
-	Update(0);
+	UpdateValue(0);
 	a_Collector.Init();
-	a_Potentiometer->InitAccumulator();
+	a_Potentiometer.InitAccumulator();
 
 	/* Notes:
 	 * SolOne is for the fingers
@@ -25,9 +25,22 @@ void CollectorArm::Init()
 	 */
 }
 
-void CollectorArm::Update(float angle)
+void CollectorArm::UpdateValue(float val)
 {
-	a_pivotMotor.Set(angle);
+	a_pivotMotor.Set(val);
+}
+
+void CollectorArm::UpdateAngle(float angle)
+{
+	if (GetAngle2() < angle){
+		a_pivotMotor.Set(0.5);
+	}
+	else if (GetAngle2() > angle){
+		a_pivotMotor.Set(-0.5);
+	}
+	else {
+		a_pivotMotor.Set(0);
+	}
 }
 
 void CollectorArm::UpdateRollers(float velo)
@@ -77,15 +90,19 @@ bool CollectorArm::GetCubeStatus(){
 
 float CollectorArm::GetAngle1()
 {
-	return (a_Potentiometer->GetValue());
+	return (a_Potentiometer.GetValue());
 }
 
 float CollectorArm::GetAngle2()
 {
-	return (a_Potent->Get());
+	return (Map(a_Potentiometer.GetValue(), REST_POS, UPPER_STOP, 50,180));
 }
 
 void CollectorArm::Disable()
 {
 	a_pivotMotor.Set(0);
+}
+
+float CollectorArm::Map(float x, float in_min, float in_max, float out_min, float out_max){
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }

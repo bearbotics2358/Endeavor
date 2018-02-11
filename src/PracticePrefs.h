@@ -8,6 +8,8 @@
 
 #define WHEEL_DISTANCE 24 // distance in inches pls
 
+#define PDP_PORT 0
+
 // Need to update CAN IDs once we get wiring. They should be correct, theoretically
 #define LEFT_DRIVE_TALON_ONE 1
 #define LEFT_DRIVE_TALON_TWO 2
@@ -27,6 +29,11 @@
 #define PCM_PORT 12
 
 #define POTENTIOMETER_PORT 0
+#define REST_POS 637
+#define LOWER_ANGLE 720
+#define SALUTE 1360
+#define UPPER_ANGLE 2056
+#define UPPER_STOP 2760
 
 #define SOL_PORT_ZRO 0 // PCM Port ID
 #define SOL_PORT_ONE 1
