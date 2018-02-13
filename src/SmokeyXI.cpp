@@ -33,7 +33,7 @@ a_CollectorArm(COLLECTOR_ARM_TALON),
 
 a_Lifter(LIFTER_TALON),
 
-// a_Compressor(PCM_PORT),
+a_Compressor(PCM_PORT),
 
 a_Gyro(I2C::kMXP),
 
@@ -104,7 +104,6 @@ void SmokeyXI::TeleopInit()
 	a_CollectorArm.Init();
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
-	// a_Compressor.SetClosedLoopControl(true);
 	if (a_AutoBot.GetAllianceSide()){
 		a_Arduino.Write("P", 1);
 		SmartDashboard::PutBoolean("Blue?", true);
@@ -152,16 +151,21 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(4)){a_DiffDrive.ShiftLow();}
 	if (a_Joystick2.GetRawButton(5)){a_DiffDrive.ShiftHigh();}
 
-	if (a_Joystick2.GetRawButton(6)){
-		a_CollectorArm.UpdateAngle(45);
-
-	}
 	if (a_Joystick2.GetRawButton(7)){
 		a_CollectorArm.UpdateAngle(90);
 	}
 	if (a_Joystick2.GetRawButton(10)){
 		a_CollectorArm.UpdateAngle(135);
 	}
+	if (a_Joystick1.GetRawButton(6)){
+		a_Compressor.SetClosedLoopControl(true);
+	}
+	if (a_Joystick1.GetRawButton(7)){
+		a_Compressor.SetClosedLoopControl(false);
+	}
+	SmartDashboard::PutBoolean("Pressure Switch", a_Compressor.GetPressureSwitchValue());
+	SmartDashboard::PutNumber("Compressor Current Draw", a_Compressor.GetCompressorCurrent());
+
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 

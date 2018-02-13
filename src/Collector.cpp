@@ -15,12 +15,12 @@ void Collector::Init()
 
 void Collector::Update(float val)
 {
-	a_leftCollector.Set(val);
-	a_rightCollector.Set(val);
+	a_leftCollector.Set(ControlMode::PercentOutput, val);
+	a_rightCollector.Set(ControlMode::PercentOutput, val);
 }
 
 void Collector::Disable()
 {
-	a_leftCollector.Set(0);
-	a_rightCollector.Set(0);
+	a_leftCollector.Set(ControlMode::PercentOutput, 0);
+	a_rightCollector.Set(ControlMode::PercentOutput, 0);
 }

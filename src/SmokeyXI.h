@@ -44,7 +44,7 @@ private:
 
 	Lifter a_Lifter;
 
-	// Compressor a_Compressor;
+	Compressor a_Compressor;
 
 	JrimmyGyro a_Gyro;
 

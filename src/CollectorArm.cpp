@@ -18,6 +18,9 @@ void CollectorArm::Init()
 	UpdateValue(0);
 	a_Collector.Init();
 	a_Potentiometer.InitAccumulator();
+	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
+	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
+	// a_pivotMotor.SetSensorPhase(false); // possibly needs this?
 
 	/* Notes:
 	 * SolOne is for the fingers
@@ -27,20 +30,12 @@ void CollectorArm::Init()
 
 void CollectorArm::UpdateValue(float val)
 {
-	a_pivotMotor.Set(val);
+	a_pivotMotor.Set(ControlMode::PercentOutput, val);
 }
 
 void CollectorArm::UpdateAngle(float angle)
 {
-	if (GetAngle2() < angle){
-		a_pivotMotor.Set(0.5);
-	}
-	else if (GetAngle2() > angle){
-		a_pivotMotor.Set(-0.5);
-	}
-	else {
-		a_pivotMotor.Set(0);
-	}
+	a_pivotMotor.Set(ControlMode::Position, Map(angle, 50, 180, REST_POS, UPPER_STOP));
 }
 
 void CollectorArm::UpdateRollers(float velo)
