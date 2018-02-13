@@ -1,6 +1,7 @@
 #include <WPILib.h>
 #include "DiffDrive.h"
 #include <Math.h>
+#include <pathfinder.h>
 
 DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree)
 : a_leftDriveOne(leftDriveOne),
@@ -134,6 +135,37 @@ void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // r
 	else{
 		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
 		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
+	}
+}
+
+void DiffDrive::GenerateTrajectory(){
+	points[0] = p1;
+	points[1] = p2;
+	points[2] = p3;
+	TrajectoryCandidate candidate;
+
+	// Prepare the Trajectory for Generation.
+	//
+	// Arguments:
+	// Fit Function:        FIT_HERMITE_CUBIC or FIT_HERMITE_QUINTIC
+	// Sample Count:        PATHFINDER_SAMPLES_HIGH (100 000)
+	//                      PATHFINDER_SAMPLES_LOW  (10 000)
+	//                      PATHFINDER_SAMPLES_FAST (1 000)
+	// Time Step:           0.001 Seconds
+	// Max Velocity:        15 m/s
+	// Max Acceleration:    10 m/s/s
+	// Max Jerk:            60 m/s/s/s
+	pathfinder_prepare(points, 3, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.001, 15.0, 10.0, 60.0, &candidate);
+
+	int length = candidate.length;
+
+	// Array of Segments (the trajectory points) to store the trajectory in
+	Segment *trajectory = malloc(length * sizeof(Segment));
+
+	// Generate the trajectory
+	int result = pathfinder_generate(&candidate, trajectory);
+	if (result < 0) {
+	    // An error occured
 	}
 }
 

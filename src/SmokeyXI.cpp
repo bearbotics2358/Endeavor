@@ -49,7 +49,7 @@ a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
 
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
-	// a_Gyro.Init();
+	a_Gyro.Init();
 	a_Arduino.Write("Z", 1);
 }
 
@@ -154,6 +154,7 @@ void SmokeyXI::TeleopPeriodic()
 
 	if (a_Joystick2.GetRawButton(6)){
 		a_CollectorArm.UpdateAngle(45);
+
 	}
 	if (a_Joystick2.GetRawButton(7)){
 		a_CollectorArm.UpdateAngle(90);
