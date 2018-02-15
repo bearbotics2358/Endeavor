@@ -20,6 +20,7 @@ void CollectorArm::Init()
 	a_Potentiometer.InitAccumulator();
 	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
+	// a_pivotMotor.SetInverted(true);
 	// a_pivotMotor.SetSensorPhase(false); // possibly needs this?
 
 	/* Notes:
@@ -35,7 +36,7 @@ void CollectorArm::UpdateValue(float val)
 
 void CollectorArm::UpdateAngle(float angle)
 {
-	a_pivotMotor.Set(ControlMode::Position, Map(angle, 50, 180, REST_POS, UPPER_STOP));
+	a_pivotMotor.Set(ControlMode::Position, Map(angle, 180, 50, REST_POS, UPPER_STOP));
 }
 
 void CollectorArm::UpdateRollers(float velo)
@@ -85,12 +86,13 @@ bool CollectorArm::GetCubeStatus(){
 
 float CollectorArm::GetAngle1()
 {
-	return (a_Potentiometer.GetValue());
+	return (a_pivotMotor.GetSelectedSensorPosition(0) & 0xFFF);
 }
 
 float CollectorArm::GetAngle2()
 {
-	return (Map(a_Potentiometer.GetValue(), REST_POS, UPPER_STOP, 50,180));
+
+	return (Map((a_pivotMotor.GetSelectedSensorPosition(0) & 0xFFF), 180, 50, REST_POS, UPPER_STOP));
 }
 
 void CollectorArm::Disable()

@@ -29,11 +29,12 @@
 #define PCM_PORT 12
 
 #define POTENTIOMETER_PORT 0
-#define REST_POS 637
-#define LOWER_ANGLE 720
-#define SALUTE 1360
-#define UPPER_ANGLE 2056
-#define UPPER_STOP 2760
+#define REST_POS 762
+#define LOWER_ANGLE 744
+#define SALUTE 591
+#define UPPER_ANGLE 424
+#define UPPER_STOP 285
+
 
 #define SOL_PORT_ZRO 0 // PCM Port ID
 #define SOL_PORT_ONE 1

@@ -151,16 +151,16 @@ void SmokeyXI::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(4)){a_DiffDrive.ShiftLow();}
 	if (a_Joystick2.GetRawButton(5)){a_DiffDrive.ShiftHigh();}
 
-	if (a_Joystick2.GetRawButton(7)){
+	if (a_Joystick2.GetRawButton(10)){
 		a_CollectorArm.UpdateAngle(90);
 	}
-	if (a_Joystick2.GetRawButton(10)){
+	if (a_Joystick2.GetRawButton(11)){
 		a_CollectorArm.UpdateAngle(135);
 	}
-	if (a_Joystick1.GetRawButton(6)){
+	if (a_Joystick2.GetRawButton(6)){
 		a_Compressor.SetClosedLoopControl(true);
 	}
-	if (a_Joystick1.GetRawButton(7)){
+	if (a_Joystick2.GetRawButton(7)){
 		a_Compressor.SetClosedLoopControl(false);
 	}
 	SmartDashboard::PutBoolean("Pressure Switch", a_Compressor.GetPressureSwitchValue());
@@ -181,6 +181,7 @@ void SmokeyXI::TeleopPeriodic()
 	// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 
 	a_Gyro.Update();
+
 	float gyroValue1 = a_Gyro.GetAngle(0);
 	float gyroValue2 = a_Gyro.GetAngle(1);
 	float gyroValue3 = a_Gyro.GetAngle(2);

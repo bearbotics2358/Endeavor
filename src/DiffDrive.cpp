@@ -160,13 +160,11 @@ void DiffDrive::GenerateTrajectory(){
 	int length = candidate.length;
 
 	// Array of Segments (the trajectory points) to store the trajectory in
-	Segment *trajectory = malloc(length * sizeof(Segment));
+	// Segment *trajectory = malloc(length * sizeof(Segment));
 
 	// Generate the trajectory
-	int result = pathfinder_generate(&candidate, trajectory);
-	if (result < 0) {
-	    // An error occured
-	}
+	// int result = pathfinder_generate(&candidate, trajectory);
+	// if (result < 0) { // An error occured }
 }
 
 float DiffDrive::GetDistanceLeft(){
