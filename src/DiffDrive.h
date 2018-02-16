@@ -12,6 +12,9 @@ public:
 	DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree);
 	virtual ~DiffDrive() = default;
 	void Init();
+	void Init(float p, float i, float d, float f);
+	void SetLeftPIDF(float p, float i, float d, float f); // can be called publicly to set pid separately for each side
+	void SetRightPIDF(float p, float i, float d, float f);
 	void SetDriveType(int type);
 	void DisableMotorSafetyTraitor();
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);

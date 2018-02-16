@@ -26,7 +26,20 @@
 #define RIGHT_DRIVE_TALON_TWO 9
 #define RIGHT_DRIVE_TALON_THREE 10
 
+#define LEFT_LIFTER_TALON 4
+#define RIGHT_LIFTER_TALON 5
+
 #define PCM_PORT 12
+
+#define LEFT_DRIVE_P 0.05
+#define LEFT_DRIVE_I 0.01
+#define LEFT_DRIVE_D 0
+#define LEFT_DRIVE_F 0
+
+#define RIGHT_DRIVE_P 0.05
+#define RIGHT_DRIVE_I 0.01
+#define RIGHT_DRIVE_D 0
+#define RIGHT_DRIVE_F 0
 
 #define POTENTIOMETER_PORT 0
 #define REST_POS 762
@@ -35,6 +48,10 @@
 #define UPPER_ANGLE 424
 #define UPPER_STOP 285
 
+#define ARM_P 0.05
+#define ARM_I 0.0001
+#define ARM_D 0
+#define ARM_F 0
 
 #define SOL_PORT_ZRO 0 // PCM Port ID
 #define SOL_PORT_ONE 1

@@ -12,6 +12,7 @@ public:
 	CollectorArm(int pivotArmPort);
 	virtual ~CollectorArm() = default;
 	void Init();
+	void Init(float p, float i, float d, float f);
 	void UpdateValue(float val);
 	void UpdateAngle(float angle);
 	void UpdateRollers(float velo);
@@ -22,6 +23,7 @@ public:
 	bool GetCubeStatus();
 	float GetAngle1();
 	float GetAngle2();
+	void SetArmPIDF(float p, float i, float d, float f);
 	void Disable();
 private:
 	float Map(float x, float in_min, float in_max, float out_min, float out_max);
@@ -31,6 +33,9 @@ private:
 	DoubleSolenoid a_ArmSolenoidThree;
 	Collector a_Collector;
 	AnalogInput a_Potentiometer;
+	int kSlotIdx = 0;
+	int kPIDLoopIdx = 0;
+	int kTimeoutMs = 10;
 };
 
 #endif

@@ -25,30 +25,36 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
 
 void DiffDrive::Init()
 {
-	/*
-	a_leftDriveTwo.Config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
-	a_leftDriveTwo.Config_kP(kPIDLoopIdx, 0.0, kTimeoutMs);
-	a_leftDriveTwo.Config_kI(kPIDLoopIdx, 0.0, kTimeoutMs);
-	a_leftDriveTwo.Config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
-
-	a_rightDriveTwo.Config_kF(kPIDLoopIdx, 0.0, kTimeoutMs);
-	a_rightDriveTwo.Config_kP(kPIDLoopIdx, 0.0, kTimeoutMs);
-	a_rightDriveTwo.Config_kI(kPIDLoopIdx, 0.0, kTimeoutMs);
-	a_rightDriveTwo.Config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
-	*/
-	// int absolutePositionLeft = a_leftDriveTwo.GetSelectedSensorPosition(0) & 0xFFF;
 	a_leftDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
 	// a_leftDriveTwo.SetSensorPhase(true);
 	a_leftDriveOne.Follow(a_leftDriveTwo);
 	a_leftDriveThree.Follow(a_leftDriveTwo);
-
-	// int absolutePositionRight = a_rightDriveTwo.GetSelectedSensorPosition(0) & 0xFFF;
 	a_rightDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
 	a_rightDriveTwo.SetSensorPhase(false);
 	a_rightDriveOne.Follow(a_rightDriveTwo);
 	a_rightDriveThree.Follow(a_rightDriveTwo);
 
 	UpdateVal(0.0,0.0);
+}
+
+void DiffDrive::Init(float p, float i, float d, float f){
+	Init();
+	SetLeftPIDF(p,i,d,f);
+	SetRightPIDF(p,i,d,f);
+}
+
+void DiffDrive::SetLeftPIDF(float p, float i, float d, float f){
+	a_leftDriveTwo.Config_kP(kPIDLoopIdx, p, kTimeoutMs);
+	a_leftDriveTwo.Config_kI(kPIDLoopIdx, i, kTimeoutMs);
+	a_leftDriveTwo.Config_kD(kPIDLoopIdx, d, kTimeoutMs);
+	a_leftDriveTwo.Config_kF(kPIDLoopIdx, f, kTimeoutMs);
+}
+
+void DiffDrive::SetRightPIDF(float p, float i, float d, float f){
+	a_rightDriveTwo.Config_kP(kPIDLoopIdx, p, kTimeoutMs);
+	a_rightDriveTwo.Config_kI(kPIDLoopIdx, i, kTimeoutMs);
+	a_rightDriveTwo.Config_kD(kPIDLoopIdx, d, kTimeoutMs);
+	a_rightDriveTwo.Config_kF(kPIDLoopIdx, f, kTimeoutMs);
 }
 
 void DiffDrive::SetDriveType(int type)
@@ -101,8 +107,8 @@ bool DiffDrive::GetShiftState(){
 }
 
 void DiffDrive::GoDistance(float targetDistance){
-	a_leftDriveTwo.Set(ControlMode::Position, targetDistance * 10.0 * 4096);
-	a_rightDriveTwo.Set(ControlMode::Position, targetDistance * 10.0 * 4096); // 50 rotations? fingers crossed!
+	a_leftDriveTwo.Set(ControlMode::Position, targetDistance * 4096);
+	a_rightDriveTwo.Set(ControlMode::Position, targetDistance * 4096);
 }
 
 void DiffDrive::DriveStraight(float left, float right){
@@ -169,7 +175,7 @@ void DiffDrive::GenerateTrajectory(){
 
 float DiffDrive::GetDistanceLeft(){
 	return (a_leftDriveTwo.GetSelectedSensorPosition(0) & 0xFFF);
-	// works but rollover is a thing.
+	// works but rollover is not a thing(?)
 }
 
 float DiffDrive::GetDistanceRight(){

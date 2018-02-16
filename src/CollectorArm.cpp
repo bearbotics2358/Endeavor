@@ -20,13 +20,19 @@ void CollectorArm::Init()
 	a_Potentiometer.InitAccumulator();
 	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
-	// a_pivotMotor.SetInverted(true);
+	a_pivotMotor.SetInverted(true);
 	// a_pivotMotor.SetSensorPhase(false); // possibly needs this?
 
 	/* Notes:
 	 * SolOne is for the fingers
 	 * SolsTwo and Three are for the CollectorPosition.
 	 */
+}
+
+void CollectorArm::Init(float p, float i, float d, float f)
+{
+	Init();
+	SetArmPIDF(p,i,d,f);
 }
 
 void CollectorArm::UpdateValue(float val)
@@ -36,7 +42,7 @@ void CollectorArm::UpdateValue(float val)
 
 void CollectorArm::UpdateAngle(float angle)
 {
-	a_pivotMotor.Set(ControlMode::Position, Map(angle, 180, 50, REST_POS, UPPER_STOP));
+	a_pivotMotor.Set(ControlMode::Position, Map(angle, 180, 45, LOWER_ANGLE, UPPER_STOP));
 }
 
 void CollectorArm::UpdateRollers(float velo)
@@ -93,6 +99,14 @@ float CollectorArm::GetAngle2()
 {
 
 	return (Map((a_pivotMotor.GetSelectedSensorPosition(0) & 0xFFF), 180, 50, REST_POS, UPPER_STOP));
+}
+
+void CollectorArm::SetArmPIDF(float p, float i, float d, float f){
+	a_pivotMotor.Config_kF(kPIDLoopIdx, p, kTimeoutMs);
+	a_pivotMotor.Config_kP(kPIDLoopIdx, i, kTimeoutMs);
+	a_pivotMotor.Config_kI(kPIDLoopIdx, d, kTimeoutMs);
+	a_pivotMotor.Config_kD(kPIDLoopIdx, f, kTimeoutMs);
+
 }
 
 void CollectorArm::Disable()

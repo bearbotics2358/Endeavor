@@ -31,7 +31,7 @@ a_DiffDrive(LEFT_DRIVE_TALON_ONE, LEFT_DRIVE_TALON_TWO, LEFT_DRIVE_TALON_THREE, 
 
 a_CollectorArm(COLLECTOR_ARM_TALON),
 
-a_Lifter(LIFTER_TALON),
+// a_Lifter(LEFT_LIFTER_TALON, RIGHT_LIFTER_TALON),
 
 a_Compressor(PCM_PORT),
 
@@ -98,10 +98,11 @@ void SmokeyXI::AutonomousPeriodic()
 void SmokeyXI::TeleopInit()
 {
 	a_DiffDrive.Init();
+	a_DiffDrive.SetLeftPIDF(LEFT_DRIVE_P,LEFT_DRIVE_I,LEFT_DRIVE_D,LEFT_DRIVE_F);
+	a_DiffDrive.SetRightPIDF(RIGHT_DRIVE_P,RIGHT_DRIVE_I,RIGHT_DRIVE_D,RIGHT_DRIVE_F);
 	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	// a_DiffDrive.DisableMotorSafetyTraitor();
-	a_Lifter.Init();
-	a_CollectorArm.Init();
+	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
 	if (a_AutoBot.GetAllianceSide()){
@@ -126,7 +127,7 @@ void SmokeyXI::TeleopPeriodic()
 		a_CollectorArm.UpdateRollers(1.0);
 	}
 	if (a_Joystick2.GetRawButton(1)){
-		a_CollectorArm.UpdateValue(-1.0 * a_Joystick2.GetRawAxis(1));
+		a_CollectorArm.UpdateValue(a_Joystick2.GetRawAxis(1));
 		a_DiffDrive.UpdateVal(0,0);
 	}
 	else{
@@ -191,11 +192,11 @@ void SmokeyXI::TeleopPeriodic()
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
 	SmartDashboard::PutNumber("Gyro Y", a_Gyro.GetY());
 	SmartDashboard::PutNumber("Gyro Z", a_Gyro.GetZ());
-	/*
-	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
-
 	SmartDashboard::PutNumber("Left Encoder Pos: ", a_DiffDrive.GetDistanceLeft());
 	SmartDashboard::PutNumber("Right Encoder Pos : ", a_DiffDrive.GetDistanceRight());
+
+	/*
+	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Left Encoder Velo: ", a_DiffDrive.GetVelocityLeft());
 	SmartDashboard::PutNumber("Right Encoder Velo : ", a_DiffDrive.GetVelocityRight());
 	*/
@@ -207,17 +208,12 @@ void SmokeyXI::TeleopPeriodic()
 
 void SmokeyXI::TestInit()
 {
-	// test is currently only used to run the compressor
-	a_DiffDrive.Init();
-	a_Lifter.Init();
+
 }
 
 void SmokeyXI::TestPeriodic()
 {
-	a_DiffDrive.UpdateVal(0,0);
-	if (a_Joystick2.GetRawButton(1)){
-		a_Lifter.Update(-1); // this actually doesn't do anything to the lifter lol, it runs the compressor for now
-	}
+
 }
 
 START_ROBOT_CLASS(SmokeyXI);

@@ -42,7 +42,7 @@ private:
 
 	CollectorArm a_CollectorArm;
 
-	Lifter a_Lifter;
+	// Lifter a_Lifter;
 
 	Compressor a_Compressor;
 
