@@ -32,7 +32,6 @@ private:
 	DoubleSolenoid a_ArmSolenoidTwo;
 	DoubleSolenoid a_ArmSolenoidThree;
 	Collector a_Collector;
-	AnalogInput a_Potentiometer;
 	int kSlotIdx = 0;
 	int kPIDLoopIdx = 0;
 	int kTimeoutMs = 10;

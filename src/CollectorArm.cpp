@@ -6,9 +6,7 @@ CollectorArm::CollectorArm(int pivotMotorPort)
   a_ArmSolenoidOne(PCM_PORT, SOL_PORT_ZRO, SOL_PORT_ONE),
   a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
   a_ArmSolenoidThree(PCM_PORT, SOL_PORT_SIX, SOL_PORT_SEV),
-  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
-  a_Potentiometer(POTENTIOMETER_PORT)
-  // a_Potent(POTENTIOMETER_PORT)
+  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON)
 {
 
 }
@@ -17,7 +15,6 @@ void CollectorArm::Init()
 {
 	UpdateValue(0);
 	a_Collector.Init();
-	a_Potentiometer.InitAccumulator();
 	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
 	a_pivotMotor.SetInverted(true);
