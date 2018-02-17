@@ -1,8 +1,8 @@
 #ifndef SRC_AUTONOMOUSHELPER_H_
 #define SRC_AUTONOMOUSHELPER_H_
 
-#include <PracticePrefs.h>
 #include <WPILib.h>
+#include <CompPrefs.h>
 
 class AutonomousHelper
 {

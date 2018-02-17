@@ -3,13 +3,13 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <WPILib.h>
 #include <IterativeRobot.h>
 #include <LiveWindow/LiveWindow.h>
-#include <PracticePrefs.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <SmokeyXI.h>
-
+#include <CompPrefs.h>
 
 /*
  *
@@ -37,20 +37,19 @@ a_Compressor(PCM_PORT),
 
 a_Gyro(I2C::kMXP),
 
-a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS,  SerialPort::kParity_None, SerialPort::kStopBits_One), // USB1 is the onboard port closest to the center of the rio
+a_Underglow(),
 
 a_UltraSoul(),
 
 // a_PDP(PDP_PORT),
 
-a_AutoBot(), // AutoBot Methods return true for left.
+a_AutoBot() // AutoBot Methods return true for left.
 
-a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
+// a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
 
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
 	a_Gyro.Init();
-	a_Arduino.Write("Z", 1);
 }
 
 void SmokeyXI::RobotInit()
@@ -75,18 +74,18 @@ void SmokeyXI::DisabledPeriodic()
 
 void SmokeyXI::AutonomousInit()
 {
-	a_Arduino.Write("F", 1); // strips off
+
 }
 
 void SmokeyXI::AutonomousPeriodic()
 {
 	// Following lines are to test AutoPeriodic and the AutoBot autohelper i wrote.
 	if (a_AutoBot.GetAllianceSide()){
-		a_Arduino.Write("P", 1);
+		a_Underglow.GoBlue();
 		SmartDashboard::PutBoolean("Blue?", true);
 	}
 	else{
-		a_Arduino.Write("Q", 1);
+		a_Underglow.GoRed();
 		SmartDashboard::PutBoolean("Blue?", false);
 	}
 	SmartDashboard::PutNumber("Station Number", a_AutoBot.GetAllianceStation());
@@ -106,11 +105,11 @@ void SmokeyXI::TeleopInit()
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
 	if (a_AutoBot.GetAllianceSide()){
-		a_Arduino.Write("P", 1);
+		a_Underglow.GoBlue();
 		SmartDashboard::PutBoolean("Blue?", true);
 	}
 	else{
-		a_Arduino.Write("Q", 1);
+		a_Underglow.GoRed();
 		SmartDashboard::PutBoolean("Blue?", false);
 	}
 }
@@ -163,6 +162,19 @@ void SmokeyXI::TeleopPeriodic()
 	}
 	if (a_Joystick2.GetRawButton(7)){
 		a_Compressor.SetClosedLoopControl(false);
+	}
+
+	if (a_Joystick1.GetRawButton(12)){
+		a_Underglow.GoDark();
+	}
+	if (a_Joystick1.GetRawButton(13)){
+		a_Underglow.Rainbow();
+	}
+	if (a_Joystick2.GetRawButton(12)){
+		a_Underglow.BlueLaser();
+	}
+	if (a_Joystick2.GetRawButton(13)){
+		a_Underglow.GoWhite();
 	}
 	SmartDashboard::PutBoolean("Pressure Switch", a_Compressor.GetPressureSwitchValue());
 	SmartDashboard::PutNumber("Compressor Current Draw", a_Compressor.GetCompressorCurrent());

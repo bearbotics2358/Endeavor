@@ -1,9 +1,9 @@
 #ifndef SRC_LIFTER_H_
 #define SRC_LIFTER_H_
 
-#include <PracticePrefs.h>
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
+#include <CompPrefs.h>
 
 class Lifter
 {

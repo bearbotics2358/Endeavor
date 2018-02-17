@@ -1,5 +1,6 @@
 #include <WPILib.h>
 #include "Collector.h"
+#include "ctre/Phoenix.h"
 
 Collector::Collector(int TalonPortLeft, int TalonPortRight)
 : a_leftCollector(TalonPortLeft),

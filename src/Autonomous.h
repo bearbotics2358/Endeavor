@@ -1,9 +1,9 @@
 #ifndef SRC_AUTONOMOUS_H_
 #define SRC_AUTONOMOUS_H_
 
-#include <PracticePrefs.h>
 #include <WPILib.h>
 #include <SerialPort.h>
+#include <CompPrefs.h>
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>

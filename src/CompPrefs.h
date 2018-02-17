@@ -1,5 +1,5 @@
-#ifndef SRC_PRACTICEPREFS_H_
-#define SRC_PRACTICEPREFS_H_
+#ifndef SRC_COMPPREFS_H_
+#define SRC_COMPPREFS_H_
 
 #define GAMEPAD_PORT 0
 #define JOYSTICK1_PORT 1
@@ -7,6 +7,7 @@
 #define JOYSTICKZ_PORT 3
 
 #define WHEEL_DISTANCE 24 // distance in inches pls
+#define PULSES_PER_INCH 10 // theo af
 
 #define PDP_PORT 0
 
@@ -64,6 +65,6 @@
 #define RIGHT_AGGRO 0.6
 
 #define BAUD_RATE_ARDUINO 9600
-#define DATA_BITS 8
+#define DATA_BITS_ARDUINO 8
 
-#endif /* SRC_PRACTICEPREFS_H_ */
+#endif /* SRC_COMPPREFS_H_ */

@@ -1,5 +1,6 @@
 #include <WPILib.h>
 #include "CollectorArm.h"
+#include "ctre/Phoenix.h"
 
 CollectorArm::CollectorArm(int pivotMotorPort)
 : a_pivotMotor(pivotMotorPort),

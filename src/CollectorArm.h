@@ -1,9 +1,9 @@
 #ifndef SRC_COLLECTORARM_H_
 #define SRC_COLLECTORARM_H_
 
-#include <PracticePrefs.h>
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
+#include <CompPrefs.h>
 #include "Collector.h"
 
 class CollectorArm

@@ -1,10 +1,10 @@
 #ifndef SRC_DIFFDRIVE_H_
 #define SRC_DIFFDRIVE_H_
 
-#include <PracticePrefs.h>
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
 #include <pathfinder.h>
+#include <CompPrefs.h>
 
 class DiffDrive
 {

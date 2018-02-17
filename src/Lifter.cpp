@@ -1,5 +1,6 @@
 #include <WPILib.h>
 #include "Lifter.h"
+#include "ctre/Phoenix.h"
 
 Lifter::Lifter(int TalonPortLeft, int TalonPortRight)
 : a_LifterMotorLeft(TalonPortLeft),

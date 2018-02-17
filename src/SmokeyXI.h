@@ -7,13 +7,15 @@
 #include "SmartDashboard/SmartDashboard.h"
 #include "SmartDashboard/SendableChooser.h"
 #include "ctre/Phoenix.h"
+#include <CompPrefs.h>
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>
-#include <JrimmyGyro.h>
-#include <AutonomousHelper.h>
-#include <UltrasonicSerial.h>
 #include <Lifter.h>
+#include <JrimmyGyro.h>
+#include <Underglow.h>
+#include <UltrasonicSerial.h>
+#include <AutonomousHelper.h>
 #include <Autonomous.h>
 
 class SmokeyXI : public IterativeRobot {
@@ -48,7 +50,7 @@ private:
 
 	JrimmyGyro a_Gyro;
 
-	SerialPort a_Arduino;
+	Underglow a_Underglow;
 
 	UltrasonicSerial a_UltraSoul;
 
@@ -56,7 +58,7 @@ private:
 
 	AutonomousHelper a_AutoBot;
 
-	Autonomous a_Auto;
+	// Autonomous a_Auto;
 };
 
 #endif
