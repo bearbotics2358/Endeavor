@@ -187,6 +187,10 @@ void DiffDrive::GenerateTrajectory(){
 	// if (result < 0) { // An error occured }
 }
 
+void DiffDrive::ZeroEncoders(){
+
+}
+
 float DiffDrive::GetDistanceLeft(){
 	return (a_leftDriveTwo.GetSelectedSensorPosition(0) & 0xFFF);
 	// works but rollover is not a thing(?)
@@ -194,6 +198,10 @@ float DiffDrive::GetDistanceLeft(){
 
 float DiffDrive::GetDistanceRight(){
 	return (a_rightDriveTwo.GetSelectedSensorPosition(0) & 0xFFF);
+}
+
+float DiffDrive::GetAvgDistance(){
+	return ((GetDistanceLeft() + GetDistanceRight()) / 2.0);
 }
 
 float DiffDrive::GetVelocityLeft(){

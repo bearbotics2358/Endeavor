@@ -123,8 +123,8 @@ void SmokeyXI::TeleopPeriodic()
 {
 	a_DiffDrive.UpdateVal(0,0);
 	a_Lifter.Update(0);
-	if (a_Joystick1.GetRawButton(1)){a_CollectorArm.UpdateRollers(-1.0);}else{a_CollectorArm.UpdateRollers(0.0);}
-	if (a_Joystick1.GetRawButton(6)){a_CollectorArm.UpdateRollers(1.0);}
+	if (a_Joystick1.GetRawButton(1)){a_CollectorArm.UpdateRollers(1.0);}else{a_CollectorArm.UpdateRollers(0.0);}
+	if (a_Joystick1.GetRawButton(6)){a_CollectorArm.UpdateRollers(-1.0);}
 	if (a_Joystick2.GetRawButton(1)){
 		a_CollectorArm.UpdateValue(a_Joystick2.GetRawAxis(1));
 		a_DiffDrive.UpdateVal(0,0);

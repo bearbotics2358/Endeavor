@@ -9,7 +9,8 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, Di
   a_Gyro(Gyro),
   a_Arduino(Arduino),
   a_UltraSoul(UltraSoul),
-  a_AutoStateV1(kAutoIdle),
+  a_AutoStateV0(kAutoIdle0),
+  a_AutoStateV1(kAutoIdle1),
   a_AutoStateV2(kAutoIdle2),
   a_AutoStateV3(kAutoIdle3),
   a_AutoStateV4(kAutoIdle4),
@@ -23,31 +24,51 @@ void Autonomous::Init(){
 
 }
 
+void Autonomous::AutonomousPeriodicV0()
+{
+    AutoStateV0 nextState = a_AutoStateV0;
+
+    switch(a_AutoStateV0){
+    case kMoveToSwitch0:
+        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
+        } else {
+            a_DiffDrive.UpdateVal(0,0);
+            nextState = kAutoIdle0;
+        }
+        break;
+    case kAutoIdle0:
+        a_DiffDrive.UpdateVal(0,0);
+        a_DiffDrive.ZeroEncoders();
+        break;
+    }
+    a_AutoStateV0 = nextState;
+}
+
 void Autonomous::AutonomousPeriodicV1()
 {
-
-	// const float SWITCH_DISTANCE;
-
     AutoStateV1 nextState = a_AutoStateV1;
 
     switch(a_AutoStateV1){
-    case kMoveToSwitch:
-    	/*
-        if (robotDistance < SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+    case kMoveToSwitch1:
+        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
-            nextState = kReleaseCube;
+            nextState = kMoveArm1;
         }
-        */
         break;
-    case kReleaseCube:
-        // a_Robot.ReleaseCube;
-        nextState = kAutoIdle;
+    case kMoveArm1:
+    	a_CollectorArm.UpdateAngle(60);
+    	nextState = kReleaseCube1;
+    	break;
+    case kReleaseCube1:
+    	a_CollectorArm.UpdateRollers(-1.0);
+        nextState = kAutoIdle1;
         break;
-    case kAutoIdle:
+    case kAutoIdle1:
         a_DiffDrive.UpdateVal(0,0);
-        // a_Robot.ResetEncoders();
+        a_DiffDrive.ZeroEncoders();
         break;
     }
     a_AutoStateV1 = nextState;
@@ -55,46 +76,42 @@ void Autonomous::AutonomousPeriodicV1()
 
 void Autonomous::AutonomousPeriodicV2()
 {
-	/*
-	const float SIDE_OF_SWITCH_DISTANCE;
-	const float TURN_ANGLE;
-	const float EDGE_OF_SWITCH_DISTANCE;
-	 */
-
     AutoStateV2 nextState = a_AutoStateV2;
 
     switch(a_AutoStateV2){
     case kMoveToSideOfSwitch:
-    	/*
-        if (robotDistance < SIDE_OF_SWITCH_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
             nextState = kTurnLeft2;
         }
-        */
         break;
     case kTurnLeft2:
 		a_DiffDrive.ArcTurn(18, 90, true);
+		a_DiffDrive.ZeroEncoders();
         nextState = kMoveToEdgeOfSwitch;
         break;
     case kMoveToEdgeOfSwitch:
-    	/*
-        if (robotDistance < EDGE_OF_SWITCH_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-                } else {
-            		a_DiffDrive.UpdateVal(0,0);
-                    nextState = kReleaseCube2;
-                }
-        */
+        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kMoveArm2;
+		}
         break;
+    case kMoveArm2:
+    	a_CollectorArm.UpdateAngle(ARM_ANGLE2);
+    	nextState = kReleaseCube2;
+    	break;
     case kReleaseCube2:
-        // a_Robot.ReleaseCube;
+    	a_CollectorArm.UpdateRollers(-1.0);
         nextState = kAutoIdle2;
         break;
     case kAutoIdle2:
         a_DiffDrive.UpdateVal(0,0);
-        // a_Robot.ResetEncoders();
+        a_DiffDrive.ZeroEncoders();
         break;
     }
     a_AutoStateV2 = nextState;
@@ -102,46 +119,43 @@ void Autonomous::AutonomousPeriodicV2()
 
 void Autonomous::AutonomousPeriodicV3()
 {
-	/*
-	const float SIDE_OF_SCALE_DISTANCE;
-	const float TURN_ANGLE3;
-	const float EDGE_OF_SCALE_DISTANCE;
-	*/
-
     AutoStateV3 nextState = a_AutoStateV3;
 
     switch(a_AutoStateV3){
     case kMoveToSideOfScale:
-    	/*
-        if (robotDistance < SIDE_OF_SCALE_DISTANCE) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SCALE_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
             nextState = kTurnLeft3;
         }
-        */
         break;
     case kTurnLeft3:
         a_DiffDrive.ArcTurn(18, 90, true);
+        a_DiffDrive.ZeroEncoders();
         nextState = kMoveToEdgeOfScale;
         break;
     case kMoveToEdgeOfScale:
-    	/*
-        if (robotDistance < EDGE_OF_SCALE_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SCALE_DISTANCE) {
+				a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
                 } else {
             		a_DiffDrive.UpdateVal(0,0);
-                    nextState = kReleaseCube3;
+                    a_DiffDrive.ZeroEncoders();
+                    nextState = kMoveArm4;
                 }
-        */
         break;
+    case kMoveArm3:
+    	a_CollectorArm.UpdateAngle(ARM_ANGLE3);
+    	nextState = kReleaseCube3;
+    	break;
     case kReleaseCube3:
-        // a_Robot.ReleaseCube;
+    	a_CollectorArm.UpdateRollers(-1.0);
         nextState = kAutoIdle3;
         break;
     case kAutoIdle3:
         a_DiffDrive.UpdateVal(0,0);
-        // a_Robot.ResetEncoders();
+        a_DiffDrive.ZeroEncoders();
         break;
     }
     a_AutoStateV3 = nextState;
@@ -149,62 +163,57 @@ void Autonomous::AutonomousPeriodicV3()
 
 void Autonomous::AutonomousPeriodicV4()
 {
-	/*
-	const float HALF_OF_SWITCH_DISTANCE;
-	const float TURN_ANGLE4A;
-	const float FLUSH_WITH_SWITCH;
-	const float TURN_ANGLE4B;
-	const float FRONT_OF_SWITCH_DISTANCE;
-	*/
-
     AutoStateV4 nextState = a_AutoStateV4;
 
     switch (a_AutoStateV4) {
     case kMoveHalfToSwitch:
-    	/*
-        if (robotDistance < HALF_OF_SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < HALF_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
-            nextState = kTurnRight;
+            a_DiffDrive.ZeroEncoders();
+            nextState = kTurnRight4;
         }
-        */
         break;
     case kTurnRight4:
         a_DiffDrive.ArcTurn(18, 90, false);
+        a_DiffDrive.ZeroEncoders();
         nextState = kMoveFlushWithSwitch;
         break;
     case kMoveFlushWithSwitch:
-    	/*
-        if (robotDistance < FLUSH_WITH_SWITCH) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < FLUSH_WITH_SWITCH) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
             nextState = kTurnLeft4;
         }
-        */
         break;
     case kTurnLeft4:
         a_DiffDrive.ArcTurn(18, 90, true);
+        a_DiffDrive.ZeroEncoders();
         nextState = kMoveToFrontOfSwitch;
         break;
     case kMoveToFrontOfSwitch:
-    	/*
-        if (robotDistance < FRONT_OF_SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < FRONT_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
-            nextState = kReleaseCube4;
+            a_DiffDrive.ZeroEncoders();
+            nextState = kMoveArm4;
         }
-        */
         break;
+    case kMoveArm4:
+    	a_CollectorArm.UpdateAngle(ARM_ANGLE4);
+    	nextState = kReleaseCube4;
+    	break;
     case kReleaseCube4:
-        // a_Robot.ReleaseCube;
+    	a_CollectorArm.UpdateRollers(-1.0);
         nextState = kAutoIdle4;
         break;
     case kAutoIdle4:
         a_DiffDrive.UpdateVal(0,0);
-        // a_Robot.ResetEncoders();
+        a_DiffDrive.ZeroEncoders();
         break;
     }
     a_AutoStateV4 = nextState;
@@ -212,62 +221,57 @@ void Autonomous::AutonomousPeriodicV4()
 
 void Autonomous::AutonomousPeriodicV5()
 {
-	/*
-	const float TOP_OF_SWITCH_DISTANCE;
-	const float TURN_ANGLE5A;
-	const float FLUSH_WITH_SCALE;
-	const float TURN_ANGLE5B;
-	const float FRONT_OF_SCALE_DISTANCE;
-	*/
-
     AutoStateV5 nextState = a_AutoStateV5;
 
     switch (a_AutoStateV5) {
     case kMoveTopOfSwitch:
-    	/*
-        if (robotDistance < TOP_OF_SWITCH_DISTANCE) {
-				a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < TOP_OF_SWITCH_DISTANCE) {
+				a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
             nextState = kTurnRight5;
         }
-        */
         break;
     case kTurnRight5:
 		a_DiffDrive.ArcTurn(10, 90, false);
+		a_DiffDrive.ZeroEncoders();
         nextState = kMoveFlushWithScale;
         break;
     case kMoveFlushWithScale:
-    	/*
-        if (robotDistance < FLUSH_WITH_SCALE) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < FLUSH_WITH_SCALE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
             nextState = kTurnLeft5;
         }
-        */
         break;
     case kTurnLeft5:
         a_DiffDrive.ArcTurn(10, 90, true);
+        a_DiffDrive.ZeroEncoders();
         nextState = kMoveToFrontOfScale;
         break;
     case kMoveToFrontOfScale:
-    	/*
-        if (robotDistance < FRONT_OF_SCALE_DISTANCE) {
-			a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
+        if (a_DiffDrive.GetAvgDistance() < FRONT_OF_SCALE_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
         } else {
             a_DiffDrive.UpdateVal(0,0);
-            nextState = kReleaseCube5;
+            a_DiffDrive.ZeroEncoders();
+            nextState = kMoveArm5;
         }
-        */
         break;
+    case kMoveArm5:
+    	a_CollectorArm.UpdateAngle(ARM_ANGLE5);
+    	nextState = kReleaseCube5;
+    	break;
     case kReleaseCube5:
-        // a_Robot.ReleaseCube;
+    	a_CollectorArm.UpdateRollers(-1.0);
         nextState = kAutoIdle5;
         break;
     case kAutoIdle5:
         a_DiffDrive.UpdateVal(0,0);
-        // a_Robot.ResetEncoders();
+        a_DiffDrive.ZeroEncoders();
         break;
     }
     a_AutoStateV5 = nextState;

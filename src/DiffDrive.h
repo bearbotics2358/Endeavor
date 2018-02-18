@@ -28,8 +28,10 @@ public:
 	void DriveStraight(float left, float right);
 	void ArcTurn(float turnRadius, float turnAngle, bool direction);
 	void GenerateTrajectory();
+	void ZeroEncoders();
 	float GetDistanceLeft();
 	float GetDistanceRight();
+	float GetAvgDistance(); // only used when driving straight.
 	float GetVelocityLeft();
 	float GetVelocityRight();
 
