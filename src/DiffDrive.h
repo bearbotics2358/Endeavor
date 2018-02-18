@@ -17,6 +17,8 @@ public:
 	void SetRightPIDF(float p, float i, float d, float f);
 	void SetDriveType(int type);
 	void DisableMotorSafetyTraitor();
+	void InvertLeftDrive();
+	void InvertRightDrive();
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void UpdateVal(float left, float right);
 	void ShiftLow();

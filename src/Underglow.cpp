@@ -2,9 +2,7 @@
 #include "Underglow.h"
 
 Underglow::Underglow():
-	a_Arduino(BAUD_RATE_ARDUINO, SerialPort::kUSB1, DATA_BITS_ARDUINO,  SerialPort::kParity_None, SerialPort::kStopBits_One)
-			// USB1 is the onboard port closest to the center of the rio
-			// I dunno which one USB2 is yet. (Rio docs aren't very helpful)
+	a_Arduino(BAUD_RATE_ARDUINO, USB_PORT_ARDUINO, DATA_BITS_ARDUINO, PARITY_ARDUINO, STOP_BITS_ARDUINO)
 {
 
 }

@@ -22,8 +22,6 @@ public: UltrasonicSerial();
 	 */
 
 private:
-	#define BAUD_RATE_SOUL 38400
-	#define DATA_BITS 8
 	#define BUFFER_SIZE 100
 
 	SerialPort a_Ultra;

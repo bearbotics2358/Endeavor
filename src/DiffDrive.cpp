@@ -27,14 +27,15 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
 void DiffDrive::Init()
 {
 	a_leftDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
-	// a_leftDriveTwo.SetSensorPhase(true);
+	a_leftDriveTwo.SetSensorPhase(true);
 	a_leftDriveOne.Follow(a_leftDriveTwo);
 	a_leftDriveThree.Follow(a_leftDriveTwo);
 	a_rightDriveTwo.ConfigSelectedFeedbackSensor(FeedbackDevice::QuadEncoder, 0, 0);
 	a_rightDriveTwo.SetSensorPhase(false);
 	a_rightDriveOne.Follow(a_rightDriveTwo);
 	a_rightDriveThree.Follow(a_rightDriveTwo);
-
+	InvertLeftDrive();
+	InvertRightDrive();
 	UpdateVal(0.0,0.0);
 }
 
@@ -70,6 +71,18 @@ void DiffDrive::DisableMotorSafetyTraitor(){
 	a_rightDriveOne.SetSafetyEnabled(false);
 	a_rightDriveTwo.SetSafetyEnabled(false);
 	a_rightDriveThree.SetSafetyEnabled(false);
+}
+
+void DiffDrive::InvertLeftDrive(){
+	a_leftDriveOne.SetInverted(true);
+	a_leftDriveTwo.SetInverted(true);
+	a_leftDriveThree.SetInverted(true);
+}
+
+void DiffDrive::InvertRightDrive(){
+	a_rightDriveOne.SetInverted(true);
+	a_rightDriveTwo.SetInverted(true);
+	a_rightDriveThree.SetInverted(true);
 }
 
 void DiffDrive::Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4)

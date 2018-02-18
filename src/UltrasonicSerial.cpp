@@ -2,7 +2,7 @@
 #include "UltrasonicSerial.h"
 
 UltrasonicSerial::UltrasonicSerial():
-	a_Ultra(BAUD_RATE_SOUL, SerialPort::kUSB2, DATA_BITS, SerialPort::kParity_None, SerialPort::kStopBits_One)
+	a_Ultra(BAUD_RATE_SOUL, USB_PORT_SOUL, DATA_BITS_SOUL, PARITY_SOUL, STOP_BITS_SOUL)
 			// USB1 is the onboard port closest to the center of the rio
 			// I dunno which one USB2 is yet. (Rio docs aren't very helpful)
 {

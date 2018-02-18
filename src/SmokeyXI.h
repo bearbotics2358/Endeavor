@@ -15,6 +15,7 @@
 #include <JrimmyGyro.h>
 #include <Underglow.h>
 #include <UltrasonicSerial.h>
+#include <LightRingController.h>
 #include <AutonomousHelper.h>
 #include <Autonomous.h>
 
@@ -32,6 +33,7 @@ public:
 	void AutonomousInit(void);
 	void AutonomousPeriodic(void);
 	void AutonomousPeriodicSimple(void);
+	void ShuffleboardPeriodicUpdate();
 
 private:
 	// I'm putting all sticks in the code until we determine which one we like to drive with. -AR
@@ -44,7 +46,7 @@ private:
 
 	CollectorArm a_CollectorArm;
 
-	// Lifter a_Lifter;
+	Lifter a_Lifter;
 
 	Compressor a_Compressor;
 
@@ -52,7 +54,9 @@ private:
 
 	Underglow a_Underglow;
 
-	UltrasonicSerial a_UltraSoul;
+	// UltrasonicSerial a_UltraSoul;
+
+	LightRingController a_LRC;
 
 	// PowerDistributionPanel a_PDP;
 

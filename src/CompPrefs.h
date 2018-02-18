@@ -40,7 +40,6 @@
 #define RIGHT_DRIVE_D 0
 #define RIGHT_DRIVE_F 0
 
-#define POTENTIOMETER_PORT 0
 #define REST_POS 762
 #define LOWER_ANGLE 744
 #define SALUTE 591
@@ -65,6 +64,22 @@
 #define RIGHT_AGGRO 0.6
 
 #define BAUD_RATE_ARDUINO 9600
+#define USB_PORT_ARDUINO SerialPort::kUSB1
 #define DATA_BITS_ARDUINO 8
+#define PARITY_ARDUINO SerialPort::kParity_None
+#define STOP_BITS_ARDUINO SerialPort::kStopBits_One
+// USB1 is the onboard port closest to the center of the rio
+// I dunno which one USB2 is yet. (Rio docs aren't very helpful)
+
+#define BAUD_RATE_SOUL 38400
+#define USB_PORT_SOUL SerialPort::kUSB2
+#define DATA_BITS_SOUL 8
+#define PARITY_SOUL SerialPort::kParity_None
+#define STOP_BITS_SOUL SerialPort::kStopBits_One
+
+#define IR_RECEIVER_PORT 0
+#define BEAM_BREAK_UPPER_THRESH 0.5
+
+#define LIGHT_RING_CONTROLLER_ADDRESS 0x4
 
 #endif /* SRC_COMPPREFS_H_ */

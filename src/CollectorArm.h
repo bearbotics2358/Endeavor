@@ -3,8 +3,8 @@
 
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
+#include <Collector.h>
 #include <CompPrefs.h>
-#include "Collector.h"
 
 class CollectorArm
 {
@@ -20,7 +20,7 @@ public:
 	void Clamp();
 	void Release();
 	bool GetClampState();
-	bool GetCubeStatus();
+	bool CubePresent();
 	float GetAngle1();
 	float GetAngle2();
 	void SetArmPIDF(float p, float i, float d, float f);

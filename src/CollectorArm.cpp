@@ -83,9 +83,9 @@ bool CollectorArm::GetClampState(){
 	return (a_ArmSolenoidOne.Get() == DoubleSolenoid::kForward); // is forward low or high? dunno.
 }
 
-bool CollectorArm::GetCubeStatus(){
+bool CollectorArm::CubePresent(){
 	// returns true if the cube is in the collector
-	return true;
+	return a_Collector.GetCubeStatus();
 }
 
 float CollectorArm::GetAngle1()
