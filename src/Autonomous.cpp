@@ -142,7 +142,7 @@ void Autonomous::AutonomousPeriodicV3()
                 } else {
             		a_DiffDrive.UpdateVal(0,0);
                     a_DiffDrive.ZeroEncoders();
-                    nextState = kMoveArm4;
+                    nextState = kMoveArm3;
                 }
         break;
     case kMoveArm3:
