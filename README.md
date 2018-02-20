@@ -1,4 +1,4 @@
-# Smokey-XI
+# Endeavor, also known as Smokey XI.
 
 FRC Team 2358 Bearbotics
 
