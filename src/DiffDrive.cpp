@@ -159,11 +159,12 @@ void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // r
 }
 
 void DiffDrive::GenerateTrajectory(){
+	/*
 	points[0] = p1;
 	points[1] = p2;
 	points[2] = p3;
 	TrajectoryCandidate candidate;
-
+	*/
 	// Prepare the Trajectory for Generation.
 	//
 	// Arguments:
@@ -175,7 +176,7 @@ void DiffDrive::GenerateTrajectory(){
 	// Max Velocity:        15 m/s
 	// Max Acceleration:    10 m/s/s
 	// Max Jerk:            60 m/s/s/s
-	pathfinder_prepare(points, 3, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.001, 15.0, 10.0, 60.0, &candidate);
+	// pathfinder_prepare(points, 3, FIT_HERMITE_CUBIC, PATHFINDER_SAMPLES_HIGH, 0.001, 15.0, 10.0, 60.0, &candidate);
 
 	// int length = candidate.length;
 

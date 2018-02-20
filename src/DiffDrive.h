@@ -48,11 +48,13 @@ private:
 
 	DoubleSolenoid a_DriveSolenoid;
 
+	/*
 	Waypoint points[3];
 
 	Waypoint p1 = { -4, -1, d2r(45) };      // Waypoint @ x=-4, y=-1, exit angle=45 degrees
 	Waypoint p2 = { -1, 2, 0 };             // Waypoint @ x=-1, y= 2, exit angle= 0 radians
 	Waypoint p3 = {  2, 4, 0 };             // Waypoint @ x= 2, y= 4, exit angle= 0 radians
+	*/
 
 	int driveType;
 	int targetPositionRotations;

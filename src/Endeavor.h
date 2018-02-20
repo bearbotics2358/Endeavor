@@ -1,5 +1,5 @@
-#ifndef SRC_SMOKEYXI_H_
-#define SRC_SMOKEYXI_H_
+#ifndef SRC_ENDEAVOR_H_
+#define SRC_ENDEAVOR_H_
 
 #include <WPILib.h>
 #include <SerialPort.h>
@@ -19,9 +19,9 @@
 #include <AutonomousHelper.h>
 #include <Autonomous.h>
 
-class SmokeyXI : public IterativeRobot {
+class Endeavor : public IterativeRobot {
 public:
-	SmokeyXI(void);
+	Endeavor(void);
 	void RobotInit(void);
 	void RobotPeriodic(void);
 	void DisabledInit(void);

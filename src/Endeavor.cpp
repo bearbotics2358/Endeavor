@@ -8,16 +8,16 @@
 #include <LiveWindow/LiveWindow.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <SmokeyXI.h>
 #include <CompPrefs.h>
+#include <Endeavor.h>
 
 /*
  *
- * Check out the Smokey XI Repository on GitHub for documentation.
+ * Check out the Endeavor Repository on GitHub for documentation.
  *
  */
 
-SmokeyXI::SmokeyXI(void):
+Endeavor::Endeavor(void):
 
 a_GamePad(GAMEPAD_PORT), // this should be the gamepad - list on port 0
 
@@ -54,32 +54,32 @@ a_AutoBot() // AutoBot Methods return true for left.
 	a_Gyro.Init();
 }
 
-void SmokeyXI::RobotInit()
+void Endeavor::RobotInit()
 {
 
 }
 
-void SmokeyXI::RobotPeriodic()
+void Endeavor::RobotPeriodic()
 {
 
 }
 
-void SmokeyXI::DisabledInit()
+void Endeavor::DisabledInit()
 {
 
 }
 
-void SmokeyXI::DisabledPeriodic()
+void Endeavor::DisabledPeriodic()
 {
 
 }
 
-void SmokeyXI::AutonomousInit()
+void Endeavor::AutonomousInit()
 {
 
 }
 
-void SmokeyXI::AutonomousPeriodic()
+void Endeavor::AutonomousPeriodic()
 {
 	// Following lines are to test AutoPeriodic and the AutoBot autohelper i wrote.
 	if (a_AutoBot.GetAllianceSide()){
@@ -96,7 +96,7 @@ void SmokeyXI::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 }
 
-void SmokeyXI::TeleopInit()
+void Endeavor::TeleopInit()
 {
 	a_DiffDrive.Init();
 	a_DiffDrive.SetLeftPIDF(LEFT_DRIVE_P,LEFT_DRIVE_I,LEFT_DRIVE_D,LEFT_DRIVE_F);
@@ -119,7 +119,7 @@ void SmokeyXI::TeleopInit()
 }
 
 
-void SmokeyXI::TeleopPeriodic()
+void Endeavor::TeleopPeriodic()
 {
 	a_DiffDrive.UpdateVal(0,0);
 	a_Lifter.Update(0);
@@ -189,17 +189,17 @@ void SmokeyXI::TeleopPeriodic()
 	ShuffleboardPeriodicUpdate();
 }
 
-void SmokeyXI::TestInit()
+void Endeavor::TestInit()
 {
 
 }
 
-void SmokeyXI::TestPeriodic()
+void Endeavor::TestPeriodic()
 {
 
 }
 
-void SmokeyXI::ShuffleboardPeriodicUpdate(){
+void Endeavor::ShuffleboardPeriodicUpdate(){
 	float gyroValue1 = a_Gyro.GetAngle(0);
 	float gyroValue2 = a_Gyro.GetAngle(1);
 	float gyroValue3 = a_Gyro.GetAngle(2);
@@ -220,4 +220,4 @@ void SmokeyXI::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutBoolean("Is there a Cube?", a_CollectorArm.CubePresent());
 }
 
-START_ROBOT_CLASS(SmokeyXI);
+START_ROBOT_CLASS(Endeavor);
