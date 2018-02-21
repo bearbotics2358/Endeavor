@@ -1,4 +1,5 @@
 #include <WPILib.h>
+#include <Math.h>
 #include "UltrasonicSerial.h"
 
 UltrasonicSerial::UltrasonicSerial():
@@ -10,6 +11,10 @@ UltrasonicSerial::UltrasonicSerial():
 	ultraTwo = 0;
 	ultraThree = 0;
 	ultraFour = 0;
+	ultraFive = 0;
+	ultraSix = 0;
+	frontCenterDistance = 0;
+	backCenterDistance = 0;
 	readIndex = 0;
 }
 
@@ -18,6 +23,10 @@ void UltrasonicSerial::Init(){
 	ultraTwo = 0;
 	ultraThree = 0;
 	ultraFour = 0;
+	ultraFive = 0;
+	ultraSix = 0;
+	frontCenterDistance = 0;
+	backCenterDistance = 0;
 	readIndex = 0;
 	for(int i = 0; i < BUFFER_SIZE; i++) {
 		readBuffer[i] = 0;
@@ -29,7 +38,7 @@ void UltrasonicSerial::Update(){
 		a_Ultra.Read(&readBuffer[readIndex], 1);
 		if((readBuffer[readIndex] == '\r') || (readBuffer[readIndex] == '\t')) {
 			readBuffer[readIndex] = 0;
-			if(readIndex == 4) {
+			if(readIndex == 6) {
 				switch(readBuffer[0]) {
 					case 'A':
 						ultraOne = atoi(&readBuffer[1]);
@@ -45,6 +54,14 @@ void UltrasonicSerial::Update(){
 
 					case 'D':
 						ultraFour = atoi(&readBuffer[1]);
+						break;
+
+					case 'E':
+						ultraFive = atoi(&readBuffer[1]);
+						break;
+
+					case 'F':
+						ultraSix = atoi(&readBuffer[1]);
 						break;
 				}
 			}
@@ -74,6 +91,57 @@ int UltrasonicSerial::GetUltraThree(){
 int UltrasonicSerial::GetUltraFour(){
 	return ultraFour;
 }
+
+int UltrasonicSerial::GetUltraFive(){
+	return ultraFive;
+}
+
+int UltrasonicSerial::GetUltraSix(){
+	return ultraSix;
+}
+
+int UltrasonicSerial::GetForwardAngle(){
+	// should return range of -90 to 90?
+	// upper limits on each end should differ based on robot pos tho
+	int lenA = GetUltraOne();
+	int lenB = GetUltraTwo();
+
+	if (lenA > lenB){
+		lenA = lenA - lenB;
+		lenB = frontCenterDistance;
+		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
+		return asin(lenA/lenC) * (180/3.1415);
+	}
+	else if (lenA < lenB) {
+		lenA = lenB - lenA;
+		lenB = frontCenterDistance;
+		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
+		return asin(lenA/lenC) * (180/3.1415);
+	}
+	return 0; // theo no angle b/c straight on
+}
+
+int UltrasonicSerial::GetBackwardAngle(){
+	// should return range of -90 to 90?
+	// upper limits on each end should differ based on robot pos tho
+	int lenA = GetUltraFive();
+	int lenB = GetUltraSix();
+
+	if (lenA > lenB){
+		lenA = lenA - lenB;
+		lenB = frontCenterDistance;
+		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
+		return asin(lenA/lenC) * (180/3.1415);
+	}
+	else if (lenA < lenB) {
+		lenA = lenB - lenA;
+		lenB = frontCenterDistance;
+		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
+		return asin(lenA/lenC) * (180/3.1415);
+	}
+	return 0; // theo no angle b/c straight on
+}
+
 
 /*
  * From Mr D's documentation of the connected serial device:

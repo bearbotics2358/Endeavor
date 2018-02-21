@@ -14,6 +14,11 @@ public: UltrasonicSerial();
 	int GetUltraTwo();
 	int GetUltraThree();
 	int GetUltraFour();
+	int GetUltraFive();
+	int GetUltraSix();
+	int GetForwardAngle();
+	int GetBackwardAngle();
+
 
 	/*
 	 * Alexis' Documentation:
@@ -29,6 +34,10 @@ private:
 	int ultraTwo;
 	int ultraThree;
 	int ultraFour;
+	int ultraFive;
+	int ultraSix;
+	int frontCenterDistance;
+	int backCenterDistance;
 	int readIndex;
 	char readBuffer[BUFFER_SIZE];
 };
