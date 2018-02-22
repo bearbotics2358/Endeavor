@@ -54,11 +54,11 @@ private:
 
 	Underglow a_Underglow;
 
-	// UltrasonicSerial a_UltraSoul;
+	UltrasonicSerial a_UltraSoul;
 
 	LightRingController a_LRC;
 
-	// PowerDistributionPanel a_PDP;
+	PowerDistributionPanel a_PDP;
 
 	AutonomousHelper a_AutoBot;
 

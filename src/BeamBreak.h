@@ -12,9 +12,7 @@ class BeamBreak
 		void Init();
 		void InvertStatus();
 		bool GetStatus();
-		bool GetStatusThresh();
 	private:
-		bool StatusThresh();
 		DigitalInput a_Receiver;
 		bool inverted;
 

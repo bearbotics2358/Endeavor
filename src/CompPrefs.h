@@ -46,7 +46,7 @@
 #define UPPER_ANGLE 424
 #define UPPER_STOP 285
 
-#define ARM_P 0.05
+#define ARM_P 10
 #define ARM_I 0.0001
 #define ARM_D 0
 #define ARM_F 0
@@ -78,7 +78,6 @@
 #define STOP_BITS_SOUL SerialPort::kStopBits_One
 
 #define IR_RECEIVER_PORT 0
-#define BEAM_BREAK_UPPER_THRESH 0.5
 
 #define LIGHT_RING_CONTROLLER_ADDRESS 0x4
 

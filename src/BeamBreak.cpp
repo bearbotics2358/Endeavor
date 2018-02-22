@@ -16,13 +16,5 @@ void BeamBreak::InvertStatus(){
 }
 
 bool BeamBreak::GetStatus(){
-	return (!(a_Receiver.Get() == inverted));
-}
-
-bool BeamBreak::GetStatusThresh(){
-	return (!(StatusThresh() == inverted));
-}
-
-bool BeamBreak::StatusThresh(){
-	return (a_Receiver.Get() > BEAM_BREAK_UPPER_THRESH);
+	return (!((a_Receiver.Get() == 1) == inverted));
 }

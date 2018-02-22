@@ -41,27 +41,27 @@ void UltrasonicSerial::Update(){
 			if(readIndex == 6) {
 				switch(readBuffer[0]) {
 					case 'A':
-						ultraOne = atoi(&readBuffer[1]);
+						ultraOne = strtol(&readBuffer[1], (char **)NULL, 10);
 						break;
 
 					case 'B':
-						ultraTwo = atoi(&readBuffer[1]);
+						ultraTwo = strtol(&readBuffer[1], (char **)NULL, 10);
 						break;
 
 					case 'C':
-						ultraThree = atoi(&readBuffer[1]);
+						ultraThree = strtol(&readBuffer[1], (char **)NULL, 10);
 						break;
 
 					case 'D':
-						ultraFour = atoi(&readBuffer[1]);
+						ultraFour = strtol(&readBuffer[1], (char **)NULL, 10);
 						break;
 
 					case 'E':
-						ultraFive = atoi(&readBuffer[1]);
+						ultraFive = strtol(&readBuffer[1], (char **)NULL, 10);
 						break;
 
 					case 'F':
-						ultraSix = atoi(&readBuffer[1]);
+						ultraSix = strtol(&readBuffer[1], (char **)NULL, 10);
 						break;
 				}
 			}

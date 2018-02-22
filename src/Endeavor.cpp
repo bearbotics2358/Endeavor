@@ -39,11 +39,11 @@ a_Gyro(I2C::kMXP),
 
 a_Underglow(),
 
-// a_UltraSoul(),
+a_UltraSoul(),
 
 a_LRC(),
 
-// a_PDP(PDP_PORT),
+a_PDP(PDP_PORT),
 
 a_AutoBot() // AutoBot Methods return true for left.
 
@@ -105,6 +105,7 @@ void Endeavor::TeleopInit()
 	// a_DiffDrive.DisableMotorSafetyTraitor();
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	a_Lifter.Init();
+	a_UltraSoul.Init();
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
 	a_LRC.SetAllColor(0,100,0);
@@ -174,17 +175,14 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(13)){
 		a_Underglow.GoWhite();
 	}
-	// apparently buttons aren't zero indexed, but axes are???
-	/*
-	if (a_Joystick1.GetRawButton(3)){
+	if (a_GamePad.GetRawButton(1)){
 	a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
 	}
-	if (a_Joystick2.GetRawButton(3)){
+	if (a_GamePad.GetRawButton(2)){
 	a_DiffDrive.DriveStraight((-1 * (LEFT_AGGRO)),(1 * (RIGHT_AGGRO)));
 	}
-	*/
 	// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
-
+	a_UltraSoul.Update();
 	a_Gyro.Update();
 	ShuffleboardPeriodicUpdate();
 }
@@ -203,7 +201,7 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	float gyroValue1 = a_Gyro.GetAngle(0);
 	float gyroValue2 = a_Gyro.GetAngle(1);
 	float gyroValue3 = a_Gyro.GetAngle(2);
-	SmartDashboard::PutNumber("Gyro Angle X: ", gyroValue1);
+	SmartDashboard::PutNumber("Gyro Angle 1: ", gyroValue1);
 	SmartDashboard::PutNumber("Gyro Angle 2: ", gyroValue2);
 	SmartDashboard::PutNumber("Gyro Angle 3: ", gyroValue3);
 	SmartDashboard::PutNumber("Gyro X", a_Gyro.GetX());
@@ -218,6 +216,13 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 	SmartDashboard::PutBoolean("Is there a Cube?", a_CollectorArm.CubePresent());
+	SmartDashboard::PutNumber("PDP Things?", a_PDP.GetTotalPower());
+	SmartDashboard::PutNumber("UltraOne", a_UltraSoul.GetUltraOne());
+	SmartDashboard::PutNumber("UltraTwo", a_UltraSoul.GetUltraTwo());
+	SmartDashboard::PutNumber("UltraThree", a_UltraSoul.GetUltraThree());
+	SmartDashboard::PutNumber("UltraFour", a_UltraSoul.GetUltraFour());
+	SmartDashboard::PutNumber("UltraFive", a_UltraSoul.GetUltraFive());
+	SmartDashboard::PutNumber("UltraSix", a_UltraSoul.GetUltraSix());
 }
 
 START_ROBOT_CLASS(Endeavor);
