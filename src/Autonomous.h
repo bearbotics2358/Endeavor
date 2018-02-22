@@ -98,6 +98,9 @@ private:
     AutoStateV4 a_AutoStateV4;
     AutoStateV5 a_AutoStateV5;
 
+/* Example internal auto function
+ * bool DriveStraight(int distance);*/
+
 };
 
 #endif

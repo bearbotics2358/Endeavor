@@ -277,3 +277,13 @@ void Autonomous::AutonomousPeriodicV5()
     a_AutoStateV5 = nextState;
 }
 
+/* Example internal auto function
+ * bool Autonomous::DriveStraight(int distance) {
+	if (a_DiffDrive.GetAvgDistance() < distance) {
+		a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
+		return false;
+	} else {
+		a_DiffDrive.UpdateVal(0, 0);
+		return true;
+	}
+}*/
