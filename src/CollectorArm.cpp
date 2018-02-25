@@ -4,9 +4,9 @@
 
 CollectorArm::CollectorArm(int pivotMotorPort)
 : a_pivotMotor(pivotMotorPort),
-  a_ArmSolenoidOne(PCM_PORT, SOL_PORT_ZRO, SOL_PORT_ONE),
+  a_ArmSolenoidOne(PCM_PORT, SOL_PORT_TWO, SOL_PORT_THR),
   a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
-  a_ArmSolenoidThree(PCM_PORT, SOL_PORT_SIX, SOL_PORT_SEV),
+  a_ArmSolenoidThree(PCM_PORT, SOL_PORT_ZRO, SOL_PORT_ONE),
   a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON)
 {
 

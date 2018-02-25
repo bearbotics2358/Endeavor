@@ -15,7 +15,7 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
 
   a_Drivetrain(a_leftDriveTwo, a_rightDriveTwo),
 
-  a_DriveSolenoid(PCM_PORT, SOL_PORT_TWO, SOL_PORT_THR)
+  a_DriveSolenoid(PCM_PORT, SOL_PORT_SIX, SOL_PORT_SEV)
 {
 	driveType = 0;
 	targetPositionRotations = 10.0 * 4096; /* 10 Rotations in either direction??? */

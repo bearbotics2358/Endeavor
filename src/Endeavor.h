@@ -58,7 +58,7 @@ private:
 
 	LightRingController a_LRC;
 
-	PowerDistributionPanel a_PDP;
+	// PowerDistributionPanel a_PDP;
 
 	AutonomousHelper a_AutoBot;
 

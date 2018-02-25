@@ -43,7 +43,7 @@ a_UltraSoul(),
 
 a_LRC(),
 
-a_PDP(PDP_PORT),
+// a_PDP(PDP_PORT),
 
 a_AutoBot() // AutoBot Methods return true for left.
 
@@ -216,7 +216,7 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutNumber("Arm Angle Theo 1: ", a_CollectorArm.GetAngle1());
 	SmartDashboard::PutNumber("Arm Angle Theo 2: ", a_CollectorArm.GetAngle2());
 	SmartDashboard::PutBoolean("Is there a Cube?", a_CollectorArm.CubePresent());
-	SmartDashboard::PutNumber("PDP Things?", a_PDP.GetTotalPower());
+	// SmartDashboard::PutNumber("PDP Things?", a_PDP.GetTotalPower());
 	SmartDashboard::PutNumber("UltraOne", a_UltraSoul.GetUltraOne());
 	SmartDashboard::PutNumber("UltraTwo", a_UltraSoul.GetUltraTwo());
 	SmartDashboard::PutNumber("UltraThree", a_UltraSoul.GetUltraThree());
