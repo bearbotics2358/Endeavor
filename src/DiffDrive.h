@@ -21,6 +21,7 @@ public:
 	void InvertRightDrive();
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void UpdateVal(float left, float right);
+	bool UpdateAngle(float curAngle, float tarAngle);
 	void ShiftLow();
 	void ShiftHigh();
 	bool GetShiftState();

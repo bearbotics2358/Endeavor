@@ -108,6 +108,26 @@ void DiffDrive::UpdateVal(float left, float right){
 	a_Drivetrain.TankDrive(left, right, false);
 }
 
+bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when its right.
+	if(curAngle > (tarAngle - 3)) {
+		if(fabs(tarAngle - curAngle) > 10) {
+			UpdateVal(-0.3, 0.3);
+		} else {
+			UpdateVal(-0.2, 0.2);
+		}
+	} else if(curAngle < tarAngle + 3) {
+		if(fabs(tarAngle - curAngle) > 10) {
+			UpdateVal(0.3, -0.3);
+		} else {
+			UpdateVal(0.2, -0.2);
+		}
+	} else {
+		UpdateVal(0.0, 0.0);
+		return true;
+	}
+	return false;
+}
+
 void DiffDrive::ShiftLow(){
 	a_DriveSolenoid.Set(DoubleSolenoid::kForward);
 }
@@ -132,10 +152,10 @@ void DiffDrive::DriveStraight(float left, float right){
 	SmartDashboard::PutNumber("right auto", rightDistance);
 	// difference in inches:
 	double diff = (leftDistance - rightDistance);
-	if(diff < 0.10) {
+	if(fabs(diff) < 0.10) {
 		a_leftDriveTwo.Set(left);
 		a_rightDriveTwo.Set(right);
-	} else if(diff < 0) {
+	} else if(fabs(diff) < 0) {
 		// turn right
 		a_leftDriveTwo.Set((9.0/7.0) * left);
 		a_rightDriveTwo.Set((7.0/9.0) * right);

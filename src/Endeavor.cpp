@@ -162,6 +162,9 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(10)){
 		a_CollectorArm.UpdateAngle(90);
 	}
+	if (a_Joystick2.GetRawButton(11)){
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(0), 90.0);
+	}
 
 	if (a_Joystick1.GetRawButton(12)){
 		a_Underglow.GoDark();
