@@ -61,7 +61,8 @@ void Endeavor::RobotInit()
 
 void Endeavor::RobotPeriodic()
 {
-
+	a_Gyro.Update();
+	ShuffleboardPeriodicUpdate();
 }
 
 void Endeavor::DisabledInit()
@@ -101,7 +102,8 @@ void Endeavor::TeleopInit()
 	a_DiffDrive.Init();
 	a_DiffDrive.SetLeftPIDF(LEFT_DRIVE_P,LEFT_DRIVE_I,LEFT_DRIVE_D,LEFT_DRIVE_F);
 	a_DiffDrive.SetRightPIDF(RIGHT_DRIVE_P,RIGHT_DRIVE_I,RIGHT_DRIVE_D,RIGHT_DRIVE_F);
-	a_DiffDrive.SetDriveType(2); // Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	a_DiffDrive.SetDriveType(2);
+	// Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	// a_DiffDrive.DisableMotorSafetyTraitor();
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	a_Lifter.Init();
@@ -187,7 +189,6 @@ void Endeavor::TeleopPeriodic()
 	// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 	a_UltraSoul.Update();
 	a_Gyro.Update();
-	ShuffleboardPeriodicUpdate();
 }
 
 void Endeavor::TestInit()

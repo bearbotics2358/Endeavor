@@ -19,6 +19,7 @@ void CollectorArm::Init()
 	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
 	a_pivotMotor.SetInverted(true);
+	a_Collector.InvertLeft();
 	// a_pivotMotor.SetSensorPhase(false); // possibly needs this?
 
 	/* Notes:
