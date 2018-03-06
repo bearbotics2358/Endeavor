@@ -213,12 +213,12 @@ void DiffDrive::ZeroEncoders(){
 }
 
 float DiffDrive::GetDistanceLeft(){
-	return (a_leftDriveTwo.GetSelectedSensorPosition(0) & 0xFFF);
+	return (a_leftDriveTwo.GetSelectedSensorPosition(0));
 	// works but rollover is not a thing(?)
 }
 
 float DiffDrive::GetDistanceRight(){
-	return (a_rightDriveTwo.GetSelectedSensorPosition(0) & 0xFFF);
+	return (a_rightDriveTwo.GetSelectedSensorPosition(0));
 }
 
 float DiffDrive::GetAvgDistance(){
