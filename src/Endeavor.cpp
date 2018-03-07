@@ -126,30 +126,35 @@ void Endeavor::TeleopPeriodic()
 {
 	a_DiffDrive.UpdateVal(0,0);
 	a_Lifter.Update(0);
-	if (a_Joystick1.GetRawButton(1)){a_CollectorArm.UpdateRollers(1.0);}else{a_CollectorArm.UpdateRollers(0.0);}
-	if (a_Joystick1.GetRawButton(6)){a_CollectorArm.UpdateRollers(-1.0);}
-	if (a_Joystick2.GetRawButton(1)){
-		a_CollectorArm.UpdateValue(a_Joystick2.GetRawAxis(1));
-		a_DiffDrive.UpdateVal(0,0);
+
+	if (a_GamePad.GetRawButton(5)){
+		a_CollectorArm.Clamp();
 	}
-	else{
-		a_DiffDrive.UpdateVal((a_Joystick1.GetRawAxis(1)), (a_Joystick2.GetRawAxis(1)));
+	if (a_GamePad.GetRawButton(6)){
+		a_CollectorArm.Release();
 	}
 
-	if (a_Joystick1.GetRawButton(2)){ // Change Collector Position
+	if (a_GamePad.GetRawAxis(3) > 0.05){
+		a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(3));
+	}
+	else if ((a_GamePad.GetRawAxis(2) > 0.05)){  // in
+		a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(2) * -1);
+	}
+
+	if (a_GamePad.GetRawButton(1)){
+		a_CollectorArm.UpdateValue(a_GamePad.GetRawAxis(1));
+	}
+
+	a_DiffDrive.UpdateVal((a_Joystick1.GetRawAxis(1)), (a_Joystick2.GetRawAxis(1)));
+	if (a_GamePad.GetRawButton(2)){ // Change Collector Position
 		a_CollectorArm.RollerPos(0);
 	}
-	if (a_Joystick1.GetRawButton(3)){
+	if (a_GamePad.GetRawButton(4)){
 		a_CollectorArm.RollerPos(1);
 	}
-	if (a_Joystick1.GetRawButton(4)){
+	if (a_GamePad.GetRawButton(3)){
 		a_CollectorArm.RollerPos(2);
 	}
-	if (a_Joystick1.GetRawButton(5)){
-		a_CollectorArm.RollerPos(3);
-	}
-	if (a_Joystick2.GetRawButton(2)){a_CollectorArm.Clamp();}
-	if (a_Joystick2.GetRawButton(3)){a_CollectorArm.Release();}	
 
 	if (a_Joystick2.GetRawButton(4)){a_DiffDrive.ShiftLow();}
 	if (a_Joystick2.GetRawButton(5)){a_DiffDrive.ShiftHigh();}
@@ -161,31 +166,6 @@ void Endeavor::TeleopPeriodic()
 		a_Compressor.SetClosedLoopControl(false);
 	}
 
-	if (a_Joystick2.GetRawButton(10)){
-		a_CollectorArm.UpdateAngle(90);
-	}
-	if (a_Joystick2.GetRawButton(11)){
-		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(0), 90.0);
-	}
-
-	if (a_Joystick1.GetRawButton(12)){
-		a_Underglow.GoDark();
-	}
-	if (a_Joystick1.GetRawButton(13)){
-		a_Underglow.Rainbow();
-	}
-	if (a_Joystick2.GetRawButton(12)){
-		a_Underglow.BlueLaser();
-	}
-	if (a_Joystick2.GetRawButton(13)){
-		a_Underglow.GoWhite();
-	}
-	if (a_GamePad.GetRawButton(1)){
-	a_DiffDrive.DriveStraight((1 * (LEFT_AGGRO)),(-1 * (RIGHT_AGGRO)));
-	}
-	if (a_GamePad.GetRawButton(2)){
-	a_DiffDrive.DriveStraight((-1 * (LEFT_AGGRO)),(1 * (RIGHT_AGGRO)));
-	}
 	// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
 	a_UltraSoul.Update();
 	a_Gyro.Update();
