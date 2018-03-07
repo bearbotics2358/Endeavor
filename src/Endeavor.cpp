@@ -77,7 +77,7 @@ void Endeavor::DisabledPeriodic()
 
 void Endeavor::AutonomousInit()
 {
-
+	a_DiffDrive.ZeroEncoders();
 }
 
 void Endeavor::AutonomousPeriodic()
@@ -95,6 +95,8 @@ void Endeavor::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Our Switch Left? ", a_AutoBot.GetAllianceSwitch());
 	SmartDashboard::PutBoolean("Scale Left? ", a_AutoBot.GetAllianceScale());
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
+
+	a_DiffDrive.UpdateDistance();
 }
 
 void Endeavor::TeleopInit()
@@ -125,6 +127,7 @@ void Endeavor::TeleopInit()
 void Endeavor::TeleopPeriodic()
 {
 	a_DiffDrive.UpdateVal(0,0);
+	a_DiffDrive.UpdateDistance();
 	a_Lifter.Update(0);
 	if (a_Joystick1.GetRawButton(1)){a_CollectorArm.UpdateRollers(1.0);}else{a_CollectorArm.UpdateRollers(0.0);}
 	if (a_Joystick1.GetRawButton(6)){a_CollectorArm.UpdateRollers(-1.0);}
