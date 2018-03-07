@@ -30,6 +30,7 @@ public:
 	void ArcTurn(float turnRadius, float turnAngle, bool direction);
 	void GenerateTrajectory();
 	void ZeroEncoders();
+	void UpdateDistance();
 	float GetDistanceLeft();
 	float GetDistanceRight();
 	float GetAvgDistance(); // only used when driving straight.
@@ -62,6 +63,11 @@ private:
 	int kSlotIdx = 0;
 	int kPIDLoopIdx = 0;
 	int kTimeoutMs = 10;
+
+	long totCountLeft = 0;
+	long totCountRight = 0;
+	long lastCountLeft = 0;
+	long lastCountRight = 0;
 };
 
 #endif

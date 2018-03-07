@@ -3,6 +3,7 @@
 #include "ctre/Phoenix.h"
 #include <Math.h>
 #include <pathfinder.h>
+#include <stdlib.h> // labs()
 
 DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree)
 : a_leftDriveOne(leftDriveOne),
@@ -37,6 +38,7 @@ void DiffDrive::Init()
 	InvertLeftDrive();
 	InvertRightDrive();
 	UpdateVal(0.0,0.0);
+	ZeroEncoders();
 }
 
 void DiffDrive::Init(float p, float i, float d, float f){
@@ -137,7 +139,8 @@ void DiffDrive::ShiftHigh(){
 }
 
 bool DiffDrive::GetShiftState(){
-	return (a_DriveSolenoid.Get() == DoubleSolenoid::kForward); // is forward low or high? dunno.
+	// return true for High gear
+	return (a_DriveSolenoid.Get() == DoubleSolenoid::kReverse);
 }
 
 void DiffDrive::GoDistance(float targetDistance){
@@ -153,9 +156,10 @@ void DiffDrive::DriveStraight(float left, float right){
 	// difference in inches:
 	double diff = (leftDistance - rightDistance);
 	if(fabs(diff) < 0.10) {
+		// close enough
 		a_leftDriveTwo.Set(left);
 		a_rightDriveTwo.Set(right);
-	} else if(fabs(diff) < 0) {
+	} else if(diff < 0) {
 		// turn right
 		a_leftDriveTwo.Set((9.0/7.0) * left);
 		a_rightDriveTwo.Set((7.0/9.0) * right);
@@ -209,16 +213,80 @@ void DiffDrive::GenerateTrajectory(){
 }
 
 void DiffDrive::ZeroEncoders(){
+	totCountLeft = 0;
+	totCountRight = 0;
+	lastCountLeft = 0;
+	lastCountRight = 0;
 
+	a_leftDriveTwo.SetSelectedSensorPosition(0, 0);
+	a_rightDriveTwo.SetSelectedSensorPosition(0, 0);
+}
+
+void DiffDrive::UpdateDistance(){
+	GetDistanceLeft();
+	GetDistanceRight();
 }
 
 float DiffDrive::GetDistanceLeft(){
-	return (a_leftDriveTwo.GetSelectedSensorPosition(0));
-	// works but rollover is not a thing(?)
+	// returns distance in inches
+	long count;
+	float ret;
+	float ticks_per_inch;
+	
+	count = a_leftDriveTwo.GetSelectedSensorPosition(0);
+	// add change since last reading
+	totCountLeft += (count - lastCountLeft);
+	// did it rollover?
+	if(labs(count - lastCountLeft) > 2048) {
+		// rollover
+		if((count - lastCountLeft) < -2048) {
+			// increasing count rollover
+			totCountLeft += 4096;
+		} else 	if((count - lastCountLeft) > 2048) {
+			// decreasing count rollover
+			totCountLeft -= 4096;
+		}
+	}
+
+	// update for next time
+	lastCountLeft = count;
+
+	// convert to inches
+	ticks_per_inch = (GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	ret = totCountLeft * ticks_per_inch;
+	
+	return ret;
 }
 
 float DiffDrive::GetDistanceRight(){
-	return (a_rightDriveTwo.GetSelectedSensorPosition(0));
+	// returns distance in inches
+	long count;
+	float ret;
+	float ticks_per_inch;
+	
+	count = a_rightDriveTwo.GetSelectedSensorPosition(0);
+	// add change since last reading
+	totCountRight += (count - lastCountRight);
+	// did it rollover?
+	if(labs(count - lastCountRight) > 2048) {
+		// rollover
+		if((count - lastCountRight) < -2048) {
+			// increasing count rollover
+			totCountRight += 4096;
+		} else 	if((count - lastCountRight) > 2048) {
+			// decreasing count rollover
+			totCountRight -= 4096;
+		}
+	}
+
+	// update for next time
+	lastCountRight = count;
+
+	// convert to inches
+	ticks_per_inch = (GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	ret = totCountRight * ticks_per_inch;
+	
+	return ret;
 }
 
 float DiffDrive::GetAvgDistance(){
