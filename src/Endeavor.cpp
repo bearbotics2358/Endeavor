@@ -47,7 +47,7 @@ a_LRC(),
 
 a_AutoBot(), // AutoBot Methods return true for left.
 
-a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
+a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow, a_UltraSoul)
 
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
@@ -97,7 +97,7 @@ void Endeavor::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Scale Left? ", a_AutoBot.GetAllianceScale());
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 
-	a_DiffDrive.UpdateDistance();
+	// a_DiffDrive.UpdateDistance(); // why call this in periodic?
 	a_Auto.AutonomousPeriodicVx();
 }
 

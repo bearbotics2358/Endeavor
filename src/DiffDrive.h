@@ -29,7 +29,7 @@ public:
 	void DriveStraight(float left, float right);
 	double gettime_d();
 	int DriveToDist(float ldist, float rdist, float speed, int first_call);
-	void ArcTurn(float turnRadius, float turnAngle, bool direction);
+	bool ArcTurn(float turnRadius, float turnAngle, bool direction, int first_call);
 	void GenerateTrajectory();
 	void ZeroEncoders();
 	void UpdateDistance();

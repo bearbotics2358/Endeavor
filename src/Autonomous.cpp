@@ -2,20 +2,20 @@
 #include <Math.h>
 #include "Autonomous.h"
 
-Autonomous::Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, SerialPort &Arduino, UltrasonicSerial &UltraSoul)
+Autonomous::Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul)
 : a_AutoBot(AutoBot),
   a_CollectorArm(CollectorArm),
   a_DiffDrive(DiffDrive),
   a_Gyro(Gyro),
-  a_Arduino(Arduino),
+  a_Underglow(Underglow),
   a_UltraSoul(UltraSoul),
+  a_AutoStateVx(kAutoIdlex),
   a_AutoStateV0(kAutoIdle0),
   a_AutoStateV1(kAutoIdle1),
   a_AutoStateV2(kAutoIdle2),
   a_AutoStateV3(kAutoIdle3),
   a_AutoStateV4(kAutoIdle4),
   a_AutoStateV5(kAutoIdle5)
-
 {
 
 }
@@ -36,12 +36,12 @@ void Autonomous::AutonomousPeriodicVx()
 		break;
 
 	case kMoveToSwitchInitx:
-		a_diffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
+		a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
 		nextState = kMoveToSwitchx;
 		break;
 
 	case kMoveToSwitchx:
-		ret = a_diffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
+		ret = a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
 		if(ret) {
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdlex;
@@ -116,7 +116,7 @@ void Autonomous::AutonomousPeriodicV2()
         }
         break;
     case kTurnLeft2:
-		a_DiffDrive.ArcTurn(18, 90, true);
+		// a_DiffDrive.ArcTurn(18, 90, true);
 		a_DiffDrive.ZeroEncoders();
         nextState = kMoveToEdgeOfSwitch;
         break;
@@ -159,7 +159,7 @@ void Autonomous::AutonomousPeriodicV3()
         }
         break;
     case kTurnLeft3:
-        a_DiffDrive.ArcTurn(18, 90, true);
+        // a_DiffDrive.ArcTurn(18, 90, true);
         a_DiffDrive.ZeroEncoders();
         nextState = kMoveToEdgeOfScale;
         break;
@@ -203,7 +203,7 @@ void Autonomous::AutonomousPeriodicV4()
         }
         break;
     case kTurnRight4:
-        a_DiffDrive.ArcTurn(18, 90, false);
+        // a_DiffDrive.ArcTurn(18, 90, false);
         a_DiffDrive.ZeroEncoders();
         nextState = kMoveFlushWithSwitch;
         break;
@@ -217,7 +217,7 @@ void Autonomous::AutonomousPeriodicV4()
         }
         break;
     case kTurnLeft4:
-        a_DiffDrive.ArcTurn(18, 90, true);
+        // a_DiffDrive.ArcTurn(18, 90, true);
         a_DiffDrive.ZeroEncoders();
         nextState = kMoveToFrontOfSwitch;
         break;
@@ -261,7 +261,7 @@ void Autonomous::AutonomousPeriodicV5()
         }
         break;
     case kTurnRight5:
-		a_DiffDrive.ArcTurn(10, 90, false);
+		// a_DiffDrive.ArcTurn(10, 90, false);
 		a_DiffDrive.ZeroEncoders();
         nextState = kMoveFlushWithScale;
         break;
@@ -275,7 +275,7 @@ void Autonomous::AutonomousPeriodicV5()
         }
         break;
     case kTurnLeft5:
-        a_DiffDrive.ArcTurn(10, 90, true);
+        // a_DiffDrive.ArcTurn(10, 90, true);
         a_DiffDrive.ZeroEncoders();
         nextState = kMoveToFrontOfScale;
         break;

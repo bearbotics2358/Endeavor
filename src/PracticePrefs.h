@@ -13,24 +13,22 @@
 
 #define PDP_PORT 0
 
-// Need to update CAN IDs once we get wiring. They should be correct, theoretically
+// CAN IDs are correct.
 #define LEFT_DRIVE_TALON_ONE 1
 #define LEFT_DRIVE_TALON_TWO 2
 #define LEFT_DRIVE_TALON_THREE 3
 
-#define LIFTER_TALON 4
-
-#define COLLECTOR_ARM_TALON 5
-
-#define LEFT_COLLECTOR_TALON 6
-#define RIGHT_COLLECTOR_TALON 7
-
-#define RIGHT_DRIVE_TALON_ONE 8
-#define RIGHT_DRIVE_TALON_TWO 9
-#define RIGHT_DRIVE_TALON_THREE 10
-
 #define LEFT_LIFTER_TALON 4
 #define RIGHT_LIFTER_TALON 5
+
+#define COLLECTOR_ARM_TALON 6
+
+#define LEFT_COLLECTOR_TALON 7
+#define RIGHT_COLLECTOR_TALON 8
+
+#define RIGHT_DRIVE_TALON_ONE 9
+#define RIGHT_DRIVE_TALON_TWO 10
+#define RIGHT_DRIVE_TALON_THREE 11
 
 #define PCM_PORT 12
 
@@ -44,14 +42,13 @@
 #define RIGHT_DRIVE_D 0
 #define RIGHT_DRIVE_F 0
 
-#define POTENTIOMETER_PORT 0
 #define REST_POS 762
 #define LOWER_ANGLE 744
 #define SALUTE 591
 #define UPPER_ANGLE 424
 #define UPPER_STOP 285
 
-#define ARM_P 0.05
+#define ARM_P 10
 #define ARM_I 0.0001
 #define ARM_D 0
 #define ARM_F 0
@@ -69,6 +66,19 @@
 #define RIGHT_AGGRO 0.6
 
 #define BAUD_RATE_ARDUINO 9600
-#define DATA_BITS 8
+#define USB_PORT_ARDUINO SerialPort::kUSB2
+#define DATA_BITS_ARDUINO 8
+#define PARITY_ARDUINO SerialPort::kParity_None
+#define STOP_BITS_ARDUINO SerialPort::kStopBits_One
+
+#define BAUD_RATE_SOUL 38400
+#define USB_PORT_SOUL SerialPort::kUSB1
+#define DATA_BITS_SOUL 8
+#define PARITY_SOUL SerialPort::kParity_None
+#define STOP_BITS_SOUL SerialPort::kStopBits_One
+
+#define IR_RECEIVER_PORT 0
+
+#define LIGHT_RING_CONTROLLER_ADDRESS 0x4
 
 #endif /* SRC_PRACTICEPREFS_H_ */

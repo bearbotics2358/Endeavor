@@ -7,7 +7,9 @@
 #define JOYSTICKZ_PORT 3
 
 #define WHEEL_DISTANCE 24 // distance in inches pls
-#define PULSES_PER_INCH 10 // theo af
+
+#define TICKS_PER_INCH_HIGH_GEAR 35.918
+#define TICKS_PER_INCH_LOW_GEAR 90.992
 
 #define PDP_PORT 0
 

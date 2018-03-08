@@ -24,6 +24,11 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
 	kSlotIdx = 0;
 	kPIDLoopIdx = 0;
 	kTimeoutMs = 10;
+
+	t0 = 0.0;
+	lspeed_target = 0.0;
+	rspeed_target = 0.0;
+	avg_speed_target = 0.0;
 }
 
 void DiffDrive::Init()
@@ -203,12 +208,17 @@ int DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call
 	double tnow;
 	float lerr;
 	float rerr;
-	float lspeed_ideal;
-	float rspeed_ideal;
+	float lspeed_ideal = 0.0;
+	float rspeed_ideal = 0.0;
 	float ldist_ideal;
 	float rdist_ideal;
 	float ldist_new;
 	float rdist_new;
+	float lIsum;
+	float rIsum;
+	float ticks_per_inch;
+	float ldist_count;
+	float rdist_count;
 	
 	if(first_call) {
 		// calculate ideal speeds for left and right side based on speed and distances
@@ -265,24 +275,23 @@ int DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call
 	rdist_new = rdist_ideal + rdist_init;
 	// convert to encoder counts
 	ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
-	ldist_count = ldist_new * ticks_per_inch; 
-	rdist_count = rdist_new * ticks_per_inch; 
+	ldist_count = ldist_new * ticks_per_inch;
+	rdist_count = rdist_new * ticks_per_inch;
 	a_leftDriveTwo.Set(ControlMode::Position, ldist_count);
 	a_rightDriveTwo.Set(ControlMode::Position, rdist_count);
 	
 	return 0;
 }
 
-void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // radius dictates how gradual turn is, angle dictates how far it goes, direction indicates left vs right
+bool DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction, int first_call){ // radius dictates how gradual turn is, angle dictates how far it goes, direction indicates left vs right
 	// do some fancy math here to find the arc length (if its just a circle, then use 2*pi*turnRadius*(turnangle/360)
 	if (direction){
-		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
-		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
+		DriveToDist((2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096), (2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096), 0.5, 0);
 	}
 	else{
-		a_leftDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096);
-		a_rightDriveTwo.Set(ControlMode::Position, 2 * 3.1415 * turnRadius * (turnAngle/360) * 10.0 * 4096);
+		DriveToDist((2 * 3.1415 * (turnRadius + WHEEL_DISTANCE) * (turnAngle/360) * 10.0 * 4096), (2 * 3.1415 * (turnRadius) * (turnAngle/360) * 10.0 * 4096), 0.5, 0);
 	}
+	return false;
 }
 
 void DiffDrive::GenerateTrajectory(){
@@ -321,8 +330,8 @@ void DiffDrive::ZeroEncoders(){
 	lastCountLeft = 0;
 	lastCountRight = 0;
 
-	a_leftDriveTwo.SetSelectedSensorPosition(0, 0);
-	a_rightDriveTwo.SetSelectedSensorPosition(0, 0);
+	a_leftDriveTwo.SetSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
+	a_rightDriveTwo.SetSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
 }
 
 void DiffDrive::UpdateDistance(){

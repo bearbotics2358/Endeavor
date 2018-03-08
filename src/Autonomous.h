@@ -10,6 +10,7 @@
 #include <CollectorArm.h>
 #include <JrimmyGyro.h>
 #include <AutonomousHelper.h>
+#include <Underglow.h>
 #include <UltrasonicSerial.h>
 
 enum AutoStateVx {
@@ -75,7 +76,7 @@ enum AutoStateV5
 class Autonomous
 {
 public:
-	Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, SerialPort &Arduino, UltrasonicSerial &UltraSoul);
+	Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul);
 	virtual ~Autonomous() = default;
 	void Init();
 	void AutonomousPeriodicVx();
@@ -94,7 +95,7 @@ private:
 
 	JrimmyGyro &a_Gyro;
 
-	SerialPort &a_Arduino;
+	Underglow &a_Underglow;
 
 	UltrasonicSerial &a_UltraSoul;
 
