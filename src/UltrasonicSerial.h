@@ -2,7 +2,7 @@
 #define SRC_ULTRASONICSERIAL_H_
 
 #include <WPILib.h>
-#include <CompPrefs.h>
+#include <PracticePrefs.h>
 
 class UltrasonicSerial
 {

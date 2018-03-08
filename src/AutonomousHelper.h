@@ -2,7 +2,7 @@
 #define SRC_AUTONOMOUSHELPER_H_
 
 #include <WPILib.h>
-#include <CompPrefs.h>
+#include <PracticePrefs.h>
 
 class AutonomousHelper
 {

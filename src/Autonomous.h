@@ -3,8 +3,8 @@
 
 #include <WPILib.h>
 #include <SerialPort.h>
-#include <CompPrefs.h>
-#include <CompPrefsAutonomous.h>
+#include <PracticePrefs.h>
+#include <PracticePrefsAutonomous.h>
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>
