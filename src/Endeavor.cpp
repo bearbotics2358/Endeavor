@@ -45,9 +45,9 @@ a_LRC(),
 
 // a_PDP(PDP_PORT),
 
-a_AutoBot() // AutoBot Methods return true for left.
+a_AutoBot(), // AutoBot Methods return true for left.
 
-// a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
+a_Auto(a_AutoBot, a_CollectorArm, a_DiffDrive, a_Gyro, a_Arduino, a_UltraSoul)
 
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
@@ -78,6 +78,7 @@ void Endeavor::DisabledPeriodic()
 void Endeavor::AutonomousInit()
 {
 	a_DiffDrive.ZeroEncoders();
+	a_Auto.Init();
 }
 
 void Endeavor::AutonomousPeriodic()
@@ -97,6 +98,7 @@ void Endeavor::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 
 	a_DiffDrive.UpdateDistance();
+	a_Auto.AutonomousPeriodicVx();
 }
 
 void Endeavor::TeleopInit()

@@ -24,6 +24,33 @@ void Autonomous::Init(){
 
 }
 
+void Autonomous::AutonomousPeriodicVx()
+{
+	AutoStateVx nextState = a_AutoStateVx;
+	int ret;
+	
+	switch(a_AutoStateVx){
+	case kAutoIdlex:
+		a_DiffDrive.UpdateVal(0,0);
+		a_DiffDrive.ZeroEncoders();
+		break;
+
+	case kMoveToSwitchInitx:
+		a_diffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
+		nextState = kMoveToSwitchx;
+		break;
+
+	case kMoveToSwitchx:
+		ret = a_diffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
+		if(ret) {
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kAutoIdlex;
+		}
+		break;
+	}
+	a_AutoStateVx = nextState;
+}
+
 void Autonomous::AutonomousPeriodicV0()
 {
     AutoStateV0 nextState = a_AutoStateV0;

@@ -12,6 +12,12 @@
 #include <AutonomousHelper.h>
 #include <UltrasonicSerial.h>
 
+enum AutoStateVx {
+	kAutoIdlex = 0,
+	kMoveToSwitchInitx,
+	kMoveToSwitchx,
+};
+
 enum AutoStateV0 {
 	kMoveToSwitch0 = 0,
 	kAutoIdle0
@@ -72,6 +78,7 @@ public:
 	Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, SerialPort &Arduino, UltrasonicSerial &UltraSoul);
 	virtual ~Autonomous() = default;
 	void Init();
+	void AutonomousPeriodicVx();
 	void AutonomousPeriodicV0();
     void AutonomousPeriodicV1();
     void AutonomousPeriodicV2();
@@ -91,6 +98,7 @@ private:
 
 	UltrasonicSerial &a_UltraSoul;
 
+	AutoStateVx a_AutoStateVx;
 	AutoStateV0 a_AutoStateV0;
     AutoStateV1 a_AutoStateV1;
     AutoStateV2 a_AutoStateV2;

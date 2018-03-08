@@ -62,7 +62,7 @@ private:
 
 	AutonomousHelper a_AutoBot;
 
-	// Autonomous a_Auto;
+	Autonomous a_Auto;
 };
 
 #endif

@@ -27,6 +27,8 @@ public:
 	bool GetShiftState();
 	void GoDistance(float targetDistance);
 	void DriveStraight(float left, float right);
+	double gettime_d();
+	int DriveToDist(float ldist, float rdist, float speed, int first_call);
 	void ArcTurn(float turnRadius, float turnAngle, bool direction);
 	void GenerateTrajectory();
 	void ZeroEncoders();
@@ -68,6 +70,11 @@ private:
 	long totCountRight = 0;
 	long lastCountLeft = 0;
 	long lastCountRight = 0;
+
+	double t0;
+	double lspeed_target;
+	double rspeed_target;
+	double avg_speed_target;
 };
 
 #endif

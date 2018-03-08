@@ -4,6 +4,7 @@
 #include <Math.h>
 #include <pathfinder.h>
 #include <stdlib.h> // labs()
+#include <sys/time.h>
 
 DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int rightDriveOne, int rightDriveTwo, int rightDriveThree)
 : a_leftDriveOne(leftDriveOne),
@@ -170,6 +171,108 @@ void DiffDrive::DriveStraight(float left, float right){
 	}
 }
 
+double DiffDrive::gettime_d()
+{
+	// return time in seconds as a double
+	double t0;
+	struct timeval tv0;
+
+	gettimeofday(&tv0, NULL);
+	t0 = 1.0 * tv0.tv_sec + (1.0 * tv0.tv_usec) / 1000000.0;
+	// printf("seconds: %ld\n", tv0.tv_sec);
+	// printf("usecs:   %ld\n", tv0.tv_usec);
+	// printf("time:    %lf\n", t0);
+
+	return t0;
+}
+
+int DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call) {
+	// currently only handles driving forward (and forward arcs)
+
+	// distances are in inches 
+	// speed is inches/second
+	// first_call is set to 1 on initial call to setup variables, and 0 on subsequent calls
+	// distances and speed should not change
+
+	// return: 1 when maneuver is complete
+	
+	float ldist_init = 0;
+	float rdist_init = 0;
+	float ldist_now;
+	float rdist_now;
+	double tnow;
+	float lerr;
+	float rerr;
+	float lspeed_ideal;
+	float rspeed_ideal;
+	float ldist_ideal;
+	float rdist_ideal;
+	float ldist_new;
+	float rdist_new;
+	
+	if(first_call) {
+		// calculate ideal speeds for left and right side based on speed and distances
+		if(fabs(ldist - rdist) < 0.01) { // using this as "equals" for floats
+			lspeed_ideal = speed;
+			rspeed_ideal = speed;
+		} else if(fabs(ldist) < 0.01) {
+			lspeed_ideal = 0;
+			rspeed_ideal = speed;
+		} else if(fabs(rdist) < 0.01) {
+			lspeed_ideal = speed;
+			rspeed_ideal = 0;
+		} else if(ldist > rdist) {
+			lspeed_ideal = speed;
+			rspeed_ideal = speed * ((1.0 * rdist) / (1.0 * ldist));
+		} if(ldist < rdist) {
+			lspeed_ideal = speed * ((1.0 * ldist) / (1.0 * rdist));
+			rspeed_ideal = speed;
+		}
+
+		ldist_init = GetDistanceLeft();
+		rdist_init = GetDistanceRight();
+		t0 = gettime_d();
+		tnow = t0;
+		lerr = rerr = 0.0;
+		lIsum = rIsum = 0.0;
+	}
+	
+	// get distance since first call
+	ldist_now = GetDistanceLeft();
+	rdist_now = GetDistanceRight();
+	ldist_now -= ldist_init;
+	rdist_now -= rdist_init;
+	
+	if((ldist_now >= ldist) && (rdist_now >= rdist)) {
+		// maneuver complete
+		return 1;
+	}
+
+	// where should it be now?
+	tnow = gettime_d();
+
+	ldist_ideal = lspeed_ideal * (tnow - t0);
+	if(ldist_ideal > ldist) {
+		ldist_ideal = ldist;
+	}
+	rdist_ideal = rspeed_ideal * (tnow - t0);
+	if(rdist_ideal > rdist) {
+		rdist_ideal = rdist;
+	}
+		
+	// set the motors to updated distances
+	ldist_new = ldist_ideal + ldist_init;
+	rdist_new = rdist_ideal + rdist_init;
+	// convert to encoder counts
+	ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	ldist_count = ldist_new * ticks_per_inch; 
+	rdist_count = rdist_new * ticks_per_inch; 
+	a_leftDriveTwo.Set(ControlMode::Position, ldist_count);
+	a_rightDriveTwo.Set(ControlMode::Position, rdist_count);
+	
+	return 0;
+}
+
 void DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction){ // radius dictates how gradual turn is, angle dictates how far it goes, direction indicates left vs right
 	// do some fancy math here to find the arc length (if its just a circle, then use 2*pi*turnRadius*(turnangle/360)
 	if (direction){
@@ -234,6 +337,7 @@ float DiffDrive::GetDistanceLeft(){
 	float ticks_per_inch;
 	
 	count = a_leftDriveTwo.GetSelectedSensorPosition(0);
+	/*
 	// add change since last reading
 	totCountLeft += (count - lastCountLeft);
 	// did it rollover?
@@ -250,10 +354,11 @@ float DiffDrive::GetDistanceLeft(){
 
 	// update for next time
 	lastCountLeft = count;
+	*/
 
 	// convert to inches
-	ticks_per_inch = (GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
-	ret = totCountLeft * ticks_per_inch;
+	ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	ret = count / (float)ticks_per_inch;
 	
 	return ret;
 }
@@ -265,6 +370,7 @@ float DiffDrive::GetDistanceRight(){
 	float ticks_per_inch;
 	
 	count = a_rightDriveTwo.GetSelectedSensorPosition(0);
+	/*
 	// add change since last reading
 	totCountRight += (count - lastCountRight);
 	// did it rollover?
@@ -281,10 +387,11 @@ float DiffDrive::GetDistanceRight(){
 
 	// update for next time
 	lastCountRight = count;
+	*/
 
 	// convert to inches
-	ticks_per_inch = (GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
-	ret = totCountRight * ticks_per_inch;
+	ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	ret = count / (float)ticks_per_inch;
 	
 	return ret;
 }
