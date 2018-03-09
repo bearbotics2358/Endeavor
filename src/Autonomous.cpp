@@ -10,6 +10,7 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, Di
   a_Underglow(Underglow),
   a_UltraSoul(UltraSoul),
   a_AutoStateVx(kAutoIdlex),
+  a_AutoStateU0(kAutoIdleU0),
   a_AutoStateV0(kAutoIdle0),
   a_AutoStateV1(kAutoIdle1),
   a_AutoStateV2(kAutoIdle2),
@@ -49,6 +50,29 @@ void Autonomous::AutonomousPeriodicVx()
 		break;
 	}
 	a_AutoStateVx = nextState;
+}
+
+void Autonomous::AutonomousPeriodicU0()
+{
+	AutoStateU0 nextState = a_AutoStateU0;
+
+	switch(a_AutoStateU0){
+	case kAutoIdleU0:
+		a_DiffDrive.UpdateVal(0,0);
+		a_DiffDrive.ZeroEncoders();
+		break;
+
+	case kMoveToSwitchU0:
+		if (a_UltraSoul.GetRearRight() < SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kAutoIdleU0;
+		}
+		break;
+
+	}
+	a_AutoStateU0 = nextState;
 }
 
 void Autonomous::AutonomousPeriodicV0()

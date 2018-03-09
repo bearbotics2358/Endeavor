@@ -19,6 +19,11 @@ enum AutoStateVx {
 	kMoveToSwitchx,
 };
 
+enum AutoStateU0 {
+	kAutoIdleU0 = 0,
+	kMoveToSwitchU0,
+};
+
 enum AutoStateV0 {
 	kMoveToSwitch0 = 0,
 	kAutoIdle0
@@ -80,6 +85,7 @@ public:
 	virtual ~Autonomous() = default;
 	void Init();
 	void AutonomousPeriodicVx();
+	void AutonomousPeriodicU0();
 	void AutonomousPeriodicV0();
     void AutonomousPeriodicV1();
     void AutonomousPeriodicV2();
@@ -100,6 +106,7 @@ private:
 	UltrasonicSerial &a_UltraSoul;
 
 	AutoStateVx a_AutoStateVx;
+	AutoStateU0 a_AutoStateU0;
 	AutoStateV0 a_AutoStateV0;
     AutoStateV1 a_AutoStateV1;
     AutoStateV2 a_AutoStateV2;

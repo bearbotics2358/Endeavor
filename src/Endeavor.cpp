@@ -101,8 +101,7 @@ void Endeavor::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Scale Left? ", a_AutoBot.GetAllianceScale());
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 
-	// a_DiffDrive.UpdateDistance(); // why call this in periodic?
-	a_Auto.AutonomousPeriodicVx();
+	// a_Auto.AutonomousPeriodicU0();
 }
 
 void Endeavor::TeleopInit()
