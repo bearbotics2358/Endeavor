@@ -144,13 +144,16 @@ void Endeavor::TeleopPeriodic()
 		a_CollectorArm.Release();
 	}
 
-	if (a_GamePad.GetRawAxis(3) > 0.05){
+	if (a_GamePad.GetRawAxis(3) > 0.00){
 		a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(3));
 	}
-	else if ((a_GamePad.GetRawAxis(2) > 0.05)){  // in
+	else if ((a_GamePad.GetRawAxis(2) > 0.00)){  // in
 		a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(2) * -1);
 	}
-
+	else {
+		a_CollectorArm.UpdateRollers(0.0);
+	}
+	a_CollectorArm.UpdateValue(0.0);
 	if (a_GamePad.GetRawButton(1)){
 		a_CollectorArm.UpdateValue(a_GamePad.GetRawAxis(1));
 	}
