@@ -77,6 +77,11 @@
 #define PARITY_SOUL SerialPort::kParity_None
 #define STOP_BITS_SOUL SerialPort::kStopBits_One
 
+// distance between ultrasonic sensors
+// NOTE: these values are floats - include a decimal point to guarantee code won't have to cast on divides
+#define FRONT_CENTER_DISTANCE 6.0
+#define REAR_CENTER_DISTANCE 20.0
+
 #define IR_RECEIVER_PORT 0
 
 #define LIGHT_RING_CONTROLLER_ADDRESS 0x4

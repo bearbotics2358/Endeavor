@@ -10,14 +10,22 @@ public: UltrasonicSerial();
 	virtual ~UltrasonicSerial() = default;
 	void Init();
 	void Update();
-	int GetUltraOne();
-	int GetUltraTwo();
-	int GetUltraThree();
-	int GetUltraFour();
-	int GetUltraFive();
-	int GetUltraSix();
-	int GetForwardAngle();
-	int GetBackwardAngle();
+	float GetUltraA();
+	float GetUltraB();
+	float GetUltraC();
+	float GetUltraD();
+	float GetUltraE();
+	float GetUltraF();
+	float GetFrontLeft();
+	float GetFrontRight();
+	float GetLeftSide();
+	float GetRightSide();
+	float GetRearLeft();
+	float GetRearRight();
+	void EnablePort(int port);
+	void DisablePort(int port);
+	float GetForwardAngle();
+	float GetBackwardAngle();
 
 
 	/*
@@ -30,14 +38,12 @@ private:
 	#define BUFFER_SIZE 100
 
 	SerialPort a_Ultra;
-	int ultraOne;
-	int ultraTwo;
-	int ultraThree;
-	int ultraFour;
-	int ultraFive;
-	int ultraSix;
-	int frontCenterDistance;
-	int backCenterDistance;
+	float ultraA;
+	float ultraB;
+	float ultraC;
+	float ultraD;
+	float ultraE;
+	float ultraF;
 	int readIndex;
 	char readBuffer[BUFFER_SIZE];
 };

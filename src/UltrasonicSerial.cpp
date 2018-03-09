@@ -2,31 +2,28 @@
 #include <Math.h>
 #include "UltrasonicSerial.h"
 
+// return all distances in inches
 UltrasonicSerial::UltrasonicSerial():
 	a_Ultra(BAUD_RATE_SOUL, USB_PORT_SOUL, DATA_BITS_SOUL, PARITY_SOUL, STOP_BITS_SOUL)
 			// USB1 is the onboard port closest to the center of the rio
 			// I dunno which one USB2 is yet. (Rio docs aren't very helpful)
 {
-	ultraOne = 0;
-	ultraTwo = 0;
-	ultraThree = 0;
-	ultraFour = 0;
-	ultraFive = 0;
-	ultraSix = 0;
-	frontCenterDistance = 0;
-	backCenterDistance = 0;
+	ultraA = 0;
+	ultraB = 0;
+	ultraC = 0;
+	ultraD = 0;
+	ultraE = 0;
+	ultraF = 0;
 	readIndex = 0;
 }
 
 void UltrasonicSerial::Init(){
-	ultraOne = 0;
-	ultraTwo = 0;
-	ultraThree = 0;
-	ultraFour = 0;
-	ultraFive = 0;
-	ultraSix = 0;
-	frontCenterDistance = 0;
-	backCenterDistance = 0;
+	ultraA = 0;
+	ultraB = 0;
+	ultraC = 0;
+	ultraD = 0;
+	ultraE = 0;
+	ultraF = 0;
 	readIndex = 0;
 	for(int i = 0; i < BUFFER_SIZE; i++) {
 		readBuffer[i] = 0;
@@ -34,6 +31,8 @@ void UltrasonicSerial::Init(){
 }
 
 void UltrasonicSerial::Update(){
+	int dist;
+	
 	while (a_Ultra.GetBytesReceived() > 0){
 		a_Ultra.Read(&readBuffer[readIndex], 1);
 		if((readBuffer[readIndex] == '\r') || (readBuffer[readIndex] == '\t')) {
@@ -41,27 +40,39 @@ void UltrasonicSerial::Update(){
 			if(readIndex == 6) {
 				switch(readBuffer[0]) {
 					case 'A':
-						ultraOne = strtol(&readBuffer[1], (char **)NULL, 10);
+						dist = strtol(&readBuffer[1], (char **)NULL, 10);
+						// convert mm to inches
+						ultraA = (float)dist/25.4;
 						break;
 
 					case 'B':
-						ultraTwo = strtol(&readBuffer[1], (char **)NULL, 10);
+						dist = strtol(&readBuffer[1], (char **)NULL, 10);
+						// convert mm to inches
+						ultraB = (float)dist/25.4;
 						break;
 
 					case 'C':
-						ultraThree = strtol(&readBuffer[1], (char **)NULL, 10);
+						dist = strtol(&readBuffer[1], (char **)NULL, 10);
+						// convert mm to inches
+						ultraC = (float)dist/25.4;
 						break;
 
 					case 'D':
-						ultraFour = strtol(&readBuffer[1], (char **)NULL, 10);
+						dist = strtol(&readBuffer[1], (char **)NULL, 10);
+						// convert mm to inches
+						ultraD = (float)dist/25.4;
 						break;
 
 					case 'E':
-						ultraFive = strtol(&readBuffer[1], (char **)NULL, 10);
+						dist = strtol(&readBuffer[1], (char **)NULL, 10);
+						// convert mm to inches
+						ultraE = (float)dist/25.4;
 						break;
 
 					case 'F':
-						ultraSix = strtol(&readBuffer[1], (char **)NULL, 10);
+						dist = strtol(&readBuffer[1], (char **)NULL, 10);
+						// convert mm to inches
+						ultraF = (float)dist/25.4;
 						break;
 				}
 			}
@@ -76,70 +87,97 @@ void UltrasonicSerial::Update(){
 	}
 }
 
-int UltrasonicSerial::GetUltraOne(){
-	return ultraOne;
+float UltrasonicSerial::GetUltraA(){
+	return ultraA;
 }
 
-int UltrasonicSerial::GetUltraTwo(){
-	return ultraTwo;
+float UltrasonicSerial::GetUltraB(){
+	return ultraB;
 }
 
-int UltrasonicSerial::GetUltraThree(){
-	return ultraThree;
+float UltrasonicSerial::GetUltraC(){
+	return ultraC;
 }
 
-int UltrasonicSerial::GetUltraFour(){
-	return ultraFour;
+float UltrasonicSerial::GetUltraD(){
+	return ultraD;
 }
 
-int UltrasonicSerial::GetUltraFive(){
-	return ultraFive;
+float UltrasonicSerial::GetUltraE(){
+	return ultraE;
 }
 
-int UltrasonicSerial::GetUltraSix(){
-	return ultraSix;
+float UltrasonicSerial::GetUltraF(){
+	return ultraF;
+}
+
+
+
+float UltrasonicSerial::GetFrontLeft(){
+	GetUltraD();
+}
+
+float UltrasonicSerial::GetFrontRight(){
+	GetUltraA();
+}
+
+float UltrasonicSerial::GetLeftSide(){
+	GetUltraE();
+}
+
+float UltrasonicSerial::GetRightSide(){
+	GetUltraB();
+}
+
+float UltrasonicSerial::GetRearLeft(){
+	GetUltraF();
+}
+
+float UltrasonicSerial::GetRearRight(){
+	GetUltraC();
+}
+
+
+void UltrasonicSerial::EnablePort(int port)
+{
+	char cmd[3];
+	cmd[0] = 'A' + port;
+	cmd[1] = '1';
+	cmd[2] = '\r';
+	a_Ultra.Write(cmd, 3);
+	a_Ultra.Flush();
+}
+
+void UltrasonicSerial::DisablePort(int port)
+{
+	char cmd[3];
+	cmd[0] = 'A' + port;
+	cmd[1] = '0';
+	cmd[2] = '\r';
+	a_Ultra.Write(cmd, 3);
+	a_Ultra.Flush();
 }
 
 int UltrasonicSerial::GetForwardAngle(){
-	// should return range of -90 to 90?
-	// upper limits on each end should differ based on robot pos tho
-	int lenA = GetUltraOne();
-	int lenB = GetUltraTwo();
+	// returns range of -90 to 90
+	// positive angles mean bot is counter-clockwise relative to straight on
+	// negative angles mean bot is clockwise relative to straight on
+	float ret;
+	float delta = GetFrontLeft() - GetFrontRight();
 
-	if (lenA > lenB){
-		lenA = lenA - lenB;
-		lenB = frontCenterDistance;
-		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
-		return asin(lenA/lenC) * (180/3.1415);
-	}
-	else if (lenA < lenB) {
-		lenA = lenB - lenA;
-		lenB = frontCenterDistance;
-		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
-		return asin(lenA/lenC) * (180/3.1415);
-	}
-	return 0; // theo no angle b/c straight on
+	ret = atan2(delta, FRONT_CENTER_DISTANCE) * (180.0/M_PI);
+	return ret;
 }
 
 int UltrasonicSerial::GetBackwardAngle(){
-	// should return range of -90 to 90?
-	// upper limits on each end should differ based on robot pos tho
-	int lenA = GetUltraFive();
-	int lenB = GetUltraSix();
+	// returns range of -90 to 90
+	// positive angles mean bot is counter-clockwise relative to straight on
+	// negative angles mean bot is clockwise relative to straight on
+	float ret;
+	float delta = GetRearRight() - GetRearLeft();
 
-	if (lenA > lenB){
-		lenA = lenA - lenB;
-		lenB = frontCenterDistance;
-		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
-		return asin(lenA/lenC) * (180/3.1415);
-	}
-	else if (lenA < lenB) {
-		lenA = lenB - lenA;
-		lenB = frontCenterDistance;
-		int lenC = pow((lenA * lenA) + (lenB * lenB), (1/2)); // finds hypotenuse of triangle
-		return asin(lenA/lenC) * (180/3.1415);
-	}
-	return 0; // theo no angle b/c straight on
+	ret = atan2(delta, REAR_CENTER_DISTANCE) * (180.0/M_PI);
+	return ret;
 }
 
 
