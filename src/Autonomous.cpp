@@ -52,6 +52,11 @@ void Autonomous::AutonomousPeriodicVx()
 	a_AutoStateVx = nextState;
 }
 
+void Autonomous::AutonomousStartU0()
+{
+	a_AutoStateU0 = kMoveToSwitchU0;
+}
+
 void Autonomous::AutonomousPeriodicU0()
 {
 	AutoStateU0 nextState = a_AutoStateU0;

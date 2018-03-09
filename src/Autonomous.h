@@ -85,6 +85,7 @@ public:
 	virtual ~Autonomous() = default;
 	void Init();
 	void AutonomousPeriodicVx();
+	void AutonomousStartU0();
 	void AutonomousPeriodicU0();
 	void AutonomousPeriodicV0();
     void AutonomousPeriodicV1();

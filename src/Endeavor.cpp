@@ -83,6 +83,8 @@ void Endeavor::AutonomousInit()
 {
 	a_DiffDrive.ZeroEncoders();
 	a_Auto.Init();
+	
+	// a_Auto.AutonomousStartU0();
 }
 
 void Endeavor::AutonomousPeriodic()
