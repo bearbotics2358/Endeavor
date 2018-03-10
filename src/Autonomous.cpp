@@ -75,13 +75,12 @@ void Autonomous::AutonomousPeriodicU0()
 
 	case kMoveToSwitchU0:
 		if (a_UltraSoul.GetRearRight() < SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.4);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdleU0;
 		}
 		break;
-
 	}
 	a_AutoStateU0 = nextState;
 }
@@ -126,7 +125,7 @@ void Autonomous::AutonomousPeriodicU1()
 		// move arm while moving bot
 		a_CollectorArm.UpdateAngle(60);
 		if (a_UltraSoul.GetRearRight() < SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.4);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kMoveArmU1;

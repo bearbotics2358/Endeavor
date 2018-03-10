@@ -119,15 +119,15 @@ void DiffDrive::UpdateVal(float left, float right){
 bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when its right.
 	if(curAngle > (tarAngle - 3)) {
 		if(fabs(tarAngle - curAngle) > 10) {
-			UpdateVal(-0.3, 0.3);
+			UpdateVal(-0.5, 0.5);
 		} else {
-			UpdateVal(-0.2, 0.2);
+			UpdateVal(-0.4, 0.4);
 		}
 	} else if(curAngle < tarAngle + 3) {
 		if(fabs(tarAngle - curAngle) > 10) {
-			UpdateVal(0.3, -0.3);
+			UpdateVal(0.5, -0.5);
 		} else {
-			UpdateVal(0.2, -0.2);
+			UpdateVal(0.3, -0.3);
 		}
 	} else {
 		UpdateVal(0.0, 0.0);
@@ -181,7 +181,7 @@ void DiffDrive::DriveStraightGyro(float tarAngle, float curAngle, float speed){
 		// close enough
 		a_leftDriveTwo.Set(speed);
 		a_rightDriveTwo.Set(speed);
-	} else if(fabs(curAngle - tarAngle) < 0) {
+	} else if(fabs(curAngle - tarAngle) > 0) {
 		// turn right
 		a_leftDriveTwo.Set((9.0/7.0) * speed);
 		a_rightDriveTwo.Set((7.0/9.0) * speed);

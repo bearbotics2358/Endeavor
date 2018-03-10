@@ -85,7 +85,7 @@ void Endeavor::AutonomousInit()
 	a_Auto.Init();
 	
 	// For now, uncomment one of the following lines to run that Autonomous routine
-	// a_Auto.AutonomousStartU0();
+	a_Auto.AutonomousStartU0();
 	// a_Auto.AutonomousStartU1();
 	// a_Auto.AutonomousStartU2();
 	// a_Auto.AutonomousStartU3();
@@ -114,7 +114,7 @@ void Endeavor::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 
 	// For now, uncomment one of the following lines to run that Autonomous routine
-	// a_Auto.AutonomousPeriodicU0();
+	a_Auto.AutonomousPeriodicU0();
 	// a_Auto.AutonomousPeriodicU1();
 	// a_Auto.AutonomousPeriodicU2();
 	// a_Auto.AutonomousPeriodicU3();
@@ -180,12 +180,15 @@ void Endeavor::TeleopPeriodic()
 
 	a_DiffDrive.UpdateVal((a_Joystick1.GetRawAxis(1)), (a_Joystick2.GetRawAxis(1)));
 	if (a_GamePad.GetRawButton(2)){ // Change Collector Position
-		a_CollectorArm.RollerPos(0);
+		// B
+		a_CollectorArm.RollerPos(3);
 	}
 	if (a_GamePad.GetRawButton(4)){
+		// Y
 		a_CollectorArm.RollerPos(1);
 	}
 	if (a_GamePad.GetRawButton(3)){
+		// X
 		a_CollectorArm.RollerPos(2);
 	}
 
@@ -204,12 +207,28 @@ void Endeavor::TeleopPeriodic()
 
 void Endeavor::TestInit()
 {
-
+	TeleopInit();
 }
 
 void Endeavor::TestPeriodic()
 {
+	a_UltraSoul.Update();
+	a_Gyro.Update();
 
+	a_DiffDrive.UpdateVal(0,0);
+	a_DiffDrive.UpdateDistance();
+	a_Lifter.Update(0);
+
+	if (a_GamePad.GetRawButton(1)){
+		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, a_GamePad.GetRawAxis(2));
+	}
+	if (a_GamePad.GetRawButton(2)){
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 0.0);
+	}
+	if (a_GamePad.GetRawButton(3)){
+		a_Gyro.Zero();
+	}
+	ShuffleboardPeriodicUpdate();
 }
 
 void Endeavor::ShuffleboardPeriodicUpdate(){

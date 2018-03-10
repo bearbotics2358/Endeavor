@@ -51,21 +51,21 @@ void CollectorArm::UpdateRollers(float velo)
 
 void CollectorArm::RollerPos(int state){
 	switch(state){
-	case 0: // theo af?
+	case 0: // middle pos - PRAC
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
 		break;
 
-	case 1: // theo af?
+	case 1: // middle pos - PRAC
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
 		break;
 
-	case 2: // theo af?
+	case 2: // collect - PRAC
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
 		break;
-	case 3: // theo af?
+	case 3: // stow - PRAC
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
 		break;
