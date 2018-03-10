@@ -84,11 +84,21 @@ void Endeavor::AutonomousInit()
 	a_DiffDrive.ZeroEncoders();
 	a_Auto.Init();
 	
+	// For now, uncomment one of the following lines to run that Autonomous routine
 	// a_Auto.AutonomousStartU0();
+	// a_Auto.AutonomousStartU1();
+	// a_Auto.AutonomousStartU2();
+	// a_Auto.AutonomousStartU3();
+	// a_Auto.AutonomousStartU4();
+	// a_Auto.AutonomousStartU5();
 }
 
 void Endeavor::AutonomousPeriodic()
 {
+	// get latest values before taking action
+	a_UltraSoul.Update();
+	a_Gyro.Update();
+
 	// Following lines are to test AutoPeriodic and the AutoBot autohelper i wrote.
 	if (a_AutoBot.GetAllianceSide()){
 		a_Underglow.GoBlue();
@@ -103,7 +113,13 @@ void Endeavor::AutonomousPeriodic()
 	SmartDashboard::PutBoolean("Scale Left? ", a_AutoBot.GetAllianceScale());
 	SmartDashboard::PutBoolean("Opp Switch Left?", a_AutoBot.GetOpponentSwitch());
 
+	// For now, uncomment one of the following lines to run that Autonomous routine
 	// a_Auto.AutonomousPeriodicU0();
+	// a_Auto.AutonomousPeriodicU1();
+	// a_Auto.AutonomousPeriodicU2();
+	// a_Auto.AutonomousPeriodicU3();
+	// a_Auto.AutonomousPeriodicU4();
+	// a_Auto.AutonomousPeriodicU5();
 }
 
 void Endeavor::TeleopInit()
@@ -133,6 +149,10 @@ void Endeavor::TeleopInit()
 
 void Endeavor::TeleopPeriodic()
 {
+	// get latest values before taking action
+	a_UltraSoul.Update();
+	a_Gyro.Update();
+
 	a_DiffDrive.UpdateVal(0,0);
 	a_DiffDrive.UpdateDistance();
 	a_Lifter.Update(0);
@@ -180,8 +200,6 @@ void Endeavor::TeleopPeriodic()
 	}
 
 	// a_DiffDrive.Update(a_GamePad, a_Joystick1, a_Joystick2, a_JoystickZ); // wonder if passing four sticks impacts latency -- if it does, i didnt notice
-	a_UltraSoul.Update();
-	a_Gyro.Update();
 }
 
 void Endeavor::TestInit()
