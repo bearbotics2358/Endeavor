@@ -30,10 +30,10 @@ enum AutoStateV0 {
 };
 
 enum AutoStateU1 {
-	kAutoIdleU1 = 0
+	kAutoIdleU1 = 0,
 	kMoveToSwitchU1,
 	kMoveArmU1,
-	kReleaseCubeU1,
+	kReleaseCubeU1
 };
 
 enum AutoStateV1 {
@@ -44,7 +44,7 @@ enum AutoStateV1 {
 };
 
 enum AutoStateU2 {
-	kAutoIdle2 =0,
+	kAutoIdleU2 =0,
 	kMoveToSideOfSwitchU2,
 	kTurnLeftU2,
 	kMoveToEdgeOfSwitchU2,
@@ -169,15 +169,15 @@ class Autonomous
 	AutoStateVx a_AutoStateVx;
 	AutoStateU0 a_AutoStateU0;
 	AutoStateV0 a_AutoStateV0;
-	AutoStateU1 a_AutoStateU0;
+	AutoStateU1 a_AutoStateU1;
 	AutoStateV1 a_AutoStateV1;
-	AutoStateU2 a_AutoStateU0;
+	AutoStateU2 a_AutoStateU2;
 	AutoStateV2 a_AutoStateV2;
-	AutoStateU3 a_AutoStateU0;
+	AutoStateU3 a_AutoStateU3;
 	AutoStateV3 a_AutoStateV3;
-	AutoStateU4 a_AutoStateU0;
+	AutoStateU4 a_AutoStateU4;
 	AutoStateV4 a_AutoStateV4;
-	AutoStateU5 a_AutoStateU0;
+	AutoStateU5 a_AutoStateU5;
 	AutoStateV5 a_AutoStateV5;
 
 	float a_AngleSaved;

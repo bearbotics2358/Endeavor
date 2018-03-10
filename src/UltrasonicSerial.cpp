@@ -158,7 +158,7 @@ void UltrasonicSerial::DisablePort(int port)
 	a_Ultra.Flush();
 }
 
-int UltrasonicSerial::GetForwardAngle(){
+float UltrasonicSerial::GetForwardAngle(){
 	// returns range of -90 to 90
 	// positive angles mean bot is counter-clockwise relative to straight on
 	// negative angles mean bot is clockwise relative to straight on
@@ -169,7 +169,7 @@ int UltrasonicSerial::GetForwardAngle(){
 	return ret;
 }
 
-int UltrasonicSerial::GetBackwardAngle(){
+float UltrasonicSerial::GetBackwardAngle(){
 	// returns range of -90 to 90
 	// positive angles mean bot is counter-clockwise relative to straight on
 	// negative angles mean bot is clockwise relative to straight on

@@ -12,13 +12,19 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, Di
   a_AutoStateVx(kAutoIdlex),
   a_AutoStateU0(kAutoIdleU0),
   a_AutoStateV0(kAutoIdle0),
+  a_AutoStateU1(kAutoIdleU1),
   a_AutoStateV1(kAutoIdle1),
+  a_AutoStateU2(kAutoIdleU2),
   a_AutoStateV2(kAutoIdle2),
+  a_AutoStateU3(kAutoIdleU3),
   a_AutoStateV3(kAutoIdle3),
+  a_AutoStateU4(kAutoIdleU4),
   a_AutoStateV4(kAutoIdle4),
+  a_AutoStateU5(kAutoIdleU5),
   a_AutoStateV5(kAutoIdle5)
 {
-
+	a_AngleSaved = 0.0;
+	a_time_state = 0;
 }
 
 void Autonomous::Init(){
@@ -138,7 +144,7 @@ void Autonomous::AutonomousPeriodicU1()
 	case kReleaseCubeU1:
 		a_CollectorArm.UpdateRollers(-1.0);
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d - a_time_state > 0.5) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kAutoIdleU1;
 		}
@@ -199,7 +205,7 @@ void Autonomous::AutonomousPeriodicU2()
 			a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
 			a_DiffDrive.ZeroEncoders();
 			nextState = kTurnLeftU2;
-			a_AngleSaved = a_Jrimmy.GetAngle(2);  // get Z-axis gyro angle
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
 		}
 		break;
 
@@ -208,7 +214,7 @@ void Autonomous::AutonomousPeriodicU2()
 		a_CollectorArm.UpdateAngle(ARM_ANGLE2);
 		// a_DiffDrive.ArcTurn(18, 90, true);
 		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
-		if((a_Jrimmy.GetAngle(2) - a_AngleSaved) >= 90) {
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
 			// a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveToEdgeOfSwitchU2;
@@ -236,7 +242,7 @@ void Autonomous::AutonomousPeriodicU2()
 	case kReleaseCubeU2:
 		a_CollectorArm.UpdateRollers(-1.0);
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d - a_time_state > 0.5) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kAutoIdleU2;
 		}
@@ -311,7 +317,7 @@ void Autonomous::AutonomousPeriodicU3()
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
-			a_AngleSaved = a_Jrimmy.GetAngle(2);  // get Z-axis gyro angle
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
 			nextState = kTurnLeftU3;
 		}
 		break;
@@ -321,7 +327,7 @@ void Autonomous::AutonomousPeriodicU3()
 		a_CollectorArm.UpdateAngle(ARM_ANGLE3);
 		// a_DiffDrive.ArcTurn(18, 90, true);
 		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
-		if((a_Jrimmy.GetAngle(2) - a_AngleSaved) >= 90) {
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveToEdgeOfScaleU3;
@@ -351,7 +357,7 @@ void Autonomous::AutonomousPeriodicU3()
 	case kReleaseCubeU3:
 		a_CollectorArm.UpdateRollers(-1.0);
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d - a_time_state > 0.5) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kAutoIdleU3;
 		}
@@ -426,14 +432,14 @@ void Autonomous::AutonomousPeriodicU4()
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kTurnRightU4;
-			a_AngleSaved = a_Jrimmy.GetAngle(2);  // get Z-axis gyro angle
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
 		}
 		break;
 
 	case kTurnRightU4:
 		// a_DiffDrive.ArcTurn(18, 90, false);
 		a_DiffDrive.UpdateVal(0.25,-0.25); // rotate clockwise
-		if((a_Jrimmy.GetAngle(2) - a_AngleSaved) <= -90) {
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) <= -90) {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveFlushWithSwitchU4;
@@ -447,7 +453,7 @@ void Autonomous::AutonomousPeriodicU4()
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kTurnLeftU4;
-			a_AngleSaved = a_Jrimmy.GetAngle(2);  // get Z-axis gyro angle
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
 		}
 		break;
 
@@ -456,7 +462,7 @@ void Autonomous::AutonomousPeriodicU4()
 		a_CollectorArm.UpdateAngle(ARM_ANGLE4);
 		// a_DiffDrive.ArcTurn(18, 90, true);
 		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
-		if((a_Jrimmy.GetAngle(2) - a_AngleSaved) >= 90) {
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveToFrontOfSwitchU4;
@@ -486,7 +492,7 @@ void Autonomous::AutonomousPeriodicU4()
 	case kReleaseCubeU4:
 		a_CollectorArm.UpdateRollers(-1.0);
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d - a_time_state > 0.5) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kAutoIdleU4;
 		}
@@ -575,14 +581,14 @@ void Autonomous::AutonomousPeriodicU5()
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kTurnRightU5;
-			a_AngleSaved = a_Jrimmy.GetAngle(2);  // get Z-axis gyro angle
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
 		}
 		break;
 
 	case kTurnRightU5:
 		// a_DiffDrive.ArcTurn(10, 90, false);
 		a_DiffDrive.UpdateVal(0.25,-0.25); // rotate clockwise
-		if((a_Jrimmy.GetAngle(2) - a_AngleSaved) <= -90) {
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) <= -90) {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveFlushWithScaleU5;
@@ -596,7 +602,7 @@ void Autonomous::AutonomousPeriodicU5()
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kTurnLeftU5;
-			a_AngleSaved = a_Jrimmy.GetAngle(2);  // get Z-axis gyro angle
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
 		}
 		break;
 
@@ -605,7 +611,7 @@ void Autonomous::AutonomousPeriodicU5()
 		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
 		// a_DiffDrive.ArcTurn(10, 90, true);
 		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
-		if((a_Jrimmy.GetAngle(2) - a_AngleSaved) >= 90) {
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveToFrontOfScaleU5;
@@ -635,7 +641,7 @@ void Autonomous::AutonomousPeriodicU5()
 	case kReleaseCubeU5:
 		a_CollectorArm.UpdateRollers(-1.0);
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d - a_time_state > 0.5) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kAutoIdleU5;
 		}
