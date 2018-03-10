@@ -170,9 +170,25 @@ void DiffDrive::DriveStraight(float left, float right){
 		a_leftDriveTwo.Set((9.0/7.0) * left);
 		a_rightDriveTwo.Set((7.0/9.0) * right);
 	} else {
-		//turn left
+		// turn left
 		a_leftDriveTwo.Set((7.0/9.0) * left);
 		a_rightDriveTwo.Set((9.0/7.0) * right);
+	}
+}
+
+void DiffDrive::DriveStraightGyro(float tarAngle, float curAngle, float speed){
+	if(fabs(curAngle - tarAngle) < 0.10) {
+		// close enough
+		a_leftDriveTwo.Set(speed);
+		a_rightDriveTwo.Set(speed);
+	} else if(fabs(curAngle - tarAngle) < 0) {
+		// turn right
+		a_leftDriveTwo.Set((9.0/7.0) * speed);
+		a_rightDriveTwo.Set((7.0/9.0) * speed);
+	} else {
+		// turn left
+		a_leftDriveTwo.Set((7.0/9.0) * speed);
+		a_rightDriveTwo.Set((9.0/7.0) * speed);
 	}
 }
 

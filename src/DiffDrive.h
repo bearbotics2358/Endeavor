@@ -27,6 +27,7 @@ public:
 	bool GetShiftState();
 	void GoDistance(float targetDistance);
 	void DriveStraight(float left, float right);
+	void DriveStraightGyro(float tarAngle, float curAngle, float speed);
 	double gettime_d();
 	int DriveToDist(float ldist, float rdist, float speed, int first_call);
 	bool ArcTurn(float turnRadius, float turnAngle, bool direction, int first_call);
