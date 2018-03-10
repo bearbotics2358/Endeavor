@@ -114,27 +114,27 @@ float UltrasonicSerial::GetUltraF(){
 
 
 float UltrasonicSerial::GetFrontLeft(){
-	GetUltraD();
+	return GetUltraD();
 }
 
 float UltrasonicSerial::GetFrontRight(){
-	GetUltraA();
+	return GetUltraA();
 }
 
 float UltrasonicSerial::GetLeftSide(){
-	GetUltraE();
+	return GetUltraE();
 }
 
 float UltrasonicSerial::GetRightSide(){
-	GetUltraB();
+	return GetUltraB();
 }
 
 float UltrasonicSerial::GetRearLeft(){
-	GetUltraF();
+	return GetUltraF();
 }
 
 float UltrasonicSerial::GetRearRight(){
-	GetUltraC();
+	return GetUltraC();
 }
 
 
