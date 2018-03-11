@@ -82,6 +82,7 @@ void Endeavor::DisabledPeriodic()
 void Endeavor::AutonomousInit()
 {
 	a_DiffDrive.ZeroEncoders();
+	a_UltraSoul.Init();
 	a_Auto.Init();
 	
 	// For now, uncomment one of the following lines to run that Autonomous routine
@@ -146,9 +147,9 @@ void Endeavor::TeleopInit()
 	}
 }
 
-
 void Endeavor::TeleopPeriodic()
 {
+
 	// get latest values before taking action
 	a_UltraSoul.Update();
 	a_Gyro.Update();

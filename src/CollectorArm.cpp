@@ -41,7 +41,7 @@ void CollectorArm::UpdateValue(float val)
 
 void CollectorArm::UpdateAngle(float angle)
 {
-	a_pivotMotor.Set(ControlMode::Position, Map(angle, 180, 45, LOWER_ANGLE, UPPER_STOP));
+	a_pivotMotor.Set(ControlMode::Position, GetAngle2());
 }
 
 void CollectorArm::UpdateRollers(float velo)
@@ -91,13 +91,13 @@ bool CollectorArm::CubePresent(){
 
 float CollectorArm::GetAngle1()
 {
-	return (a_pivotMotor.GetSelectedSensorPosition(0) & 0xFFF);
+	return (a_pivotMotor.GetSelectedSensorPosition(0));
 }
 
 float CollectorArm::GetAngle2()
 {
-
-	return (Map((a_pivotMotor.GetSelectedSensorPosition(0) & 0xFFF), 180, 50, REST_POS, UPPER_STOP));
+	float ret = 60.0 - 565.0 - (Map((a_pivotMotor.GetSelectedSensorPosition(0)), 50.0, 180.0, REST_POS, UPPER_STOP));
+	return ret;
 }
 
 void CollectorArm::SetArmPIDF(float p, float i, float d, float f){
@@ -105,7 +105,6 @@ void CollectorArm::SetArmPIDF(float p, float i, float d, float f){
 	a_pivotMotor.Config_kP(kPIDLoopIdx, i, kTimeoutMs);
 	a_pivotMotor.Config_kI(kPIDLoopIdx, d, kTimeoutMs);
 	a_pivotMotor.Config_kD(kPIDLoopIdx, f, kTimeoutMs);
-
 }
 
 void CollectorArm::Disable()

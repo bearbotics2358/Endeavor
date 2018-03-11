@@ -61,6 +61,7 @@ void Autonomous::AutonomousPeriodicVx()
 void Autonomous::AutonomousStartU0()
 {
 	a_AutoStateU0 = kMoveToSwitchU0;
+	a_Gyro.Zero();
 }
 
 void Autonomous::AutonomousPeriodicU0()
@@ -71,11 +72,12 @@ void Autonomous::AutonomousPeriodicU0()
 	case kAutoIdleU0:
 		a_DiffDrive.UpdateVal(0,0);
 		a_DiffDrive.ZeroEncoders();
+		a_Gyro.Zero();
 		break;
 
 	case kMoveToSwitchU0:
 		if (a_UltraSoul.GetRearRight() < SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.4);
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.45);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdleU0;
@@ -109,6 +111,7 @@ void Autonomous::AutonomousPeriodicV0()
 void Autonomous::AutonomousStartU1()
 {
 	a_AutoStateU1 = kMoveToSwitchU1;
+	a_Gyro.Zero();
 }
 
 void Autonomous::AutonomousPeriodicU1()
@@ -311,7 +314,7 @@ void Autonomous::AutonomousPeriodicU3()
 	case kMoveToSideOfScaleU3:
 		// move arm while moving bot
 		a_CollectorArm.UpdateAngle(ARM_ANGLE3);
-		if (a_UltraSoul.GetRearRight() < SIDE_OF_SCALE_DISTANCE) {
+		if (a_UltraSoul.GetRearRight() < SIDE_OF_SCALE_DISTANCE){
 			a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);

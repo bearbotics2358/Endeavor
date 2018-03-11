@@ -163,37 +163,30 @@ void DiffDrive::DriveStraight(float left, float right){
 	double diff = (leftDistance - rightDistance);
 	if(fabs(diff) < 0.10) {
 		// close enough
-		a_leftDriveTwo.Set(left);
-		a_rightDriveTwo.Set(right);
+		UpdateVal(left, right);
 	} else if(diff < 0) {
 		// turn right
-		a_leftDriveTwo.Set((9.0/7.0) * left);
-		a_rightDriveTwo.Set((7.0/9.0) * right);
+		UpdateVal(((9.0/7.0) * left), ((7.0/9.0) * right));
 	} else {
 		// turn left
-		a_leftDriveTwo.Set((7.0/9.0) * left);
-		a_rightDriveTwo.Set((9.0/7.0) * right);
+		UpdateVal(((7.0/9.0) * left), ((9.0/7.0) * right));
 	}
 }
 
 void DiffDrive::DriveStraightGyro(float tarAngle, float curAngle, float speed){
 	if(fabs(curAngle - tarAngle) < 0.10) {
 		// close enough
-		a_leftDriveTwo.Set(speed);
-		a_rightDriveTwo.Set(speed);
-	} else if(fabs(curAngle - tarAngle) > 0) {
+		UpdateVal(speed * -1, speed * -1);
+	} else if((curAngle - tarAngle) < 0) {
 		// turn right
-		a_leftDriveTwo.Set((9.0/7.0) * speed);
-		a_rightDriveTwo.Set((7.0/9.0) * speed);
+		UpdateVal(((11.0/7.0) * speed * -1), ((7.0/11.0) * speed * -1));
 	} else {
 		// turn left
-		a_leftDriveTwo.Set((7.0/9.0) * speed);
-		a_rightDriveTwo.Set((9.0/7.0) * speed);
+		UpdateVal(((7.0/11.0) * speed * -1), ((11.0/7.0) * speed * -1));
 	}
 }
 
-double DiffDrive::gettime_d()
-{
+double DiffDrive::gettime_d(){
 	// return time in seconds as a double
 	double t0;
 	struct timeval tv0;

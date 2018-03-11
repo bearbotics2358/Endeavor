@@ -42,11 +42,11 @@
 #define RIGHT_DRIVE_D 0
 #define RIGHT_DRIVE_F 0
 
-#define REST_POS 762
-#define LOWER_ANGLE 744
-#define SALUTE 591
-#define UPPER_ANGLE 424
-#define UPPER_STOP 285
+#define REST_POS 3601.0
+#define LOWER_ANGLE 0
+#define SALUTE 0
+#define UPPER_ANGLE 0
+#define UPPER_STOP 3177.0
 
 #define ARM_P 10
 #define ARM_I 0.0001
