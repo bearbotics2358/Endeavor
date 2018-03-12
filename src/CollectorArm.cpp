@@ -89,14 +89,14 @@ bool CollectorArm::CubePresent(){
 	return a_Collector.GetCubeStatus();
 }
 
-float CollectorArm::GetAngle1()
+float CollectorArm::GetAngle1() // returns raw values
 {
 	return (a_pivotMotor.GetSelectedSensorPosition(0));
 }
 
-float CollectorArm::GetAngle2()
+float CollectorArm::GetAngle2() // returns the corrected value using map function.
 {
-	float ret = 60.0 - 565.0 - (Map((a_pivotMotor.GetSelectedSensorPosition(0)), 50.0, 180.0, REST_POS, UPPER_STOP));
+	float ret = Map((a_pivotMotor.GetSelectedSensorPosition(0)), 50.0, 180.0, REST_POS, UPPER_STOP);
 	return ret;
 }
 
@@ -107,8 +107,7 @@ void CollectorArm::SetArmPIDF(float p, float i, float d, float f){
 	a_pivotMotor.Config_kD(kPIDLoopIdx, f, kTimeoutMs);
 }
 
-void CollectorArm::Disable()
-{
+void CollectorArm::Disable(){
 	a_pivotMotor.Set(0);
 }
 

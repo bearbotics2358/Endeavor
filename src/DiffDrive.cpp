@@ -105,7 +105,7 @@ void DiffDrive::Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joy
 	    break;
 	  case 2: // Traditional Two Stick Tank.
 		  	  // Uses the two flightsticks without z axes.
-		  a_Drivetrain.TankDrive((-1.0 * stick2.GetRawAxis(1)), (-1.0 * stick3.GetRawAxis(1)), false);
+		  a_Drivetrain.TankDrive((stick2.GetRawAxis(1)), (stick3.GetRawAxis(1)), false);
 		break;
 	  default:
 		  a_Drivetrain.TankDrive(0, 0, false); // theo disable
@@ -163,13 +163,13 @@ void DiffDrive::DriveStraight(float left, float right){
 	double diff = (leftDistance - rightDistance);
 	if(fabs(diff) < 0.10) {
 		// close enough
-		UpdateVal(left, right);
+		UpdateVal(left * -1, right * -1);
 	} else if(diff < 0) {
 		// turn right
-		UpdateVal(((9.0/7.0) * left), ((7.0/9.0) * right));
+		UpdateVal(((9.0/7.0) * left * -1), ((7.0/9.0) * right * -1));
 	} else {
 		// turn left
-		UpdateVal(((7.0/9.0) * left), ((9.0/7.0) * right));
+		UpdateVal(((7.0/9.0) * left * -1), ((9.0/7.0) * right * -1));
 	}
 }
 
