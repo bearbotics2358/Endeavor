@@ -53,10 +53,15 @@ void Autonomous::DecidePath(AutonomousHelper &AutoBot, Joystick &ButtonBox, bool
 	 * U2 - Drive Straight on side of switch, raise arm, twist 90, dispense (US)
 	 *
 	 */
-
-	if (center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
+	if (testing){
+		autoPathMaster = -1;
+	}
+	else if (center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
 		// U1
 		autoPathMaster = 1;
+	}
+	else if (left || right){
+		autoPathMaster = 0;
 	}
 }
 
@@ -64,11 +69,14 @@ void Autonomous::StartPathMaster(){
 	switch(autoPathMaster){
 		case -1:
 			// Error!
+			SmartDashboard::PutBoolean("Auto Started", false);
 			break;
 		case 0:
+			SmartDashboard::PutBoolean("Auto Started", true);
 			AutonomousStartU0();
 			break;
 		case 1:
+			SmartDashboard::PutBoolean("Auto Started", true);
 			AutonomousStartU1();
 			break;
 	}

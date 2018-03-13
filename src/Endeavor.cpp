@@ -43,7 +43,7 @@ a_UltraSoul(),
 
 a_LRC(),
 
-a_PDP(PDP_PORT),
+// a_PDP(PDP_PORT),
 
 a_AutoBot(), // AutoBot Methods return true for left.
 
@@ -81,20 +81,11 @@ void Endeavor::DisabledPeriodic()
 
 void Endeavor::AutonomousInit()
 {
-	a_DiffDrive.Init();
-	a_DiffDrive.SetLeftPIDF(LEFT_DRIVE_P,LEFT_DRIVE_I,LEFT_DRIVE_D,LEFT_DRIVE_F);
-	a_DiffDrive.SetRightPIDF(RIGHT_DRIVE_P,RIGHT_DRIVE_I,RIGHT_DRIVE_D,RIGHT_DRIVE_F);
-	a_DiffDrive.SetDriveType(2);
-	a_DiffDrive.ZeroEncoders();
-
-	a_UltraSoul.Init();
-	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
-	a_LRC.SetAllColor(0,100,0);
+	MasterInit();
 
 	a_Auto.Init();
 	// a_Auto.DecidePath(a_AutoBot, a_ButtonBox, true);
 	// a_Auto.StartPathMaster();
-
 
 	// For now, uncomment one of the following lines to run that Autonomous routine
 	// a_Auto.AutonomousStartU0();
@@ -122,18 +113,7 @@ void Endeavor::AutonomousPeriodic()
 
 void Endeavor::TeleopInit()
 {
-	a_DiffDrive.Init();
-	a_DiffDrive.SetLeftPIDF(LEFT_DRIVE_P,LEFT_DRIVE_I,LEFT_DRIVE_D,LEFT_DRIVE_F);
-	a_DiffDrive.SetRightPIDF(RIGHT_DRIVE_P,RIGHT_DRIVE_I,RIGHT_DRIVE_D,RIGHT_DRIVE_F);
-	a_DiffDrive.SetDriveType(2);
-	// Change the number to change drivetypes. Refer to diffdrive.cpp for help.
-	// a_DiffDrive.DisableMotorSafetyTraitor();
-	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
-	a_Lifter.Init();
-	a_UltraSoul.Init();
-	// a_Gyro.Cal();
-	a_Gyro.Zero();
-	a_LRC.SetAllColor(0,100,0);
+	MasterInit();
 }
 
 void Endeavor::TeleopPeriodic()
@@ -141,10 +121,9 @@ void Endeavor::TeleopPeriodic()
 	// get latest values before taking action
 	a_UltraSoul.Update();
 	a_Gyro.Update();
-
 	a_DiffDrive.UpdateVal(0,0);
 	a_DiffDrive.UpdateDistance();
-	a_Lifter.Update(0);
+	a_Lifter.Update(0.0);
 
 	if (a_GamePad.GetRawButton(5)){
 		a_CollectorArm.Clamp();
@@ -194,7 +173,7 @@ void Endeavor::TeleopPeriodic()
 
 void Endeavor::TestInit()
 {
-	TeleopInit();
+	MasterInit();
 }
 
 void Endeavor::TestPeriodic()
@@ -221,9 +200,25 @@ void Endeavor::TestPeriodic()
 	ShuffleboardPeriodicUpdate();
 }
 
+void Endeavor::MasterInit(){
+	a_DiffDrive.Init();
+	a_DiffDrive.SetLeftPIDF(LEFT_DRIVE_P,LEFT_DRIVE_I,LEFT_DRIVE_D,LEFT_DRIVE_F);
+	a_DiffDrive.SetRightPIDF(RIGHT_DRIVE_P,RIGHT_DRIVE_I,RIGHT_DRIVE_D,RIGHT_DRIVE_F);
+	a_DiffDrive.SetDriveType(2);
+	a_DiffDrive.ZeroEncoders();
+	// Change the number to change drivetypes. Refer to diffdrive.cpp for help.
+	// a_DiffDrive.DisableMotorSafetyTraitor();
+	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
+	a_Lifter.Init();
+	a_UltraSoul.Init();
+	// a_Gyro.Cal();
+	a_Gyro.Zero();
+	a_LRC.SetAllColor(0,100,0);
+}
+
 void Endeavor::ShuffleboardPeriodicUpdate(){
-	float gyroValue1 = a_Gyro.GetAngle(0);
-	float gyroValue2 = a_Gyro.GetAngle(1);
+	// float gyroValue1 = a_Gyro.GetAngle(0);
+	// float gyroValue2 = a_Gyro.GetAngle(1);
 	float gyroValue3 = a_Gyro.GetAngle(2);
 	// SmartDashboard::PutNumber("Gyro Angle 1: ", gyroValue1);
 	// SmartDashboard::PutNumber("Gyro Angle 2: ", gyroValue2);

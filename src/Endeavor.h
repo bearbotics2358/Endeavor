@@ -33,6 +33,7 @@ public:
 	void AutonomousInit(void);
 	void AutonomousPeriodic(void);
 	void AutonomousPeriodicSimple(void);
+	void MasterInit();
 	void ShuffleboardPeriodicUpdate();
 
 private:
@@ -58,7 +59,7 @@ private:
 
 	LightRingController a_LRC;
 
-	PowerDistributionPanel a_PDP;
+	// PowerDistributionPanel a_PDP;
 
 	AutonomousHelper a_AutoBot;
 

@@ -18,7 +18,6 @@ UltrasonicSerial::UltrasonicSerial():
 }
 
 void UltrasonicSerial::Init(){
-	SmartDashboard::PutNumber("UltrasonicCycling", 1);
 	ultraA = 0;
 	ultraB = 0;
 	ultraC = 0;
@@ -29,28 +28,21 @@ void UltrasonicSerial::Init(){
 	for(int i = 0; i < BUFFER_SIZE; i++) {
 		readBuffer[i] = 0;
 	}
-	SmartDashboard::PutNumber("UltrasonicCycling", 2);
 }
 
 void UltrasonicSerial::Update(){
 	int dist;
 	
 	while (a_Ultra.GetBytesReceived() > 0){
-		SmartDashboard::PutNumber("UltrasonicCycling", 3);
 		a_Ultra.Read(&readBuffer[readIndex], 1);
 		if((readBuffer[readIndex] == '\r') || (readBuffer[readIndex] == '\t')) {
 			readBuffer[readIndex] = 0;
-			SmartDashboard::PutNumber("UltrasonicCycling", 4);
-			SmartDashboard::PutString("UltrasonicTest", readBuffer);
-			SmartDashboard::PutNumber("UltrasonicTest2", readIndex);
 			if(readIndex == 5) {
 				switch(readBuffer[0]) {
 					case 'A':
-						SmartDashboard::PutNumber("UltrasonicCycling", 5);
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
 						ultraA = (float)dist/25.4;
-						SmartDashboard::PutNumber("Ultrasonic A", ultraA);
 						break;
 
 					case 'B':
