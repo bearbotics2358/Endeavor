@@ -43,12 +43,12 @@ void CollectorArm::UpdateValue(float val)
 
 void CollectorArm::UpdateAngle(float angle)
 {
-	a_pivotMotor.Set(ControlMode::Position, angle);
+	a_pivotMotor.Set(ControlMode::Position, Map(angle, REST_POS, UPPER_STOP, 50.0, 180.0));
 }
 
 void CollectorArm::UpdateRollers(float velo)
 {
-	a_Collector.Update(Map(velo, REST_POS, UPPER_STOP, 50.0, 180.0));
+	a_Collector.Update(velo);
 }
 
 void CollectorArm::RollerPos(int state){
