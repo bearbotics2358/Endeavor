@@ -4,7 +4,7 @@
 #define GAMEPAD_PORT 0
 #define JOYSTICK1_PORT 1
 #define JOYSTICK2_PORT 2
-#define JOYSTICKZ_PORT 3
+#define BUTTONBOX_PORT 3
 
 #define WHEEL_DISTANCE 24 // distance in inches pls
 
@@ -62,8 +62,8 @@
 #define SOL_PORT_SIX 6
 #define SOL_PORT_SEV 7
 
-#define LEFT_AGGRO 0.6 // used to change how aggressive drive straight correction is on both sides.
-#define RIGHT_AGGRO 0.6
+#define LEFT_AGGRO 1.0 // used to change how aggressive drive straight correction is on both sides.
+#define RIGHT_AGGRO 1.0
 
 #define BAUD_RATE_ARDUINO 9600
 #define USB_PORT_ARDUINO SerialPort::kUSB2

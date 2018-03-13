@@ -130,9 +130,12 @@ enum AutoStateV5
 class Autonomous
 {
  public:
-	Autonomous(AutonomousHelper &AutoBot, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul);
+	Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul);
 	virtual ~Autonomous() = default;
 	void Init();
+	void DecidePath(AutonomousHelper &AutoBot, Joystick &ButtonBox, bool testing);
+	void StartPathMaster();
+	void PeriodicPathMaster();
 	void AutonomousPeriodicVx();
 	void AutonomousStartU0();
 	void AutonomousPeriodicU0();
@@ -155,6 +158,8 @@ class Autonomous
 
  private:
 	AutonomousHelper &a_AutoBot;
+
+	Joystick &a_ButtonBox;
 
 	CollectorArm &a_CollectorArm;
 
@@ -182,6 +187,7 @@ class Autonomous
 
 	float a_AngleSaved;
 	double a_time_state = 0;
+	int autoPathMaster;
 
 	/* Example internal auto function
 	 * bool DriveStraight(int distance);*/

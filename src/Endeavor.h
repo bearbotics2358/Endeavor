@@ -40,7 +40,7 @@ private:
 	Joystick a_GamePad;
 	Joystick a_Joystick1;
 	Joystick a_Joystick2;
-	Joystick a_JoystickZ;
+	Joystick a_ButtonBox;
 
 	DiffDrive a_DiffDrive; // This is different from Differential Drive in WPILib.
 
@@ -58,7 +58,7 @@ private:
 
 	LightRingController a_LRC;
 
-	// PowerDistributionPanel a_PDP;
+	PowerDistributionPanel a_PDP;
 
 	AutonomousHelper a_AutoBot;
 

@@ -21,6 +21,7 @@ public:
 	void Release();
 	bool GetClampState();
 	bool CubePresent();
+	void SetAngle(float val);
 	float GetAngle1();
 	float GetAngle2();
 	void SetArmPIDF(float p, float i, float d, float f);

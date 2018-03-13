@@ -154,7 +154,7 @@ void DiffDrive::GoDistance(float targetDistance){
 	a_rightDriveTwo.Set(ControlMode::Position, targetDistance * 4096);
 }
 
-void DiffDrive::DriveStraight(float left, float right){
+void DiffDrive::DriveStraightEncoder(float left, float right, float velo){
 	double leftDistance = GetDistanceLeft();
 	double rightDistance = GetDistanceRight();
 	SmartDashboard::PutNumber("left auto", leftDistance);
@@ -163,13 +163,13 @@ void DiffDrive::DriveStraight(float left, float right){
 	double diff = (leftDistance - rightDistance);
 	if(fabs(diff) < 0.10) {
 		// close enough
-		UpdateVal(left * -1, right * -1);
+		UpdateVal(left * velo * -1, right * velo * -1);
 	} else if(diff < 0) {
 		// turn right
-		UpdateVal(((9.0/7.0) * left * -1), ((7.0/9.0) * right * -1));
+		UpdateVal(((9.0/7.0) * left * velo * -1), ((7.0/9.0) * right * velo * -1));
 	} else {
 		// turn left
-		UpdateVal(((7.0/9.0) * left * -1), ((9.0/7.0) * right * -1));
+		UpdateVal(((7.0/9.0) * left * velo * -1), ((9.0/7.0) * right * velo * -1));
 	}
 }
 
@@ -200,7 +200,7 @@ double DiffDrive::gettime_d(){
 	return t0;
 }
 
-int DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call) {
+bool DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call) {
 	// currently only handles driving forward (and forward arcs)
 
 	// distances are in inches 
@@ -264,7 +264,7 @@ int DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call
 	
 	if((ldist_now >= ldist) && (rdist_now >= rdist)) {
 		// maneuver complete
-		return 1;
+		return true;
 	}
 
 	// where should it be now?
@@ -289,7 +289,7 @@ int DiffDrive::DriveToDist(float ldist, float rdist, float speed, int first_call
 	a_leftDriveTwo.Set(ControlMode::Position, ldist_count);
 	a_rightDriveTwo.Set(ControlMode::Position, rdist_count);
 	
-	return 0;
+	return false;
 }
 
 bool DiffDrive::ArcTurn(float turnRadius, float turnAngle, bool direction, int first_call){ // radius dictates how gradual turn is, angle dictates how far it goes, direction indicates left vs right

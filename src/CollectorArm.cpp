@@ -15,11 +15,13 @@ CollectorArm::CollectorArm(int pivotMotorPort)
 void CollectorArm::Init()
 {
 	UpdateValue(0);
+	UpdateRollers(0);
 	a_Collector.Init();
 	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
 	a_pivotMotor.SetInverted(true);
 	a_Collector.InvertRight();
+	SetAngle(0.0);
 	// a_pivotMotor.SetSensorPhase(false); // possibly needs this?
 
 	/* Notes:
@@ -41,12 +43,12 @@ void CollectorArm::UpdateValue(float val)
 
 void CollectorArm::UpdateAngle(float angle)
 {
-	a_pivotMotor.Set(ControlMode::Position, GetAngle2());
+	a_pivotMotor.Set(ControlMode::Position, angle);
 }
 
 void CollectorArm::UpdateRollers(float velo)
 {
-	a_Collector.Update(velo);
+	a_Collector.Update(Map(velo, REST_POS, UPPER_STOP, 50.0, 180.0));
 }
 
 void CollectorArm::RollerPos(int state){
@@ -55,12 +57,10 @@ void CollectorArm::RollerPos(int state){
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
 		break;
-
 	case 1: // middle pos - PRAC
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
 		break;
-
 	case 2: // collect - PRAC
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
@@ -89,14 +89,21 @@ bool CollectorArm::CubePresent(){
 	return a_Collector.GetCubeStatus();
 }
 
+void CollectorArm::SetAngle(float val){
+	a_pivotMotor.SetSelectedSensorPosition(0, kPIDLoopIdx, kTimeoutMs);
+}
+
 float CollectorArm::GetAngle1() // returns raw values
 {
-	return (a_pivotMotor.GetSelectedSensorPosition(0));
+	float ret = (a_pivotMotor.GetSelectedSensorPosition(0));
+	// SmartDashboard::PutNumber("ArmTheta", ret);
+	// SmartDashboard::PutNumber("ArmTheta", (ret * 1.0));
+	return ret;
 }
 
 float CollectorArm::GetAngle2() // returns the corrected value using map function.
 {
-	float ret = Map((a_pivotMotor.GetSelectedSensorPosition(0)), 50.0, 180.0, REST_POS, UPPER_STOP);
+	float ret = Map((1.0 * (a_pivotMotor.GetSelectedSensorPosition(0))), REST_POS, UPPER_STOP, 50.0, 180.0);
 	return ret;
 }
 
@@ -112,5 +119,6 @@ void CollectorArm::Disable(){
 }
 
 float CollectorArm::Map(float x, float in_min, float in_max, float out_min, float out_max){
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	float ret = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	return ret;
 }
