@@ -133,7 +133,8 @@ class Autonomous
 	Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul);
 	virtual ~Autonomous() = default;
 	void Init();
-	void DecidePath(AutonomousHelper &AutoBot, Joystick &ButtonBox, bool testing);
+	void DecidePath();
+	void DecidePath(int intent);
 	void StartPathMaster();
 	void PeriodicPathMaster();
 	void AutonomousPeriodicVx();

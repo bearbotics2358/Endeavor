@@ -84,12 +84,10 @@ void Endeavor::AutonomousInit()
 	MasterInit();
 
 	a_Auto.Init();
-	// a_Auto.DecidePath(a_AutoBot, a_ButtonBox, true);
-	// a_Auto.StartPathMaster();
-
-	// For now, uncomment one of the following lines to run that Autonomous routine
+	a_Auto.DecidePath(); // call this with a number to override automatic selection
+	a_Auto.StartPathMaster(); // override by commenting this and the above call to decide path
 	// a_Auto.AutonomousStartU0();
-	a_Auto.AutonomousStartU1();
+	// a_Auto.AutonomousStartU1();
 	// a_Auto.AutonomousStartU2();
 	// a_Auto.AutonomousStartU3();
 	// a_Auto.AutonomousStartU4();
@@ -101,10 +99,9 @@ void Endeavor::AutonomousPeriodic()
 	// get latest values before taking action
 	a_UltraSoul.Update();
 	a_Gyro.Update();
-
-	// For now, uncomment one of the following lines to run that Autonomous routine
+	a_Auto.PeriodicPathMaster();
 	// a_Auto.AutonomousPeriodicU0();
-	a_Auto.AutonomousPeriodicU1();
+	// a_Auto.AutonomousPeriodicU1();
 	// a_Auto.AutonomousPeriodicU2();
 	// a_Auto.AutonomousPeriodicU3();
 	// a_Auto.AutonomousPeriodicU4();
@@ -114,6 +111,7 @@ void Endeavor::AutonomousPeriodic()
 void Endeavor::TeleopInit()
 {
 	MasterInit();
+	a_Underglow.BlueLaser();
 }
 
 void Endeavor::TeleopPeriodic()
@@ -186,6 +184,7 @@ void Endeavor::TestPeriodic()
 	a_Lifter.Update(0);
 
 	if (a_GamePad.GetRawButton(1)){
+		SmartDashboard::PutNumber("DStr Val", a_GamePad.GetRawAxis(2));
 		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, a_GamePad.GetRawAxis(2));
 	}
 	if (a_GamePad.GetRawButton(2)){
@@ -211,8 +210,10 @@ void Endeavor::MasterInit(){
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	a_Lifter.Init();
 	a_UltraSoul.Init();
+	a_Underglow.Init();
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
+	a_Compressor.SetClosedLoopControl(false);
 	a_LRC.SetAllColor(0,100,0);
 }
 

@@ -43,6 +43,8 @@ void CollectorArm::UpdateValue(float val)
 
 void CollectorArm::UpdateAngle(float angle)
 {
+	// map is used here to bring angle back to the raw sensor value
+	// raw is converted to an angle to make code simpler.
 	a_pivotMotor.Set(ControlMode::Position, Map(angle, REST_POS, UPPER_STOP, 50.0, 180.0));
 }
 
@@ -96,8 +98,6 @@ void CollectorArm::SetAngle(float val){
 float CollectorArm::GetAngle1() // returns raw values
 {
 	float ret = (a_pivotMotor.GetSelectedSensorPosition(0));
-	// SmartDashboard::PutNumber("ArmTheta", ret);
-	// SmartDashboard::PutNumber("ArmTheta", (ret * 1.0));
 	return ret;
 }
 

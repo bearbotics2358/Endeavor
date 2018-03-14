@@ -30,14 +30,15 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
 }
 
 void Autonomous::Init(){
-
+	a_Gyro.Zero();
 }
 
-void Autonomous::DecidePath(AutonomousHelper &AutoBot, Joystick &ButtonBox, bool testing){
+void Autonomous::DecidePath(){
+	autoPathMaster = -1; // makes sure we start on a clean value
 	// ButtonBox Information
-	bool left = ButtonBox.GetRawButton(2);
-	bool center = ButtonBox.GetRawButton(3);
-	bool right = ButtonBox.GetRawButton(4);
+	bool left = a_ButtonBox.GetRawButton(2);
+	bool center = a_ButtonBox.GetRawButton(3);
+	bool right = a_ButtonBox.GetRawButton(4);
 	// AutoBot Information
 	int playerStation = a_AutoBot.GetAllianceStation();
 	bool blue = a_AutoBot.GetAllianceSide();
@@ -53,16 +54,25 @@ void Autonomous::DecidePath(AutonomousHelper &AutoBot, Joystick &ButtonBox, bool
 	 * U2 - Drive Straight on side of switch, raise arm, twist 90, dispense (US)
 	 *
 	 */
-	if (testing){
-		autoPathMaster = -1;
-	}
-	else if (center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
+	if (center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
 		// U1
 		autoPathMaster = 1;
 	}
 	else if (left || right){
+		// U0
 		autoPathMaster = 0;
 	}
+
+	if (left && center && right){
+		// special override to execute U0
+		// please dont use this if we are in front of the switch, it may cause the robot to ram it.
+		autoPathMaster = 0;
+	}
+}
+
+void Autonomous::DecidePath(int intent){
+	// Call DecidePath with the param to override the decision structure.
+	autoPathMaster = intent;
 }
 
 void Autonomous::StartPathMaster(){
@@ -70,14 +80,25 @@ void Autonomous::StartPathMaster(){
 		case -1:
 			// Error!
 			SmartDashboard::PutBoolean("Auto Started", false);
+			a_Underglow.GoRed();
 			break;
 		case 0:
 			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.GoBlue();
 			AutonomousStartU0();
 			break;
 		case 1:
 			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.BlueBounce();
 			AutonomousStartU1();
+			break;
+		case 2:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			AutonomousStartU2();
+			break;
+		case 3:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			AutonomousStartU3();
 			break;
 	}
 }
@@ -92,6 +113,12 @@ void Autonomous::PeriodicPathMaster(){
 			break;
 		case 1:
 			AutonomousPeriodicU1();
+			break;
+		case 2:
+			AutonomousPeriodicU2();
+			break;
+		case 3:
+			AutonomousPeriodicU3();
 			break;
 	}
 }
@@ -142,7 +169,11 @@ void Autonomous::AutonomousPeriodicU0()
 
 	case kMoveToSwitchU0:
 		if (a_UltraSoul.GetRearRight() < SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.45);
+			if (a_UltraSoul.GetRearRight() > (0.75 * SWITCH_DISTANCE)){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.3);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.45);
+			}
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdleU0;
