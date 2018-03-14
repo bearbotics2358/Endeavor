@@ -46,7 +46,7 @@ enum AutoStateV1 {
 enum AutoStateU2 {
 	kAutoIdleU2 =0,
 	kMoveToSideOfSwitchU2,
-	kTurnLeftU2,
+	kTurnNinetyU2,
 	kMoveToEdgeOfSwitchU2,
 	kMoveArmU2,
 	kReleaseCubeU2,
@@ -189,6 +189,10 @@ class Autonomous
 	float a_AngleSaved;
 	double a_time_state = 0;
 	int autoPathMaster;
+
+	bool b_left = false;
+	bool b_center = false;
+	bool b_right = false;
 
 	/* Example internal auto function
 	 * bool DriveStraight(int distance);*/

@@ -27,6 +27,9 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
 	a_AngleSaved = 0.0;
 	a_time_state = 0;
 	autoPathMaster = -1;
+	b_left = false;
+	b_center = false;
+	b_right = false;
 }
 
 void Autonomous::Init(){
@@ -36,9 +39,9 @@ void Autonomous::Init(){
 void Autonomous::DecidePath(){
 	autoPathMaster = -1; // makes sure we start on a clean value
 	// ButtonBox Information
-	bool left = a_ButtonBox.GetRawButton(2);
-	bool center = a_ButtonBox.GetRawButton(3);
-	bool right = a_ButtonBox.GetRawButton(4);
+	b_left = a_ButtonBox.GetRawButton(2);
+	b_center = a_ButtonBox.GetRawButton(3);
+	b_right = a_ButtonBox.GetRawButton(4);
 	// AutoBot Information
 	int playerStation = a_AutoBot.GetAllianceStation();
 	bool blue = a_AutoBot.GetAllianceSide();
@@ -51,19 +54,24 @@ void Autonomous::DecidePath(){
 	 *
 	 * U0 - Drive Straight (Past Line using USonics)
 	 * U1 - Drive into front of switch, raise arm, dispense cube. (USonics)
-	 * U2 - Drive Straight on side of switch, raise arm, twist 90, dispense (US)
+	 * U2 - Drive Straight on side of switch, raise arm, twist 90, dispense if ours (US)
 	 *
 	 */
-	if (center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
+	if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
 		// U1
 		autoPathMaster = 1;
-	}
-	else if (left || right){
+	} else if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
+		// U2, turn to switch
+		autoPathMaster = 2;
+	} else if (b_right && !ourSwitch){ // Indicates Switch on Right and Right RPos.
+		// U2, turn to switch
+		autoPathMaster = 2;
+	} else if (b_left || b_right){
 		// U0
 		autoPathMaster = 0;
 	}
 
-	if (left && center && right){
+	if (b_left && b_center && b_right){
 		// special override to execute U0
 		// please dont use this if we are in front of the switch, it may cause the robot to ram it.
 		autoPathMaster = 0;
@@ -308,22 +316,36 @@ void Autonomous::AutonomousPeriodicU2()
 		} else {
 			a_DiffDrive.ZeroEncoders();
 			a_Gyro.Zero();
-			nextState = kTurnLeftU2;
+			nextState = kTurnNinetyU2;
 		}
 		break;
 
-	case kTurnLeftU2:
+	case kTurnNinetyU2:
 		// move arm while moving bot
 		a_CollectorArm.UpdateAngle(ARM_ANGLE2);
-		if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveToEdgeOfSwitchU2;
+		if (b_left){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				nextState = kMoveToEdgeOfSwitchU2;
+			}
+			else{
+				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
+				// might not be even needed because short-circuit in code makes the motors still run
+			}
 		}
-		else{
-			a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
-			// might not be even needed because short-circuit in code makes the motors still run
+		else if (b_right){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				nextState = kMoveToEdgeOfSwitchU2;
+			}
+			else{
+				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
+				// might not be even needed because short-circuit in code makes the motors still run
+			}
 		}
+
 		break;
 
 	case kMoveToEdgeOfSwitchU2:
