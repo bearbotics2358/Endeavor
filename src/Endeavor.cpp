@@ -8,7 +8,7 @@
 #include <LiveWindow/LiveWindow.h>
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
-#include <PracticePrefs.h>
+#include <CompPrefs.h>
 #include <Endeavor.h>
 
 /*

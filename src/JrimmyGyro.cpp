@@ -3,7 +3,7 @@
 #include <I2C.h>
 #include <HAL/HAL.h>
 #include <LiveWindow/LiveWindow.h>
-#include <PracticePrefs.h>
+#include <CompPrefs.h>
 
 const uint8_t JrimmyGyro::kPowerMgmRegister;
 // const uint8_t JrimmyGyro::kDataFormatRegister;
