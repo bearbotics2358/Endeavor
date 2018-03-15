@@ -199,14 +199,26 @@ void Endeavor::TestPeriodic(){
 		SmartDashboard::PutNumber("DStr Val", a_GamePad.GetRawAxis(2));
 		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, a_GamePad.GetRawAxis(2));
 	}
-	if (a_GamePad.GetRawButton(2)){
-		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 0.0);
+	if (a_Joystick2.GetRawButton(4)){
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90);
+	}
+	if (a_Joystick2.GetRawButton(5)){
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90);
 	}
 	if (a_GamePad.GetRawButton(3)){
 		a_Gyro.Zero();
 	}
 	if (a_Joystick1.GetRawButton(3)){
 		a_CollectorArm.UpdateAngle(60);
+	}
+	if (a_Joystick1.GetRawButton(2)){
+		a_CollectorArm.UpdateAngle(175);
+	}
+	if (a_Joystick1.GetRawButton(8)){
+		a_CollectorArm.UpdateAngle(90);
+	}
+	if (a_Joystick1.GetRawButton(9)){
+		a_CollectorArm.UpdateAngle(135);
 	}
 	ShuffleboardPeriodicUpdate();
 }
