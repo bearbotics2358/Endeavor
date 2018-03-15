@@ -47,10 +47,30 @@ void Underglow::RedBounce(){
 	a_Arduino.Write("Q", 1);
 }
 
-void Underglow::Rainbow(){
-	a_Arduino.Write("Z", 1);
+void Underglow::MagentaLaser(){
+	a_Arduino.Write("T", 1);
+}
+
+void Underglow::YellowLaser(){
+	a_Arduino.Write("U", 1);
+}
+
+void Underglow::CyanLaser(){
+	a_Arduino.Write("V", 1);
+}
+
+void Underglow::RedLaser(){
+	a_Arduino.Write("X", 1);
 }
 
 void Underglow::BlueLaser(){
-	a_Arduino.Write("X", 1);
+	a_Arduino.Write("Y", 1);
+}
+
+void Underglow::GreenLaser(){
+	a_Arduino.Write("Z", 1);
+}
+
+void Underglow::Rainbow(){
+	a_Arduino.Write("R", 1);
 }

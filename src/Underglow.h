@@ -18,8 +18,13 @@ public: Underglow();
 	void FadeDark();
 	void BlueBounce();
 	void RedBounce();
-	void Rainbow();
+	void MagentaLaser();
+	void YellowLaser();
+	void CyanLaser();
+	void RedLaser();
 	void BlueLaser();
+	void GreenLaser();
+	void Rainbow();
 
 private:
 	SerialPort a_Arduino;
