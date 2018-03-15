@@ -83,9 +83,9 @@ enum AutoStateU4
 {
 	kAutoIdleU4 = 0,
 	kMoveHalfToSwitchU4,
-	kTurnRightU4,
-	kMoveFlushWithSwitchU4,
-	kTurnLeftU4,
+	kTurnNinetyU4,
+	kCenterWithSwitchU4,
+	kTurnNinetyOppositeU4,
 	kMoveToFrontOfSwitchU4,
 	kMoveArmU4,
 	kReleaseCubeU4,
