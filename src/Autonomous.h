@@ -64,7 +64,7 @@ enum AutoStateV2 {
 enum AutoStateU3 {
 	kAutoIdleU3 = 0,
 	kMoveToSideOfScaleU3,
-	kTurnLeftU3,
+	kTurnNinetyU3,
 	kMoveToEdgeOfScaleU3,
 	kMoveArmU3,
 	kReleaseCubeU3,
