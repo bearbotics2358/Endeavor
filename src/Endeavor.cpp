@@ -52,6 +52,7 @@ a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow,
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
 	a_Gyro.Init();
+	autonTesting = false;
 }
 
 void Endeavor::RobotInit()
@@ -61,6 +62,7 @@ void Endeavor::RobotInit()
 	// Disable the other ports
 	a_UltraSoul.DisablePort(1);
 	a_UltraSoul.DisablePort(3);
+	autonTesting = false;
 }
 
 void Endeavor::RobotPeriodic()
@@ -111,7 +113,7 @@ void Endeavor::AutonomousPeriodic()
 void Endeavor::TeleopInit()
 {
 	MasterInit();
-	a_Underglow.BlueLaser();
+	a_Underglow.MagentaLaser();
 }
 
 void Endeavor::TeleopPeriodic()
@@ -167,15 +169,25 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(7)){
 		a_Compressor.SetClosedLoopControl(false);
 	}
+	if (a_Joystick1.GetRawButton(7)){
+		// test autonomous by pressing and holding down the button for the duration of the auto sequence
+		if (autonTesting){
+			a_Auto.AutonomousPeriodicU0();
+		} else {
+			a_Auto.AutonomousStartU0();
+		}
+		autonTesting = true;
+	}
+	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
+		autonTesting = false;
+	}
 }
 
-void Endeavor::TestInit()
-{
+void Endeavor::TestInit(){
 	MasterInit();
 }
 
-void Endeavor::TestPeriodic()
-{
+void Endeavor::TestPeriodic(){
 	a_UltraSoul.Update();
 	a_Gyro.Update();
 

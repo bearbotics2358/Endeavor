@@ -92,20 +92,22 @@ void Autonomous::StartPathMaster(){
 			break;
 		case 0:
 			SmartDashboard::PutBoolean("Auto Started", true);
-			a_Underglow.GoBlue();
+			a_Underglow.MagentaLaser();
 			AutonomousStartU0();
 			break;
 		case 1:
 			SmartDashboard::PutBoolean("Auto Started", true);
-			a_Underglow.BlueBounce();
+			a_Underglow.BlueLaser();
 			AutonomousStartU1();
 			break;
 		case 2:
 			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.YellowLaser();
 			AutonomousStartU2();
 			break;
 		case 3:
 			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.CyanLaser();
 			AutonomousStartU3();
 			break;
 	}

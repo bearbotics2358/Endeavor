@@ -64,6 +64,8 @@ private:
 	AutonomousHelper a_AutoBot;
 
 	Autonomous a_Auto;
+
+	bool autonTesting;
 };
 
 #endif
