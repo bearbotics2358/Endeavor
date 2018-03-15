@@ -21,4 +21,6 @@
 #define FRONT_OF_SCALE_DISTANCE 0.0
 #define ARM_ANGLE5 60.0
 
+#define ARM_ANGLE6 60.0
+
 #endif

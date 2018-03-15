@@ -22,7 +22,8 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
   a_AutoStateU4(kAutoIdleU4),
   a_AutoStateV4(kAutoIdle4),
   a_AutoStateU5(kAutoIdleU5),
-  a_AutoStateV5(kAutoIdle5)
+  a_AutoStateV5(kAutoIdle5),
+  a_AutoStateU6(kAutoIdleU6)
 {
 	a_AngleSaved = 0.0;
 	a_time_state = 0;
@@ -53,8 +54,12 @@ void Autonomous::DecidePath(){
 	 * Auton Path Documentation
 	 *
 	 * U0 - Drive Straight (Past Line using USonics)
-	 * U1 - Drive into front of switch, raise arm, dispense cube. (USonics)
-	 * U2 - Drive Straight on side of switch, raise arm, twist 90, dispense if ours (US)
+	 * U1 - Drive into front of switch, raise arm, dispense cube
+	 * U2 - Drive Straight on side of switch, raise arm, twist 90, dispense
+	 * U3 - Drive straight on side of scale, twist 90 facing out of field, arm flicks up, dispense
+	 * U4 - Drive straight for a bit, twist in, move to other side of switch, twist again, move to switch, dispense.
+	 * U5 - Drive past switch, twist in, move across field to center of the side edge of scale, twist, backshot
+	 * U6 - Start dead center,  forward, 45, forward 45 to front of correct switch.
 	 *
 	 */
 	if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
@@ -133,32 +138,6 @@ void Autonomous::PeriodicPathMaster(){
 	}
 }
 
-void Autonomous::AutonomousPeriodicVx()
-{
-	AutoStateVx nextState = a_AutoStateVx;
-	int ret;
-	
-	switch(a_AutoStateVx){
-	case kAutoIdlex:
-		a_DiffDrive.UpdateVal(0,0);
-		a_DiffDrive.ZeroEncoders();
-		break;
-
-	case kMoveToSwitchInitx:
-		a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
-		nextState = kMoveToSwitchx;
-		break;
-
-	case kMoveToSwitchx:
-		ret = a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
-		if(ret) {
-			a_DiffDrive.UpdateVal(0,0);
-			nextState = kAutoIdlex;
-		}
-		break;
-	}
-	a_AutoStateVx = nextState;
-}
 
 void Autonomous::AutonomousStartU0()
 {
@@ -193,26 +172,6 @@ void Autonomous::AutonomousPeriodicU0()
 	a_AutoStateU0 = nextState;
 }
 
-void Autonomous::AutonomousPeriodicV0()
-{
-    AutoStateV0 nextState = a_AutoStateV0;
-
-    switch(a_AutoStateV0){
-    case kMoveToSwitch0:
-        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-        } else {
-            a_DiffDrive.UpdateVal(0,0);
-            nextState = kAutoIdle0;
-        }
-        break;
-    case kAutoIdle0:
-        a_DiffDrive.UpdateVal(0,0);
-        a_DiffDrive.ZeroEncoders();
-        break;
-    }
-    a_AutoStateV0 = nextState;
-}
 
 void Autonomous::AutonomousStartU1()
 {
@@ -268,34 +227,6 @@ void Autonomous::AutonomousPeriodicU1()
 	a_AutoStateU1 = nextState;
 }
 
-void Autonomous::AutonomousPeriodicV1()
-{
-    AutoStateV1 nextState = a_AutoStateV1;
-
-    switch(a_AutoStateV1){
-    case kMoveToSwitch1:
-        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
-        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-        } else {
-            a_DiffDrive.UpdateVal(0,0);
-            nextState = kMoveArm1;
-        }
-        break;
-    case kMoveArm1:
-    	a_CollectorArm.UpdateAngle(60);
-    	nextState = kReleaseCube1;
-    	break;
-    case kReleaseCube1:
-    	a_CollectorArm.UpdateRollers(-1.0);
-        nextState = kAutoIdle1;
-        break;
-    case kAutoIdle1:
-        a_DiffDrive.UpdateVal(0,0);
-        a_DiffDrive.ZeroEncoders();
-        break;
-    }
-    a_AutoStateV1 = nextState;
-}
 
 void Autonomous::AutonomousStartU2()
 {
@@ -380,48 +311,6 @@ void Autonomous::AutonomousPeriodicU2()
 		break;
 	}
 	a_AutoStateU2 = nextState;
-}
-
-void Autonomous::AutonomousPeriodicV2()
-{
-    AutoStateV2 nextState = a_AutoStateV2;
-
-    switch(a_AutoStateV2){
-    case kMoveToSideOfSwitch:
-        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SWITCH_DISTANCE) {
-        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-        } else {
-            a_DiffDrive.UpdateVal(0,0);
-            a_DiffDrive.ZeroEncoders();
-            nextState = kTurnLeft2;
-        }
-        break;
-    case kTurnLeft2:
-		a_DiffDrive.ZeroEncoders();
-        nextState = kMoveToEdgeOfSwitch;
-        break;
-    case kMoveToEdgeOfSwitch:
-        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SWITCH_DISTANCE) {
-        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-        } else {
-			a_DiffDrive.UpdateVal(0,0);
-			nextState = kMoveArm2;
-		}
-        break;
-    case kMoveArm2:
-    	a_CollectorArm.UpdateAngle(ARM_ANGLE2);
-    	nextState = kReleaseCube2;
-    	break;
-    case kReleaseCube2:
-    	a_CollectorArm.UpdateRollers(-1.0);
-        nextState = kAutoIdle2;
-        break;
-    case kAutoIdle2:
-        a_DiffDrive.UpdateVal(0,0);
-        a_DiffDrive.ZeroEncoders();
-        break;
-    }
-    a_AutoStateV2 = nextState;
 }
 
 void Autonomous::AutonomousStartU3()
@@ -509,50 +398,6 @@ void Autonomous::AutonomousPeriodicU3()
 		break;
 	}
 	a_AutoStateU3 = nextState;
-}
-
-void Autonomous::AutonomousPeriodicV3()
-{
-    AutoStateV3 nextState = a_AutoStateV3;
-
-    switch(a_AutoStateV3){
-    case kMoveToSideOfScale:
-        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SCALE_DISTANCE) {
-        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-        } else {
-            a_DiffDrive.UpdateVal(0,0);
-            a_DiffDrive.ZeroEncoders();
-            nextState = kTurnLeft3;
-        }
-        break;
-    case kTurnLeft3:
-        // a_DiffDrive.ArcTurn(18, 90, true);
-        a_DiffDrive.ZeroEncoders();
-        nextState = kMoveToEdgeOfScale;
-        break;
-    case kMoveToEdgeOfScale:
-        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SCALE_DISTANCE) {
-        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-                } else {
-            		a_DiffDrive.UpdateVal(0,0);
-                    a_DiffDrive.ZeroEncoders();
-                    nextState = kMoveArm3;
-                }
-        break;
-    case kMoveArm3:
-    	a_CollectorArm.UpdateAngle(ARM_ANGLE3);
-    	nextState = kReleaseCube3;
-    	break;
-    case kReleaseCube3:
-    	a_CollectorArm.UpdateRollers(-1.0);
-        nextState = kAutoIdle3;
-        break;
-    case kAutoIdle3:
-        a_DiffDrive.UpdateVal(0,0);
-        a_DiffDrive.ZeroEncoders();
-        break;
-    }
-    a_AutoStateV3 = nextState;
 }
 
 void Autonomous::AutonomousStartU4()
@@ -646,6 +491,341 @@ void Autonomous::AutonomousPeriodicU4()
 	a_AutoStateU4 = nextState;
 }
 
+void Autonomous::AutonomousStartU5()
+{
+	a_AutoStateU5 = kMoveTopOfSwitchU5;
+}
+
+void Autonomous::AutonomousPeriodicU5()
+{
+	AutoStateU5 nextState = a_AutoStateU5;
+
+	switch (a_AutoStateU5) {
+	case kAutoIdleU5:
+		a_DiffDrive.UpdateVal(0,0);
+		a_DiffDrive.ZeroEncoders();
+		break;
+
+	case kMoveTopOfSwitchU5:
+		if (a_UltraSoul.GetRearRight() < TOP_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.45);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kTurnNinetyU5;
+		}
+		break;
+
+	case kTurnNinetyU5:
+		// a_DiffDrive.ArcTurn(10, 90, false);
+		a_DiffDrive.UpdateVal(0.25,-0.25); // rotate clockwise
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) <= -90) {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveFlushWithScaleU5;
+		}
+		break;
+
+	case kMoveFlushWithScaleU5:
+		if (a_UltraSoul.GetFrontLeft() > FLUSH_WITH_SWITCH) {
+			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kTurnNinetyOppositeU5;
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
+		}
+		break;
+
+	case kTurnNinetyOppositeU5:
+		// move arm while moving bot
+		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
+		// a_DiffDrive.ArcTurn(10, 90, true);
+		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveToFrontOfScaleU5;
+		}
+		break;
+
+	case kMoveToFrontOfScaleU5:
+		// move arm while moving bot
+		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
+		if (a_UltraSoul.GetRearRight() < FRONT_OF_SCALE_DISTANCE) {
+			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmU5;
+		}
+		break;
+
+	case kMoveArmU5:
+		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
+		if(a_CollectorArm.GetAngle2() >= ARM_ANGLE5) {
+			nextState = kReleaseCubeU5;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+
+	case kReleaseCubeU5:
+		a_CollectorArm.UpdateRollers(-1.0);
+		// have rollers been running long enough?
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kAutoIdleU5;
+		}
+		break;
+	}
+	a_AutoStateU5 = nextState;
+}
+
+void Autonomous::AutonomousStartU6()
+{
+	a_AutoStateU6 = kMoveForwardThirdU6;
+}
+
+void Autonomous::AutonomousPeriodicU6()
+{
+	AutoStateU6 nextState = a_AutoStateU6;
+
+	switch (a_AutoStateU6) {
+	case kAutoIdleU6:
+		a_DiffDrive.UpdateVal(0,0);
+		a_DiffDrive.ZeroEncoders();
+		break;
+
+	case kMoveForwardThirdU6:
+		if (a_UltraSoul.GetRearRight() < HALF_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kTurnFourtyFiveU6;
+		}
+		break;
+
+	case kTurnFourtyFiveU6:
+		break;
+
+	case kMoveDiagU6:
+		if (a_UltraSoul.GetFrontLeft() > FLUSH_WITH_SWITCH) {
+			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kTurnFourtyFiveOppositeU6;
+			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
+		}
+		break;
+
+	case kTurnFourtyFiveOppositeU6:
+		// move arm while moving bot
+		a_CollectorArm.UpdateAngle(ARM_ANGLE4);
+		// a_DiffDrive.ArcTurn(18, 90, true);
+		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
+		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveToFrontOfSwitchU6;
+		}
+		break;
+
+	case kMoveToFrontOfSwitchU6:
+		// move arm while moving bot
+		a_CollectorArm.UpdateAngle(ARM_ANGLE4);
+		if (a_UltraSoul.GetRearRight() < FRONT_OF_SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmU6;
+		}
+		break;
+
+	case kMoveArmU6:
+		a_CollectorArm.UpdateAngle(ARM_ANGLE4);
+		if(a_CollectorArm.GetAngle2() >= ARM_ANGLE4) {
+			nextState = kReleaseCubeU6;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+
+	case kReleaseCubeU6:
+		a_CollectorArm.UpdateRollers(-1.0);
+		// have rollers been running long enough?
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kAutoIdleU6;
+		}
+		break;
+	}
+	a_AutoStateU6 = nextState;
+}
+
+
+
+
+
+void Autonomous::AutonomousPeriodicVx()
+{
+	AutoStateVx nextState = a_AutoStateVx;
+	int ret;
+
+	switch(a_AutoStateVx){
+	case kAutoIdlex:
+		a_DiffDrive.UpdateVal(0,0);
+		a_DiffDrive.ZeroEncoders();
+		break;
+
+	case kMoveToSwitchInitx:
+		a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
+		nextState = kMoveToSwitchx;
+		break;
+
+	case kMoveToSwitchx:
+		ret = a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
+		if(ret) {
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kAutoIdlex;
+		}
+		break;
+	}
+	a_AutoStateVx = nextState;
+}
+void Autonomous::AutonomousPeriodicV0()
+{
+    AutoStateV0 nextState = a_AutoStateV0;
+
+    switch(a_AutoStateV0){
+    case kMoveToSwitch0:
+        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
+			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+        } else {
+            a_DiffDrive.UpdateVal(0,0);
+            nextState = kAutoIdle0;
+        }
+        break;
+    case kAutoIdle0:
+        a_DiffDrive.UpdateVal(0,0);
+        a_DiffDrive.ZeroEncoders();
+        break;
+    }
+    a_AutoStateV0 = nextState;
+}
+void Autonomous::AutonomousPeriodicV1()
+{
+    AutoStateV1 nextState = a_AutoStateV1;
+
+    switch(a_AutoStateV1){
+    case kMoveToSwitch1:
+        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
+        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+        } else {
+            a_DiffDrive.UpdateVal(0,0);
+            nextState = kMoveArm1;
+        }
+        break;
+    case kMoveArm1:
+    	a_CollectorArm.UpdateAngle(60);
+    	nextState = kReleaseCube1;
+    	break;
+    case kReleaseCube1:
+    	a_CollectorArm.UpdateRollers(-1.0);
+        nextState = kAutoIdle1;
+        break;
+    case kAutoIdle1:
+        a_DiffDrive.UpdateVal(0,0);
+        a_DiffDrive.ZeroEncoders();
+        break;
+    }
+    a_AutoStateV1 = nextState;
+}
+void Autonomous::AutonomousPeriodicV2()
+{
+    AutoStateV2 nextState = a_AutoStateV2;
+
+    switch(a_AutoStateV2){
+    case kMoveToSideOfSwitch:
+        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SWITCH_DISTANCE) {
+        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+        } else {
+            a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
+            nextState = kTurnLeft2;
+        }
+        break;
+    case kTurnLeft2:
+		a_DiffDrive.ZeroEncoders();
+        nextState = kMoveToEdgeOfSwitch;
+        break;
+    case kMoveToEdgeOfSwitch:
+        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SWITCH_DISTANCE) {
+        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+        } else {
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kMoveArm2;
+		}
+        break;
+    case kMoveArm2:
+    	a_CollectorArm.UpdateAngle(ARM_ANGLE2);
+    	nextState = kReleaseCube2;
+    	break;
+    case kReleaseCube2:
+    	a_CollectorArm.UpdateRollers(-1.0);
+        nextState = kAutoIdle2;
+        break;
+    case kAutoIdle2:
+        a_DiffDrive.UpdateVal(0,0);
+        a_DiffDrive.ZeroEncoders();
+        break;
+    }
+    a_AutoStateV2 = nextState;
+}
+void Autonomous::AutonomousPeriodicV3()
+{
+    AutoStateV3 nextState = a_AutoStateV3;
+
+    switch(a_AutoStateV3){
+    case kMoveToSideOfScale:
+        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SCALE_DISTANCE) {
+        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+        } else {
+            a_DiffDrive.UpdateVal(0,0);
+            a_DiffDrive.ZeroEncoders();
+            nextState = kTurnLeft3;
+        }
+        break;
+    case kTurnLeft3:
+        // a_DiffDrive.ArcTurn(18, 90, true);
+        a_DiffDrive.ZeroEncoders();
+        nextState = kMoveToEdgeOfScale;
+        break;
+    case kMoveToEdgeOfScale:
+        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SCALE_DISTANCE) {
+        	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+                } else {
+            		a_DiffDrive.UpdateVal(0,0);
+                    a_DiffDrive.ZeroEncoders();
+                    nextState = kMoveArm3;
+                }
+        break;
+    case kMoveArm3:
+    	a_CollectorArm.UpdateAngle(ARM_ANGLE3);
+    	nextState = kReleaseCube3;
+    	break;
+    case kReleaseCube3:
+    	a_CollectorArm.UpdateRollers(-1.0);
+        nextState = kAutoIdle3;
+        break;
+    case kAutoIdle3:
+        a_DiffDrive.UpdateVal(0,0);
+        a_DiffDrive.ZeroEncoders();
+        break;
+    }
+    a_AutoStateV3 = nextState;
+}
 void Autonomous::AutonomousPeriodicV4()
 {
     AutoStateV4 nextState = a_AutoStateV4;
@@ -703,98 +883,6 @@ void Autonomous::AutonomousPeriodicV4()
     }
     a_AutoStateV4 = nextState;
 }
-
-void Autonomous::AutonomousStartU5()
-{
-	a_AutoStateU5 = kMoveTopOfSwitchU5;
-}
-
-void Autonomous::AutonomousPeriodicU5()
-{
-	AutoStateU5 nextState = a_AutoStateU5;
-
-	switch (a_AutoStateU5) {
-	case kAutoIdleU5:
-		a_DiffDrive.UpdateVal(0,0);
-		a_DiffDrive.ZeroEncoders();
-		break;
-
-	case kMoveTopOfSwitchU5:
-		if (a_UltraSoul.GetRearRight() < TOP_OF_SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-		} else {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kTurnRightU5;
-			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
-		}
-		break;
-
-	case kTurnRightU5:
-		// a_DiffDrive.ArcTurn(10, 90, false);
-		a_DiffDrive.UpdateVal(0.25,-0.25); // rotate clockwise
-		if((a_Gyro.GetAngle(2) - a_AngleSaved) <= -90) {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveFlushWithScaleU5;
-		}
-		break;
-
-	case kMoveFlushWithScaleU5:
-		if (a_UltraSoul.GetFrontLeft() > FLUSH_WITH_SWITCH) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-		} else {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kTurnLeftU5;
-			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
-		}
-		break;
-
-	case kTurnLeftU5:
-		// move arm while moving bot
-		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
-		// a_DiffDrive.ArcTurn(10, 90, true);
-		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
-		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveToFrontOfScaleU5;
-		}
-		break;
-
-	case kMoveToFrontOfScaleU5:
-		// move arm while moving bot
-		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
-		if (a_UltraSoul.GetRearRight() < FRONT_OF_SCALE_DISTANCE) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
-		} else {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveArmU5;
-		}
-		break;
-
-	case kMoveArmU5:
-		a_CollectorArm.UpdateAngle(ARM_ANGLE5);
-		if(a_CollectorArm.GetAngle2() >= ARM_ANGLE5) {
-			nextState = kReleaseCubeU5;
-			a_time_state = a_DiffDrive.gettime_d();
-		}
-		break;
-
-	case kReleaseCubeU5:
-		a_CollectorArm.UpdateRollers(-1.0);
-		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
-			a_CollectorArm.UpdateRollers(0.0);
-			nextState = kAutoIdleU5;
-		}
-		break;
-	}
-	a_AutoStateU5 = nextState;
-}
-
 void Autonomous::AutonomousPeriodicV5()
 {
     AutoStateV5 nextState = a_AutoStateV5;
@@ -852,6 +940,7 @@ void Autonomous::AutonomousPeriodicV5()
     }
     a_AutoStateV5 = nextState;
 }
+
 
 /* Example internal auto function
  * bool Autonomous::DriveStraight(int distance) {

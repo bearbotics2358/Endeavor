@@ -107,9 +107,9 @@ enum AutoStateU5
 {
 	kAutoIdleU5 = 0,
 	kMoveTopOfSwitchU5,
-	kTurnRightU5,
+	kTurnNinetyU5,
 	kMoveFlushWithScaleU5,
-	kTurnLeftU5,
+	kTurnNinetyOppositeU5,
 	kMoveToFrontOfScaleU5,
 	kMoveArmU5,
 	kReleaseCubeU5,
@@ -125,6 +125,18 @@ enum AutoStateV5
 	kMoveArm5,
 	kReleaseCube5,
 	kAutoIdle5
+};
+
+enum AutoStateU6
+{
+	kAutoIdleU6 = 0,
+	kMoveForwardThirdU6,
+	kTurnFourtyFiveU6,
+	kMoveDiagU6,
+	kTurnFourtyFiveOppositeU6,
+	kMoveToFrontOfSwitchU6,
+	kMoveArmU6,
+	kReleaseCubeU6,
 };
 
 class Autonomous
@@ -156,6 +168,8 @@ class Autonomous
 	void AutonomousStartU5();
 	void AutonomousPeriodicU5();
 	void AutonomousPeriodicV5();
+	void AutonomousStartU6();
+	void AutonomousPeriodicU6();
 
  private:
 	AutonomousHelper &a_AutoBot;
@@ -185,6 +199,7 @@ class Autonomous
 	AutoStateV4 a_AutoStateV4;
 	AutoStateU5 a_AutoStateU5;
 	AutoStateV5 a_AutoStateV5;
+	AutoStateU6 a_AutoStateU6;
 
 	float a_AngleSaved;
 	double a_time_state = 0;
