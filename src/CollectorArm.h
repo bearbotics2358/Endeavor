@@ -35,7 +35,7 @@ private:
 	Collector a_Collector;
 	int kSlotIdx = 0;
 	int kPIDLoopIdx = 0;
-	int kTimeoutMs = 10;
+	int kTimeoutMs = 0;
 };
 
 #endif

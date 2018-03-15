@@ -126,10 +126,10 @@ void Endeavor::TeleopPeriodic()
 	a_Lifter.Update(0.0);
 
 	if (a_GamePad.GetRawButton(5)){
-		a_CollectorArm.Clamp();
+		a_CollectorArm.Release();
 	}
 	if (a_GamePad.GetRawButton(6)){
-		a_CollectorArm.Release();
+		a_CollectorArm.Clamp();
 	}
 
 	if (a_GamePad.GetRawAxis(3) > 0.00){
@@ -143,7 +143,7 @@ void Endeavor::TeleopPeriodic()
 	}
 	a_CollectorArm.UpdateValue(0.0);
 	if (a_GamePad.GetRawButton(1)){
-		a_CollectorArm.UpdateValue(a_GamePad.GetRawAxis(1));
+		a_CollectorArm.UpdateValue(a_GamePad.GetRawAxis(1) * -1);
 	}
 
 	a_DiffDrive.UpdateVal((a_Joystick1.GetRawAxis(1)), (a_Joystick2.GetRawAxis(1)));
@@ -168,6 +168,18 @@ void Endeavor::TeleopPeriodic()
 	}
 	if (a_Joystick2.GetRawButton(7)){
 		a_Compressor.SetClosedLoopControl(false);
+	}
+	if (a_Joystick1.GetRawButton(8)){
+		a_CollectorArm.UpdateAngle(60);
+	}
+	if (a_Joystick1.GetRawButton(9)){
+		a_CollectorArm.UpdateAngle(90);
+	}
+	if (a_Joystick1.GetRawButton(10)){
+		a_CollectorArm.UpdateAngle(135);
+	}
+	if (a_Joystick1.GetRawButton(11)){
+		a_CollectorArm.UpdateAngle(175);
 	}
 	if (a_Joystick1.GetRawButton(7)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
@@ -207,18 +219,6 @@ void Endeavor::TestPeriodic(){
 	}
 	if (a_GamePad.GetRawButton(3)){
 		a_Gyro.Zero();
-	}
-	if (a_Joystick1.GetRawButton(3)){
-		a_CollectorArm.UpdateAngle(60);
-	}
-	if (a_Joystick1.GetRawButton(2)){
-		a_CollectorArm.UpdateAngle(175);
-	}
-	if (a_Joystick1.GetRawButton(8)){
-		a_CollectorArm.UpdateAngle(90);
-	}
-	if (a_Joystick1.GetRawButton(9)){
-		a_CollectorArm.UpdateAngle(135);
 	}
 	ShuffleboardPeriodicUpdate();
 }

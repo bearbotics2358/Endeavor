@@ -46,12 +46,12 @@
 #define LOWER_ANGLE 0
 #define SALUTE 0
 #define UPPER_ANGLE 0
-#define UPPER_STOP -287.0
+#define UPPER_STOP 287.0
 
-#define ARM_P 10
-#define ARM_I 0.0001
-#define ARM_D 0
-#define ARM_F 0
+#define ARM_P 100
+#define ARM_I 0.0
+#define ARM_D 0.0
+#define ARM_F 0.0
 
 #define SOL_PORT_ZRO 0 // PCM Port ID
 #define SOL_PORT_ONE 1

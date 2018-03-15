@@ -19,7 +19,7 @@ void CollectorArm::Init()
 	a_Collector.Init();
 	a_pivotMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::Analog, 0, 0);
 	a_pivotMotor.SetNeutralMode(NeutralMode::Brake);
-	a_pivotMotor.SetInverted(true);
+	// a_pivotMotor.SetInverted(true);
 	a_Collector.InvertRight();
 	SetAngle(0.0);
 	// a_pivotMotor.SetSensorPhase(false); // possibly needs this?
@@ -45,7 +45,9 @@ void CollectorArm::UpdateAngle(float angle)
 {
 	// map is used here to bring angle back to the raw sensor value
 	// raw is converted to an angle to make code simpler.
-	a_pivotMotor.Set(ControlMode::Position, Map(angle, REST_POS, UPPER_STOP, 50.0, 180.0));
+	float mappedval = Map(angle, 50.0, 180.0, REST_POS, UPPER_STOP);
+	SmartDashboard::PutNumber("Target Arm Value", mappedval);
+	a_pivotMotor.Set(ControlMode::Position, mappedval);
 }
 
 void CollectorArm::UpdateRollers(float velo)
@@ -55,19 +57,21 @@ void CollectorArm::UpdateRollers(float velo)
 
 void CollectorArm::RollerPos(int state){
 	switch(state){
-	case 0: // middle pos - PRAC
+	case 0: // middle pos - PRAC and comp
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
 		break;
-	case 1: // middle pos - PRAC
+	case 1: // middle pos - PRAC and comp
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
 		break;
 	case 2: // collect - PRAC
+		// stow - comp
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kReverse);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kReverse);
 		break;
 	case 3: // stow - PRAC
+		// collect - comp
 		a_ArmSolenoidTwo.Set(DoubleSolenoid::kForward);
 		a_ArmSolenoidThree.Set(DoubleSolenoid::kForward);
 		break;
