@@ -249,6 +249,7 @@ void Autonomous::AutonomousStartU0()
 {
 	a_AutoStateU0 = kMoveToSwitchU0;
 	a_Gyro.Zero();
+	a_Underglow.Rainbow();
 }
 
 void Autonomous::AutonomousPeriodicU0()
@@ -283,6 +284,8 @@ void Autonomous::AutonomousStartU1()
 {
 	a_AutoStateU1 = kMoveToSwitchU1;
 	a_Gyro.Zero();
+	x_T = a_DiffDrive.gettime_d();
+	x_Dist = a_UltraSoul.GetRearRight();
 }
 
 void Autonomous::AutonomousPeriodicU1()
@@ -299,7 +302,21 @@ void Autonomous::AutonomousPeriodicU1()
 	case kMoveToSwitchU1:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE2, 0.05);
-		if (a_UltraSoul.GetRearRight() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
+		if ((a_DiffDrive.gettime_d() - x_T) > 5.0){
+			a_CollectorArm.RollerPos(1); // send to middle
+			a_DiffDrive.UpdateVal(0,0);
+			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetAvgDistance());
+			nextState = kMoveArmU1;
+			a_Underglow.CyanLaser();
+			break;
+		}
+
+		if (a_UltraSoul.GetRearRight() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)){
+			if ((a_UltraSoul.GetRearRight() - x_Dist) > 6.0){
+				x_Dist = a_UltraSoul.GetRearRight();
+				x_T = a_DiffDrive.gettime_d();
+			}
+
 			if (a_UltraSoul.GetRearRight() > (0.75 * (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
@@ -310,6 +327,7 @@ void Autonomous::AutonomousPeriodicU1()
 			a_DiffDrive.UpdateVal(0,0);
 			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetAvgDistance());
 			nextState = kMoveArmU1;
+			a_Underglow.CyanLaser();
 		}
 		break;
 
@@ -331,6 +349,7 @@ void Autonomous::AutonomousPeriodicU1()
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 1.5) {
 			a_CollectorArm.UpdateRollers(0.0);
+			a_Underglow.GreenLaser();
 			nextState = kAutoIdleU1;
 		}
 		break;
@@ -373,6 +392,7 @@ void Autonomous::AutonomousPeriodicU2()
 			a_DiffDrive.ZeroEncoders();
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kTurnNinetyU2;
+			a_Underglow.GreenLaser();
 		}
 		break;
 
@@ -388,6 +408,12 @@ void Autonomous::AutonomousPeriodicU2()
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveToEdgeOfSwitchU2;
+				if (a_AutoBot.GetAllianceSide()){
+					a_Underglow.BlueLaser();
+				}
+				else{
+					a_Underglow.RedLaser();
+				}
 			} else {
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
@@ -399,6 +425,12 @@ void Autonomous::AutonomousPeriodicU2()
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveToEdgeOfSwitchU2;
+				if (a_AutoBot.GetAllianceSide()){
+					a_Underglow.BlueLaser();
+				}
+				else{
+					a_Underglow.RedLaser();
+				}
 			}
 			else{
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
@@ -441,6 +473,7 @@ void Autonomous::AutonomousPeriodicU2()
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 1.5) {
 			a_CollectorArm.UpdateRollers(0.0);
+			a_Underglow.GreenLaser();
 			nextState = kAutoIdleU2;
 		}
 		break;

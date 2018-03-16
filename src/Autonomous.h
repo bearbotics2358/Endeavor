@@ -211,6 +211,9 @@ class Autonomous
 	bool b_center = false;
 	bool b_right = false;
 
+	float x_T = 0.0;
+	float x_Dist = 0.0;
+
 	/* Example internal auto function
 	 * bool DriveStraight(int distance);*/
 
