@@ -117,9 +117,23 @@ void DiffDrive::UpdateVal(float left, float right){
 }
 
 bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when its right.
+	if (fabs(curAngle - tarAngle) < 3.0){
+		UpdateVal(0,0);
+		return true;
+	}
+	if ((tarAngle - curAngle) > 0){
+		UpdateVal(0.5,-0.5); // right
+	}
+	else {
+		UpdateVal(-0.5, 0.5) // left
+	}
+
+	return false;
+
+	/*
 	if(curAngle > (tarAngle - 3)) {
 		if(fabs(tarAngle - curAngle) > 10) {
-			UpdateVal(-0.5, 0.5);
+			UpdateVal(-0.5, 0.5); // left
 		} else {
 			UpdateVal(-0.4, 0.4);
 		}
@@ -134,6 +148,7 @@ bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when i
 		return true;
 	}
 	return false;
+	*/
 }
 
 void DiffDrive::ShiftLow(){

@@ -47,7 +47,7 @@ void CollectorArm::UpdateAngle(float angle)
 	// map is used here to bring angle back to the raw sensor value
 	// raw is converted to an angle to make code simpler.
 	float mappedval = Map(angle, 50.0, 180.0, REST_POS, UPPER_STOP);
-	SmartDashboard::PutNumber("Target Arm Value", mappedval);
+	// SmartDashboard::PutNumber("Target Arm Value", mappedval);
 	a_pivotMotor.Set(ControlMode::Position, mappedval);
 }
 
@@ -59,7 +59,7 @@ void CollectorArm::UpdateArmAngleSimple(float angle, float kP){
 	else if (intent < -1){
 		intent = -1.0;
 	}
-	// SmartDashboard::PutNumber("Intent", intent);
+	SmartDashboard::PutNumber("Intent", intent);
 	a_pivotMotor.Set(ControlMode::PercentOutput, intent);
 }
 

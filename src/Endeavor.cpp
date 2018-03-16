@@ -169,6 +169,9 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(7)){
 		a_Compressor.SetClosedLoopControl(false);
 	}
+	if (a_Joystick2.GetRawButton(8)){
+		a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE2, 0.05);
+	}
 
 	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
 		autonTesting = false;
@@ -263,7 +266,7 @@ void Endeavor::MasterInit(){
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
 	a_Compressor.SetClosedLoopControl(false);
-	a_LRC.SetAllColor(0,100,0);
+	a_LRC.SetAllColor(100,100,0);
 }
 
 void Endeavor::ShuffleboardPeriodicUpdate(){
