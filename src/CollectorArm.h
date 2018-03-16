@@ -15,6 +15,7 @@ public:
 	void Init(float p, float i, float d, float f);
 	void UpdateValue(float val);
 	void UpdateAngle(float angle);
+	void UpdateArmAngleSimple(float angle, float kP);
 	void UpdateRollers(float velo);
 	void RollerPos(int state);
 	void Clamp();
@@ -33,6 +34,7 @@ private:
 	DoubleSolenoid a_ArmSolenoidTwo;
 	DoubleSolenoid a_ArmSolenoidThree;
 	Collector a_Collector;
+	AnalogInput a_Potentiometer;
 	int kSlotIdx = 0;
 	int kPIDLoopIdx = 0;
 	int kTimeoutMs = 0;

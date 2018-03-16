@@ -62,10 +62,11 @@ void Autonomous::DecidePath(){
 	 * U6 - Start dead center,  forward, 45 out, forward, 45 in, to front of correct switch.
 	 *
 	 */
+
 	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){
 		if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
 			// U1
-			autoPathMaster = 1;
+			autoPathMaster = 1; // confirmed correct
 		} else if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
@@ -184,7 +185,7 @@ void Autonomous::AutonomousPeriodicU0()
 
 	case kMoveToSwitchU0:
 		if (a_UltraSoul.GetRearRight() < (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS))){
+			if (a_UltraSoul.GetRearRight() > (0.50 * (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -213,7 +214,6 @@ void Autonomous::AutonomousPeriodicU1()
 	case kAutoIdleU1:
 		a_DiffDrive.UpdateVal(0,0);
 		a_DiffDrive.ZeroEncoders();
-		a_CollectorArm.RollerPos(2); // ensures a proper stow?
 		break;
 
 	case kMoveToSwitchU1:
@@ -234,6 +234,7 @@ void Autonomous::AutonomousPeriodicU1()
 
 	case kMoveArmU1:
 		a_CollectorArm.UpdateAngle(ARM_ANGLE2);
+		a_DiffDrive.UpdateVal(0,0);
 		if(a_CollectorArm.GetAngle2() >= ARM_ANGLE2) {
 			nextState = kReleaseCubeU1;
 			a_time_state = a_DiffDrive.gettime_d();
@@ -241,7 +242,9 @@ void Autonomous::AutonomousPeriodicU1()
 		break;
 
 	case kReleaseCubeU1:
-		a_CollectorArm.UpdateRollers(-1.0);
+		a_CollectorArm.UpdateRollers(-0.5);
+		a_CollectorArm.UpdateAngle(ARM_ANGLE2);
+		a_DiffDrive.UpdateVal(0,0);
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
@@ -266,21 +269,22 @@ void Autonomous::AutonomousPeriodicU2()
 
 	switch(a_AutoStateU2){
 	case kAutoIdleU2:
-		a_CollectorArm.RollerPos(3); // stow
 		a_DiffDrive.UpdateVal(0,0);
 		a_DiffDrive.ZeroEncoders();
 		break;
 
 	case kMoveToSideOfSwitchU2:
-		if (a_UltraSoul.GetRearRight() < (SIDE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (SIDE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+		a_DiffDrive.UpdateVal(0,0);
+		if (a_UltraSoul.GetRearRight() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) { // shoestring, fix this in the future u dummy
+			if (a_UltraSoul.GetRearRight() > (0.75 * (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
+			SmartDashboard::PutNumber("ENCODER DUMP!!!", a_DiffDrive.GetAvgDistance());
 			a_DiffDrive.ZeroEncoders();
-			a_Gyro.Zero();
+			a_DiffDrive.UpdateVal(0,0);
 			nextState = kTurnNinetyU2;
 		}
 		break;
@@ -288,25 +292,26 @@ void Autonomous::AutonomousPeriodicU2()
 	case kTurnNinetyU2:
 		// move arm while moving bot
 		a_CollectorArm.UpdateAngle(ARM_ANGLE2);
+		a_CollectorArm.RollerPos(1); // move to middle pos
 		if (b_left){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)){
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				nextState = kMoveToEdgeOfSwitchU2;
+			}
+			else{
+				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
+				// might not be even needed because short-circuit in code makes the motors still run
+			}
+		}
+		else if (b_right){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveToEdgeOfSwitchU2;
 			}
 			else{
-				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
-				// might not be even needed because short-circuit in code makes the motors still run
-			}
-		}
-		else if (b_right){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
-				a_DiffDrive.UpdateVal(0,0);
-				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveToEdgeOfSwitchU2;
-			}
-			else{
-				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
+				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
@@ -315,12 +320,9 @@ void Autonomous::AutonomousPeriodicU2()
 
 	case kMoveToEdgeOfSwitchU2:
 		a_CollectorArm.UpdateAngle(ARM_ANGLE2);
+		a_CollectorArm.RollerPos(3); // send to collect
 		if (a_UltraSoul.GetRearRight() < (EDGE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (EDGE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
-			} else {
-				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
-			}
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kMoveArmU2;
@@ -336,7 +338,7 @@ void Autonomous::AutonomousPeriodicU2()
 		break;
 
 	case kReleaseCubeU2:
-		a_CollectorArm.UpdateRollers(-1.0);
+		a_CollectorArm.UpdateRollers(-0.5);
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
@@ -385,17 +387,6 @@ void Autonomous::AutonomousPeriodicU3()
 		a_CollectorArm.UpdateAngle(ARM_ANGLE3);
 		a_CollectorArm.RollerPos(1); // deploy to 90 rel - middle pos
 		if (b_left){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
-				a_DiffDrive.UpdateVal(0,0);
-				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveToEdgeOfScaleU3;
-			}
-			else{
-				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
-				// might not be even needed because short-circuit in code makes the motors still run
-			}
-		}
-		else if (b_right){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -403,6 +394,17 @@ void Autonomous::AutonomousPeriodicU3()
 			}
 			else{
 				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
+				// might not be even needed because short-circuit in code makes the motors still run
+			}
+		}
+		else if (b_right){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				nextState = kMoveToEdgeOfScaleU3;
+			}
+			else{
+				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
@@ -477,17 +479,6 @@ void Autonomous::AutonomousPeriodicU4()
 
 	case kTurnNinetyU4:
 		if (b_left){ // turn in, theo
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
-				a_DiffDrive.UpdateVal(0,0);
-				a_DiffDrive.ZeroEncoders();
-				nextState = kCenterWithSwitchU4;
-			}
-			else{
-				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
-				// might not be even needed because short-circuit in code makes the motors still run
-			}
-		}
-		else if (b_right){ // turn in, theo
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -495,6 +486,17 @@ void Autonomous::AutonomousPeriodicU4()
 			}
 			else{
 				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
+				// might not be even needed because short-circuit in code makes the motors still run
+			}
+		}
+		else if (b_right){ // turn in, theo
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				nextState = kCenterWithSwitchU4;
+			}
+			else{
+				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}

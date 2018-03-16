@@ -7,7 +7,8 @@ CollectorArm::CollectorArm(int pivotMotorPort)
   a_ArmSolenoidOne(PCM_PORT, SOL_PORT_TWO, SOL_PORT_THR),
   a_ArmSolenoidTwo(PCM_PORT, SOL_PORT_FOU, SOL_PORT_FIV),
   a_ArmSolenoidThree(PCM_PORT, SOL_PORT_ZRO, SOL_PORT_ONE),
-  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON)
+  a_Collector(LEFT_COLLECTOR_TALON, RIGHT_COLLECTOR_TALON),
+  a_Potentiometer(0)
 {
 
 }
@@ -48,6 +49,18 @@ void CollectorArm::UpdateAngle(float angle)
 	float mappedval = Map(angle, 50.0, 180.0, REST_POS, UPPER_STOP);
 	SmartDashboard::PutNumber("Target Arm Value", mappedval);
 	a_pivotMotor.Set(ControlMode::Position, mappedval);
+}
+
+void CollectorArm::UpdateArmAngleSimple(float angle, float kP){
+	float intent = ((angle - GetAngle2()) * kP);
+	if (intent > 1){
+		intent = 1.0;
+	}
+	else if (intent < -1){
+		intent = -1.0;
+	}
+	SmartDashboard::PutNumber("Intent", intent);
+	a_pivotMotor.Set(ControlMode::PercentOutput, intent);
 }
 
 void CollectorArm::UpdateRollers(float velo)
@@ -101,13 +114,14 @@ void CollectorArm::SetAngle(float val){
 
 float CollectorArm::GetAngle1() // returns raw values
 {
-	float ret = (a_pivotMotor.GetSelectedSensorPosition(0));
+	// float ret = z(a_pivotMotor.GetSelectedSensorPosition(0));
+	float ret = a_Potentiometer.GetValue();
 	return ret;
 }
 
 float CollectorArm::GetAngle2() // returns the corrected value using map function.
 {
-	float ret = Map((1.0 * (a_pivotMotor.GetSelectedSensorPosition(0))), REST_POS, UPPER_STOP, 50.0, 180.0);
+	float ret = Map(GetAngle1(), REST_POS_POT, UPPER_STOP_POT, 50.0, 180.0);
 	return ret;
 }
 
