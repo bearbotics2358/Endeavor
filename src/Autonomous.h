@@ -148,7 +148,9 @@ class Autonomous
 	void DecidePath();
 	void DecidePath(int intent);
 	void StartPathMaster();
+	void StartPathMaster(int path);
 	void PeriodicPathMaster();
+	void PeriodicPathMaster(int path);
 	void AutonomousPeriodicVx();
 	void AutonomousStartU0();
 	void AutonomousPeriodicU0();

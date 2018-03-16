@@ -80,9 +80,9 @@ void Autonomous::DecidePath(){
 	}
 
 	if (b_left && b_center && b_right){
-		// special override to execute U0
+		// special override to execute U2
 		// please dont use this if we are in front of the switch, it may cause the robot to ram it.
-		autoPathMaster = 0;
+		autoPathMaster = 2;
 	}
 }
 
@@ -93,6 +93,51 @@ void Autonomous::DecidePath(int intent){
 
 void Autonomous::StartPathMaster(){
 	switch(autoPathMaster){
+		case -1:
+			// Error!
+			SmartDashboard::PutBoolean("Auto Started", false);
+			a_Underglow.GoRed();
+			break;
+		case 0:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.MagentaLaser();
+			AutonomousStartU0();
+			break;
+		case 1:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.BlueLaser();
+			AutonomousStartU1();
+			break;
+		case 2:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.YellowLaser();
+			AutonomousStartU2();
+			break;
+		case 3:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.CyanLaser();
+			AutonomousStartU3();
+			break;
+		case 4:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.CyanLaser();
+			AutonomousStartU4();
+			break;
+		case 5:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.CyanLaser();
+			AutonomousStartU5();
+			break;
+		case 6:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.CyanLaser();
+			AutonomousStartU6();
+			break;
+	}
+}
+
+void Autonomous::StartPathMaster(int path){
+	switch(path){
 		case -1:
 			// Error!
 			SmartDashboard::PutBoolean("Auto Started", false);
@@ -165,6 +210,34 @@ void Autonomous::PeriodicPathMaster(){
 	}
 }
 
+void Autonomous::PeriodicPathMaster(int path){
+	switch(path){
+		case -1:
+			// Error!
+			break;
+		case 0:
+			AutonomousPeriodicU0();
+			break;
+		case 1:
+			AutonomousPeriodicU1();
+			break;
+		case 2:
+			AutonomousPeriodicU2();
+			break;
+		case 3:
+			AutonomousPeriodicU3();
+			break;
+		case 4:
+			AutonomousPeriodicU4();
+			break;
+		case 5:
+			AutonomousPeriodicU5();
+			break;
+		case 6:
+			AutonomousPeriodicU6();
+			break;
+	}
+}
 
 void Autonomous::AutonomousStartU0()
 {
@@ -191,6 +264,7 @@ void Autonomous::AutonomousPeriodicU0()
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
+			SmartDashboard::PutNumber("ENCODER DUMP 333", a_DiffDrive.GetAvgDistance());
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdleU0;
 		}
@@ -228,6 +302,7 @@ void Autonomous::AutonomousPeriodicU1()
 		} else {
 			a_CollectorArm.RollerPos(1); // send to middle
 			a_DiffDrive.UpdateVal(0,0);
+			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetAvgDistance());
 			nextState = kMoveArmU1;
 		}
 		break;
@@ -282,7 +357,7 @@ void Autonomous::AutonomousPeriodicU2()
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
-			SmartDashboard::PutNumber("ENCODER DUMP!!!", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP 000", a_DiffDrive.GetAvgDistance());
 			a_DiffDrive.ZeroEncoders();
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kTurnNinetyU2;
@@ -295,6 +370,7 @@ void Autonomous::AutonomousPeriodicU2()
 		a_CollectorArm.RollerPos(1); // move to middle pos
 		if (b_left){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)){
+				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveToEdgeOfSwitchU2;
@@ -306,6 +382,7 @@ void Autonomous::AutonomousPeriodicU2()
 		}
 		else if (b_right){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
+				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveToEdgeOfSwitchU2;

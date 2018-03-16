@@ -59,7 +59,7 @@ void CollectorArm::UpdateArmAngleSimple(float angle, float kP){
 	else if (intent < -1){
 		intent = -1.0;
 	}
-	SmartDashboard::PutNumber("Intent", intent);
+	// SmartDashboard::PutNumber("Intent", intent);
 	a_pivotMotor.Set(ControlMode::PercentOutput, intent);
 }
 

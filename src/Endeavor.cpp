@@ -169,69 +169,54 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(7)){
 		a_Compressor.SetClosedLoopControl(false);
 	}
-	if (a_Joystick1.GetRawButton(8)){
-		// a_CollectorArm.UpdateAngle(60);
-		a_CollectorArm.UpdateArmAngleSimple(60, 0.05);
-	}
-	if (a_Joystick1.GetRawButton(9)){
-		// a_CollectorArm.UpdateAngle(90);
-		a_CollectorArm.UpdateArmAngleSimple(90, 0.05);
-	}
-	if (a_Joystick1.GetRawButton(10)){
-		// a_CollectorArm.UpdateAngle(135);
-		a_CollectorArm.UpdateArmAngleSimple(135, 0.05);
-	}
-	if (a_Joystick1.GetRawButton(11)){
-		// a_CollectorArm.UpdateAngle(175);
-		a_CollectorArm.UpdateArmAngleSimple(175, 0.05);
+
+	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
+		autonTesting = false;
 	}
 	if (a_Joystick1.GetRawButton(7)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
 		if (autonTesting){
-			a_Auto.AutonomousPeriodicU0();
+			a_Auto.PeriodicPathMaster(0);
 		} else {
-			a_Auto.AutonomousStartU0();
+			a_Auto.StartPathMaster(0);
 		}
 		autonTesting = true;
 	}
 	if (a_Joystick2.GetRawButton(8)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
 		if (autonTesting){
-			a_Auto.AutonomousPeriodicU1();
+			a_Auto.PeriodicPathMaster(1);
 		} else {
-			a_Auto.AutonomousStartU1();
+			a_Auto.StartPathMaster(1);
 		}
 		autonTesting = true;
 	}
 	if (a_Joystick2.GetRawButton(9)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
 		if (autonTesting){
-			a_Auto.AutonomousPeriodicU2();
+			a_Auto.PeriodicPathMaster(2);
 		} else {
-			a_Auto.AutonomousStartU2();
+			a_Auto.StartPathMaster(2);
 		}
 		autonTesting = true;
 	}
 	if (a_Joystick2.GetRawButton(10)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
 		if (autonTesting){
-			a_Auto.AutonomousPeriodicU3();
+			a_Auto.PeriodicPathMaster(3);
 		} else {
-			a_Auto.AutonomousStartU3();
+			a_Auto.StartPathMaster(3);
 		}
 		autonTesting = true;
 	}
 	if (a_Joystick2.GetRawButton(11)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
 		if (autonTesting){
-			a_Auto.AutonomousPeriodicU4();
+			a_Auto.PeriodicPathMaster(4);
 		} else {
-			a_Auto.AutonomousStartU4();
+			a_Auto.StartPathMaster(4);
 		}
 		autonTesting = true;
-	}
-	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
-		autonTesting = false;
 	}
 }
 
