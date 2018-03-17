@@ -618,7 +618,7 @@ void Autonomous::AutonomousPeriodicU4()
 
 	case kMoveHalfToSwitchU4:
 		if (a_UltraSoul.GetRearRight() < (HALF_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (HALF_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+			if (a_UltraSoul.GetRearRight() > (0.5 * (HALF_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -658,7 +658,7 @@ void Autonomous::AutonomousPeriodicU4()
 
 	case kCenterWithSwitchU4:
 		if (a_UltraSoul.GetFrontLeft() < (FLUSH_WITH_SWITCH - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (FLUSH_WITH_SWITCH - BOT_LENGTH_BUMPERS))){
+			if (a_UltraSoul.GetRearRight() > (0.5 * (FLUSH_WITH_SWITCH - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -705,7 +705,7 @@ void Autonomous::AutonomousPeriodicU4()
 		// may need the fancy timeout. we'll see if the extra bot length sub makes it go correctly
 		a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE4, 0.05);
 		if (a_UltraSoul.GetRearRight() < (FRONT_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (FRONT_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+			if (a_UltraSoul.GetRearRight() > (0.5 * (FRONT_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -737,33 +737,6 @@ void Autonomous::AutonomousPeriodicU4()
 		break;
 	}
 	a_AutoStateU4 = nextState;
-}
-
-void Autonomous::AutonomousPeriodicVx()
-{
-	AutoStateVx nextState = a_AutoStateVx;
-	int ret;
-
-	switch(a_AutoStateVx){
-	case kAutoIdlex:
-		a_DiffDrive.UpdateVal(0,0);
-		a_DiffDrive.ZeroEncoders();
-		break;
-
-	case kMoveToSwitchInitx:
-		a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
-		nextState = kMoveToSwitchx;
-		break;
-
-	case kMoveToSwitchx:
-		ret = a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
-		if(ret) {
-			a_DiffDrive.UpdateVal(0,0);
-			nextState = kAutoIdlex;
-		}
-		break;
-	}
-	a_AutoStateVx = nextState;
 }
 
 void Autonomous::AutonomousStartU5()

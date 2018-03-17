@@ -14,6 +14,12 @@ UltrasonicSerial::UltrasonicSerial():
 	ultraD = 0;
 	ultraE = 0;
 	ultraF = 0;
+	lastA = 0;
+	lastB = 0;
+	lastC = 0;
+	lastD = 0;
+	lastE = 0;
+	lastF = 0;
 	readIndex = 0;
 }
 
@@ -42,36 +48,60 @@ void UltrasonicSerial::Update(){
 					case 'A':
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
+						if (dist == 5000){
+							dist = lastA;
+						}
+						lastA = dist;
 						ultraA = (float)dist/25.4;
 						break;
 
 					case 'B':
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
+						if (dist == 5000){
+							dist = lastB;
+						}
+						lastB = dist;
 						ultraB = (float)dist/25.4;
 						break;
 
 					case 'C':
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
+						if (dist == 5000){
+							dist = lastC;
+						}
+						lastB = dist;
 						ultraC = (float)dist/25.4;
 						break;
 
 					case 'D':
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
+						if (dist == 5000){
+							dist = lastD;
+						}
+						lastD = dist;
 						ultraD = (float)dist/25.4;
 						break;
 
 					case 'E':
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
+						if (dist == 5000){
+							dist = lastE;
+						}
+						lastE = dist;
 						ultraE = (float)dist/25.4;
 						break;
 
 					case 'F':
 						dist = strtol(&readBuffer[1], (char **)NULL, 10);
 						// convert mm to inches
+						if (dist == 5000){
+							dist = lastF;
+						}
+						lastF = dist;
 						ultraF = (float)dist/25.4;
 						break;
 				}

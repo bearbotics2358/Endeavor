@@ -46,6 +46,12 @@ private:
 	float ultraF;
 	int readIndex;
 	char readBuffer[BUFFER_SIZE];
+	int lastA;
+	int lastB;
+	int lastC;
+	int lastD;
+	int lastE;
+	int lastF;
 };
 
 #endif
