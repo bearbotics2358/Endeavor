@@ -40,9 +40,16 @@ void Autonomous::Init(){
 void Autonomous::DecidePath(){
 	autoPathMaster = -1; // makes sure we start on a clean value
 	// ButtonBox Information
-	b_left = a_ButtonBox.GetRawButton(2);
-	b_center = a_ButtonBox.GetRawButton(3);
-	b_right = a_ButtonBox.GetRawButton(4);
+
+	// b_left = a_ButtonBox.GetRawButton(2);
+	// b_center = a_ButtonBox.GetRawButton(3);
+	// b_right = a_ButtonBox.GetRawButton(4);
+
+	/* SPECIAL */
+	b_left = false;
+	b_center = false;
+	b_right = true;
+
 	// AutoBot Information
 	int playerStation = a_AutoBot.GetAllianceStation();
 	bool blue = a_AutoBot.GetAllianceSide();
@@ -64,10 +71,6 @@ void Autonomous::DecidePath(){
 	 */
 
 	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){
-		if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
-			// U1
-			autoPathMaster = 1; // confirmed correct
-		}
 		if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
@@ -86,6 +89,14 @@ void Autonomous::DecidePath(){
 			// U0
 			autoPathMaster = 0;
 		}
+
+		/*
+		 if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
+			// U1
+			autoPathMaster = 1; // confirmed correct
+		}
+		 */
+
 	}
 
 	if (b_left && b_center && b_right){
@@ -93,13 +104,15 @@ void Autonomous::DecidePath(){
 		// please dont use this if we are in front of the switch, it may cause the robot to ram it.
 		autoPathMaster = 0;
 	}
-
-
 }
 
 void Autonomous::DecidePath(int intent){
 	// Call DecidePath with the param to override the decision structure.
 	autoPathMaster = intent;
+}
+
+int Autonomous::GetCurrentPath(){
+	return autoPathMaster;
 }
 
 void Autonomous::StartPathMaster(){
@@ -726,6 +739,33 @@ void Autonomous::AutonomousPeriodicU4()
 	a_AutoStateU4 = nextState;
 }
 
+void Autonomous::AutonomousPeriodicVx()
+{
+	AutoStateVx nextState = a_AutoStateVx;
+	int ret;
+
+	switch(a_AutoStateVx){
+	case kAutoIdlex:
+		a_DiffDrive.UpdateVal(0,0);
+		a_DiffDrive.ZeroEncoders();
+		break;
+
+	case kMoveToSwitchInitx:
+		a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
+		nextState = kMoveToSwitchx;
+		break;
+
+	case kMoveToSwitchx:
+		ret = a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
+		if(ret) {
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kAutoIdlex;
+		}
+		break;
+	}
+	a_AutoStateVx = nextState;
+}
+
 void Autonomous::AutonomousStartU5()
 {
 	a_AutoStateU5 = kMoveTopOfSwitchU5;
@@ -895,33 +935,6 @@ void Autonomous::AutonomousPeriodicU6()
 		break;
 	}
 	a_AutoStateU6 = nextState;
-}
-
-void Autonomous::AutonomousPeriodicVx()
-{
-	AutoStateVx nextState = a_AutoStateVx;
-	int ret;
-
-	switch(a_AutoStateVx){
-	case kAutoIdlex:
-		a_DiffDrive.UpdateVal(0,0);
-		a_DiffDrive.ZeroEncoders();
-		break;
-
-	case kMoveToSwitchInitx:
-		a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 1);
-		nextState = kMoveToSwitchx;
-		break;
-
-	case kMoveToSwitchx:
-		ret = a_DiffDrive.DriveToDist(SWITCH_DISTANCE, SWITCH_DISTANCE, 12, 0);
-		if(ret) {
-			a_DiffDrive.UpdateVal(0,0);
-			nextState = kAutoIdlex;
-		}
-		break;
-	}
-	a_AutoStateVx = nextState;
 }
 
 void Autonomous::AutonomousPeriodicV0()

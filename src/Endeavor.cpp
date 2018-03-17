@@ -224,30 +224,15 @@ void Endeavor::TeleopPeriodic()
 
 void Endeavor::TestInit(){
 	MasterInit();
+	a_Auto.Init();
+	a_Auto.DecidePath();
+	SmartDashboard::PutNumber("AUTOPATHMASTER1", a_Auto.GetCurrentPath());
 }
 
 void Endeavor::TestPeriodic(){
-	a_UltraSoul.Update();
-	a_Gyro.Update();
-
-	a_DiffDrive.UpdateVal(0,0);
-	a_DiffDrive.UpdateDistance();
-	a_Lifter.Update(0);
-
-	if (a_GamePad.GetRawButton(1)){
-		SmartDashboard::PutNumber("DStr Val", a_GamePad.GetRawAxis(2));
-		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, a_GamePad.GetRawAxis(2));
-	}
-	if (a_Joystick2.GetRawButton(4)){
-		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90);
-	}
-	if (a_Joystick2.GetRawButton(5)){
-		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90);
-	}
-	if (a_GamePad.GetRawButton(3)){
-		a_Gyro.Zero();
-	}
-	ShuffleboardPeriodicUpdate();
+	a_Auto.DecidePath();
+	SmartDashboard::PutNumber("AUTOPATHMASTER2", a_Auto.GetCurrentPath());
+	// ShuffleboardPeriodicUpdate();
 }
 
 void Endeavor::MasterInit(){
