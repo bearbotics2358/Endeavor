@@ -67,18 +67,21 @@ void Autonomous::DecidePath(){
 		if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
 			// U1
 			autoPathMaster = 1; // confirmed correct
-		} else if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
+		}
+		if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
 		} else if (b_left && scale){
 			// U3 turn to scale
 			// autoPathMaster = 3;
+			autoPathMaster = 0;
 		} else if (b_right && !ourSwitch){ // Indicates Switch on Right and Right RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
 		} else if (b_left && scale){
 			// U3 turn to scale
 			// autoPathMaster = 3;
+			autoPathMaster = 0;
 		} else if (b_left || b_right){
 			// U0
 			autoPathMaster = 0;
@@ -90,6 +93,8 @@ void Autonomous::DecidePath(){
 		// please dont use this if we are in front of the switch, it may cause the robot to ram it.
 		autoPathMaster = 0;
 	}
+
+
 }
 
 void Autonomous::DecidePath(int intent){
@@ -249,7 +254,6 @@ void Autonomous::AutonomousStartU0()
 {
 	a_AutoStateU0 = kMoveToSwitchU0;
 	a_Gyro.Zero();
-	a_Underglow.Rainbow();
 }
 
 void Autonomous::AutonomousPeriodicU0()
@@ -446,7 +450,7 @@ void Autonomous::AutonomousPeriodicU2()
 		if (((a_DiffDrive.gettime_d() - a_time_state)) <= ARM_TIMEOUT_SECONDS){
 			a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE2, 0.05);
 		}
-		a_CollectorArm.RollerPos(3); // send to collect
+		a_CollectorArm.RollerPos(2); // send to collect
 		if (a_UltraSoul.GetRearRight() < (EDGE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
 			if (b_left){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), -90.0, DRIVE_STRAIGHT_LOW);
@@ -622,7 +626,7 @@ void Autonomous::AutonomousPeriodicU4()
 				nextState = kCenterWithSwitchU4;
 			}
 			else{
-				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
+				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
@@ -633,7 +637,7 @@ void Autonomous::AutonomousPeriodicU4()
 				nextState = kCenterWithSwitchU4;
 			}
 			else{
-				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
+				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
@@ -685,6 +689,7 @@ void Autonomous::AutonomousPeriodicU4()
 
 	case kMoveToFrontOfSwitchU4:
 		// move arm while moving bot
+		// may need the fancy timeout. we'll see if the extra bot length sub makes it go correctly
 		a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE4, 0.05);
 		if (a_UltraSoul.GetRearRight() < (FRONT_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
 			if (a_UltraSoul.GetRearRight() > (0.75 * (FRONT_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
