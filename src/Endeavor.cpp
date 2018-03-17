@@ -84,7 +84,6 @@ void Endeavor::DisabledPeriodic()
 void Endeavor::AutonomousInit()
 {
 	MasterInit();
-
 	a_Auto.Init();
 	a_Auto.DecidePath(); // call this with a number to override automatic selection
 	a_Auto.StartPathMaster(); // override by commenting this and the above call to decide path

@@ -271,7 +271,9 @@ void Autonomous::AutonomousPeriodicU0()
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
-			SmartDashboard::PutNumber("ENCODER DUMP 333", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetDistanceLeft());
+			SmartDashboard::PutNumber("ENCODER DUMP Right", a_DiffDrive.GetDistanceRight());
+			SmartDashboard::PutNumber("Ultradump right", a_UltraSoul.GetRearRight());
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdleU0;
 		}
@@ -302,7 +304,7 @@ void Autonomous::AutonomousPeriodicU1()
 	case kMoveToSwitchU1:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE2, 0.05);
-		if ((a_DiffDrive.gettime_d() - x_T) > 5.0){
+		if ((a_DiffDrive.gettime_d() - x_T) > 2.5){
 			a_CollectorArm.RollerPos(1); // send to middle
 			a_DiffDrive.UpdateVal(0,0);
 			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetAvgDistance());
@@ -325,7 +327,9 @@ void Autonomous::AutonomousPeriodicU1()
 		} else {
 			a_CollectorArm.RollerPos(1); // send to middle
 			a_DiffDrive.UpdateVal(0,0);
-			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetDistanceLeft());
+			SmartDashboard::PutNumber("ENCODER DUMP Right", a_DiffDrive.GetDistanceRight());
+			SmartDashboard::PutNumber("Ultradump right", a_UltraSoul.GetRearRight());
 			nextState = kMoveArmU1;
 			a_Underglow.CyanLaser();
 		}
@@ -353,7 +357,6 @@ void Autonomous::AutonomousPeriodicU1()
 			nextState = kAutoIdleU1;
 		}
 		break;
-
 	}
 	a_AutoStateU1 = nextState;
 }
