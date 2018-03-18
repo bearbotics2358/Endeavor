@@ -55,6 +55,18 @@ a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow,
 	autonTesting = false;
 }
 
+/*
+ *
+ * FINAL COMPETITION CODE 3/17/18
+ * FRC Central Illinois Regional
+ * Peoria, Illinois.
+ * Final standing, Quarterfinals
+ * Alexis' Notes: We did extraordinarially well. I'm incredibly proud of everyone involved.
+ *
+ * Next stop, Chicago.
+ *
+ */
+
 void Endeavor::RobotInit()
 {
 	// for now, using old multiplexer on practice bot
