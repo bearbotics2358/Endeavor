@@ -3,8 +3,8 @@
 
 #include <WPILib.h>
 #include <SerialPort.h>
-#include <CompPrefs.h>
-#include <CompPrefsAutonomous.h>
+#include <PracticePrefs.h>
+#include <PracticePrefsAutonomous.h>
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>
@@ -85,13 +85,13 @@ enum AutoStateU7
 	kAutoIdleU7 = 0,
 	kMoveToScaleU7,
 	kTurnNinetyU7,
-	kMoveArmU7,
+	kMoveArmScaleU7,
 	kReleaseCubeScaleU7,
 	kTurnToSwitchU7,
 	kMoveToSwitchU7,
 	kCollectCubeU7,
 	kMoveBackU7,
-	kMoveArmU7,
+	kMoveArmSwitchU7,
 	kReleaseCubeSwitchU7
 };
 

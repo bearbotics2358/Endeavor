@@ -944,7 +944,7 @@ void Autonomous::AutonomousPeriodicU7()
 		break;
 	case kTurnNinetyU7:
 		break;
-	case kMoveArmU7:
+	case kMoveArmScaleU7:
 		break;
 	case kReleaseCubeScaleU7:
 		break;
@@ -956,7 +956,7 @@ void Autonomous::AutonomousPeriodicU7()
 		break;
 	case kMoveBackU7:
 		break;
-	case kMoveArmU7:
+	case kMoveArmSwitchU7:
 		break;
 	case kReleaseCubeSwitchU7:
 		break;

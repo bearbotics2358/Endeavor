@@ -7,7 +7,7 @@
 #include "SmartDashboard/SmartDashboard.h"
 #include "SmartDashboard/SendableChooser.h"
 #include "ctre/Phoenix.h"
-#include <CompPrefs.h>
+#include <PracticePrefs.h>
 #include <DiffDrive.h>
 #include <Collector.h>
 #include <CollectorArm.h>
