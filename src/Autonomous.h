@@ -13,20 +13,10 @@
 #include <Underglow.h>
 #include <UltrasonicSerial.h>
 
-enum AutoStateVx {
-	kAutoIdlex = 0,
-	kMoveToSwitchInitx,
-	kMoveToSwitchx,
-};
 
 enum AutoStateU0 {
 	kAutoIdleU0 = 0,
 	kMoveToSwitchU0,
-};
-
-enum AutoStateV0 {
-	kMoveToSwitch0 = 0,
-	kAutoIdle0
 };
 
 enum AutoStateU1 {
@@ -34,13 +24,6 @@ enum AutoStateU1 {
 	kMoveToSwitchU1,
 	kMoveArmU1,
 	kReleaseCubeU1
-};
-
-enum AutoStateV1 {
-	kMoveToSwitch1 = 0,
-	kMoveArm1,
-	kReleaseCube1,
-	kAutoIdle1
 };
 
 enum AutoStateU2 {
@@ -52,15 +35,6 @@ enum AutoStateU2 {
 	kReleaseCubeU2,
 };
 
-enum AutoStateV2 {
-	kMoveToSideOfSwitch = 0,
-	kTurnLeft2,
-	kMoveToEdgeOfSwitch,
-	kMoveArm2,
-	kReleaseCube2,
-	kAutoIdle2
-};
-
 enum AutoStateU3 {
 	kAutoIdleU3 = 0,
 	kMoveToSideOfScaleU3,
@@ -68,15 +42,6 @@ enum AutoStateU3 {
 	kMoveToEdgeOfScaleU3,
 	kMoveArmU3,
 	kReleaseCubeU3,
-};
-
-enum AutoStateV3 {
-	kMoveToSideOfScale = 0,
-	kTurnLeft3,
-	kMoveToEdgeOfScale,
-	kMoveArm3,
-	kReleaseCube3,
-	kAutoIdle3
 };
 
 enum AutoStateU4
@@ -91,18 +56,6 @@ enum AutoStateU4
 	kReleaseCubeU4,
 };
 
-enum AutoStateV4
-{
-	kMoveHalfToSwitch = 0,
-	kTurnRight4,
-	kMoveFlushWithSwitch,
-	kTurnLeft4,
-	kMoveToFrontOfSwitch,
-	kMoveArm4,
-	kReleaseCube4,
-	kAutoIdle4
-};
-
 enum AutoStateU5
 {
 	kAutoIdleU5 = 0,
@@ -113,18 +66,6 @@ enum AutoStateU5
 	kMoveToFrontOfScaleU5,
 	kMoveArmU5,
 	kReleaseCubeU5,
-};
-
-enum AutoStateV5
-{
-	kMoveTopOfSwitch = 0,
-	kTurnRight5,
-	kMoveFlushWithScale,
-	kTurnLeft5,
-	kMoveToFrontOfScale,
-	kMoveArm5,
-	kReleaseCube5,
-	kAutoIdle5
 };
 
 enum AutoStateU6
@@ -138,6 +79,76 @@ enum AutoStateU6
 	kMoveArmU6,
 	kReleaseCubeU6,
 };
+
+enum AutoStateU7
+{
+	kAutoIdleU7 = 0,
+	kMoveToScaleU7,
+	kTurnNinetyU7,
+	kMoveArmU7,
+	kReleaseCubeScaleU7,
+	kTurnToSwitchU7,
+	kMoveToSwitchU7,
+	kCollectCubeU7,
+	kMoveBackU7,
+	kMoveArmU7,
+	kReleaseCubeSwitchU7
+};
+
+enum AutoStateVx {
+	kAutoIdlex = 0,
+	kMoveToSwitchInitx,
+	kMoveToSwitchx,
+};
+enum AutoStateV0 {
+	kMoveToSwitch0 = 0,
+	kAutoIdle0
+};
+enum AutoStateV1 {
+	kMoveToSwitch1 = 0,
+	kMoveArm1,
+	kReleaseCube1,
+	kAutoIdle1
+};
+enum AutoStateV2 {
+	kMoveToSideOfSwitch = 0,
+	kTurnLeft2,
+	kMoveToEdgeOfSwitch,
+	kMoveArm2,
+	kReleaseCube2,
+	kAutoIdle2
+};
+enum AutoStateV3 {
+	kMoveToSideOfScale = 0,
+	kTurnLeft3,
+	kMoveToEdgeOfScale,
+	kMoveArm3,
+	kReleaseCube3,
+	kAutoIdle3
+};
+enum AutoStateV4
+{
+	kMoveHalfToSwitch = 0,
+	kTurnRight4,
+	kMoveFlushWithSwitch,
+	kTurnLeft4,
+	kMoveToFrontOfSwitch,
+	kMoveArm4,
+	kReleaseCube4,
+	kAutoIdle4
+};
+enum AutoStateV5
+{
+	kMoveTopOfSwitch = 0,
+	kTurnRight5,
+	kMoveFlushWithScale,
+	kTurnLeft5,
+	kMoveToFrontOfScale,
+	kMoveArm5,
+	kReleaseCube5,
+	kAutoIdle5
+};
+
 
 class Autonomous
 {
@@ -173,6 +184,8 @@ class Autonomous
 	void AutonomousPeriodicV5();
 	void AutonomousStartU6();
 	void AutonomousPeriodicU6();
+	void AutonomousStartU7();
+	void AutonomousPeriodicU7();
 
  private:
 	AutonomousHelper &a_AutoBot;
@@ -203,6 +216,7 @@ class Autonomous
 	AutoStateU5 a_AutoStateU5;
 	AutoStateV5 a_AutoStateV5;
 	AutoStateU6 a_AutoStateU6;
+	AutoStateU7 a_AutoStateU7;
 
 	float a_AngleSaved;
 	double a_time_state = 0;

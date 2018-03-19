@@ -23,7 +23,8 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
   a_AutoStateV4(kAutoIdle4),
   a_AutoStateU5(kAutoIdleU5),
   a_AutoStateV5(kAutoIdle5),
-  a_AutoStateU6(kAutoIdleU6)
+  a_AutoStateU6(kAutoIdleU6),
+  a_AutoStateU7(kAutoIdleU7)
 {
 	a_AngleSaved = 0.0;
 	a_time_state = 0;
@@ -157,6 +158,11 @@ void Autonomous::StartPathMaster(){
 			a_Underglow.CyanLaser();
 			AutonomousStartU6();
 			break;
+		case 7:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.RedLaser();
+			AutonomousStartU7();
+			break;
 	}
 }
 
@@ -202,6 +208,11 @@ void Autonomous::StartPathMaster(int path){
 			a_Underglow.CyanLaser();
 			AutonomousStartU6();
 			break;
+		case 7:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.RedLaser();
+			AutonomousStartU7();
+			break;
 	}
 }
 
@@ -231,6 +242,9 @@ void Autonomous::PeriodicPathMaster(){
 		case 6:
 			AutonomousPeriodicU6();
 			break;
+		case 7:
+			AutonomousPeriodicU7();
+			break;
 	}
 }
 
@@ -259,6 +273,9 @@ void Autonomous::PeriodicPathMaster(int path){
 			break;
 		case 6:
 			AutonomousPeriodicU6();
+			break;
+		case 7:
+			AutonomousPeriodicU7();
 			break;
 	}
 }
@@ -908,6 +925,45 @@ void Autonomous::AutonomousPeriodicU6()
 		break;
 	}
 	a_AutoStateU6 = nextState;
+}
+
+void Autonomous::AutonomousStartU7()
+{
+	a_AutoStateU7 = kMoveToScaleU7;
+	a_Gyro.Zero();
+}
+
+void Autonomous::AutonomousPeriodicU7()
+{
+	AutoStateU7 nextState = a_AutoStateU7;
+
+	switch(a_AutoStateU7){
+	case kAutoIdleU7:
+		break;
+	case kMoveToScaleU7:
+		break;
+	case kTurnNinetyU7:
+		break;
+	case kMoveArmU7:
+		break;
+	case kReleaseCubeScaleU7:
+		break;
+	case kTurnToSwitchU7:
+		break;
+	case kMoveToSwitchU7:
+		break;
+	case kCollectCubeU7:
+		break;
+	case kMoveBackU7:
+		break;
+	case kMoveArmU7:
+		break;
+	case kReleaseCubeSwitchU7:
+		break;
+
+	a_AutoStateU7 = nextState;
+
+	}
 }
 
 void Autonomous::AutonomousPeriodicV0()
