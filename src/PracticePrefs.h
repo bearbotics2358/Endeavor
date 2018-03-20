@@ -48,8 +48,8 @@
 #define UPPER_ANGLE 0
 #define UPPER_STOP 287.0
 
-#define REST_POS_POT 540.0
-#define UPPER_STOP_POT 1825.0
+#define REST_POS_POT 1380.0
+#define UPPER_STOP_POT 2460.0
 
 #define ARM_P 100
 #define ARM_I 0.0

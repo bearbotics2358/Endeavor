@@ -32,3 +32,5 @@ bool AutonomousHelper::GetOpponentSwitch(){
 std::string AutonomousHelper::GetGameData(){
 	return frc::DriverStation::GetInstance().GetGameSpecificMessage();
 }
+
+

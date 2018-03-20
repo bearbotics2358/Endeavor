@@ -85,6 +85,7 @@ enum AutoStateU7
 	kAutoIdleU7 = 0,
 	kMoveToScaleU7,
 	kTurnNinetyU7,
+	kMoveToEdgeOfScaleU7,
 	kMoveArmScaleU7,
 	kReleaseCubeScaleU7,
 	kTurnToSwitchU7,

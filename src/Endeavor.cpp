@@ -124,20 +124,18 @@ void Endeavor::TeleopPeriodic()
 	a_DiffDrive.UpdateDistance();
 	a_Lifter.Update(0.0);
 
-	if (a_GamePad.GetRawButton(5)){
+	if (a_GamePad.GetRawButton(6)){ // flip on comp bot
 		a_CollectorArm.Release();
 	}
-	if (a_GamePad.GetRawButton(6)){
+	if (a_GamePad.GetRawButton(5)){
 		a_CollectorArm.Clamp();
 	}
 
-	if (a_GamePad.GetRawAxis(3) > 0.00){
-		a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(3));
-	}
-	else if ((a_GamePad.GetRawAxis(2) > 0.00)){  // in
-		a_CollectorArm.UpdateRollers(a_GamePad.GetRawAxis(2) * -1);
-	}
-	else {
+	if (a_GamePad.GetRawAxis(3) > 0.00) {
+		a_CollectorArm.UpdateRollers(pow(a_GamePad.GetRawAxis(3), 0.5));
+	} else if ((a_GamePad.GetRawAxis(2) > 0.00)) {  // in
+		a_CollectorArm.UpdateRollers(-1 * pow(a_GamePad.GetRawAxis(2), 0.5));
+	} else {
 		a_CollectorArm.UpdateRollers(0.0);
 	}
 	a_CollectorArm.UpdateValue(0.0);
@@ -169,7 +167,7 @@ void Endeavor::TeleopPeriodic()
 		a_Compressor.SetClosedLoopControl(false);
 	}
 	if (a_Joystick2.GetRawButton(8)){
-		a_CollectorArm.UpdateArmAngleSimple(ARM_ANGLE2, 0.05);
+		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
 	}
 
 	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
@@ -243,6 +241,8 @@ void Endeavor::MasterInit(){
 	a_DiffDrive.ZeroEncoders();
 	// Change the number to change drivetypes. Refer to diffdrive.cpp for help.
 	// a_DiffDrive.DisableMotorSafetyTraitor();
+	// a_DiffDrive.InvertLeftDrive();
+	// a_DiffDrive.InvertRightDrive();
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	a_Lifter.Init();
 	a_UltraSoul.Init();

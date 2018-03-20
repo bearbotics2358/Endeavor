@@ -369,8 +369,8 @@ float DiffDrive::GetDistanceLeft(){
 	*/
 
 	// convert to inches
-	// ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
-	ticks_per_inch = TICKS_PER_INCH_HIGH_GEAR;
+	ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	// ticks_per_inch = TICKS_PER_INCH_HIGH_GEAR;
 	ret = count / (float)ticks_per_inch;
 	
 	return ret;
@@ -403,8 +403,8 @@ float DiffDrive::GetDistanceRight(){
 	*/
 
 	// convert to inches
-	// ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
-	ticks_per_inch = TICKS_PER_INCH_HIGH_GEAR;
+	ticks_per_inch = GetShiftState() ? TICKS_PER_INCH_HIGH_GEAR : TICKS_PER_INCH_LOW_GEAR;
+	// ticks_per_inch = TICKS_PER_INCH_HIGH_GEAR;
 	ret = count / (float)ticks_per_inch;
 	
 	return ret;
