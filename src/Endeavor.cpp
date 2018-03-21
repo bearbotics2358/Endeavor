@@ -132,9 +132,9 @@ void Endeavor::TeleopPeriodic()
 	}
 
 	if (a_GamePad.GetRawAxis(3) > 0.00) {
-		a_CollectorArm.UpdateRollers(pow(a_GamePad.GetRawAxis(3), 0.5));
+		a_CollectorArm.UpdateRollers(pow(0.5, a_GamePad.GetRawAxis(3)));
 	} else if ((a_GamePad.GetRawAxis(2) > 0.00)) {  // in
-		a_CollectorArm.UpdateRollers(-1 * pow(a_GamePad.GetRawAxis(2), 0.5));
+		a_CollectorArm.UpdateRollers(-1 * pow(0.5, a_GamePad.GetRawAxis(2)));
 	} else {
 		a_CollectorArm.UpdateRollers(0.0);
 	}
@@ -167,7 +167,7 @@ void Endeavor::TeleopPeriodic()
 		a_Compressor.SetClosedLoopControl(false);
 	}
 	if (a_Joystick2.GetRawButton(8)){
-		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
+		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 	}
 
 	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
@@ -212,9 +212,9 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(11)){
 		// test autonomous by pressing and holding down the button for the duration of the auto sequence
 		if (autonTesting){
-			a_Auto.PeriodicPathMaster(4);
+			a_Auto.PeriodicPathMaster(7);
 		} else {
-			a_Auto.StartPathMaster(4);
+			a_Auto.StartPathMaster(7);
 		}
 		autonTesting = true;
 	}

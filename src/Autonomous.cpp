@@ -530,16 +530,17 @@ void Autonomous::AutonomousPeriodicU3()
 		break;
 
 	case kMoveToSideOfScaleU3:
-		if (a_UltraSoul.GetRearRight() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)){
-			if (a_UltraSoul.GetRearRight() > (0.75 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetAvgDistance() < (SEVEN_TO_SCALE_DISTANCE)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.60 * (SEVEN_TO_SCALE_DISTANCE))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+				a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05); // raise the arm sooner
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
-			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
-			a_Gyro.Zero();
+			a_DiffDrive.UpdateVal(0,0);
+			a_Underglow.GreenLaser();
 			nextState = kTurnNinetyU3;
 		}
 		break;
@@ -552,7 +553,7 @@ void Autonomous::AutonomousPeriodicU3()
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveToEdgeOfScaleU3;
+				nextState = kMoveArmU3;
 			}
 			else{
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
@@ -563,7 +564,7 @@ void Autonomous::AutonomousPeriodicU3()
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveToEdgeOfScaleU3;
+				nextState = kMoveArmU3;
 			}
 			else{
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
@@ -854,7 +855,7 @@ void Autonomous::AutonomousPeriodicU6()
 
 	case kMoveForwardThirdU6:
 		if (a_UltraSoul.GetRearRight() < HALF_OF_SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
@@ -903,7 +904,7 @@ void Autonomous::AutonomousPeriodicU6()
 
 	case kMoveDiagU6:
 		if (a_UltraSoul.GetFrontLeft() > FLUSH_WITH_SWITCH) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
@@ -928,7 +929,7 @@ void Autonomous::AutonomousPeriodicU6()
 		// move arm while moving bot
 		a_CollectorArm.UpdateAngle(SWITCH_ANGLE);
 		if (a_UltraSoul.GetRearRight() < FRONT_OF_SWITCH_DISTANCE) {
-			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
@@ -975,8 +976,8 @@ void Autonomous::AutonomousPeriodicU7()
 
 	case kMoveToScaleU7:
 		a_DiffDrive.UpdateVal(0,0);
-		if (a_DiffDrive.GetAvgDistance() < (SIDE_OF_SCALE_DISTANCE)) {
-			if (a_UltraSoul.GetRearRight() > (0.75 * (SIDE_OF_SCALE_DISTANCE))){
+		if (a_DiffDrive.GetAvgDistance() < (SEVEN_TO_SCALE_DISTANCE)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.6 * (SEVEN_TO_SCALE_DISTANCE))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 				a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05); // raise the arm sooner
 			} else {
@@ -1029,14 +1030,41 @@ void Autonomous::AutonomousPeriodicU7()
 		}
 		break;
 	case kMoveToEdgeOfScaleU7:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
+		if (a_UltraSoul.GetFrontRight() < (EDGE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
+			if (a_UltraSoul.GetFrontRight() > (0.75 * (EDGE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmScaleU7;
+		}
 		break;
 	case kMoveArmScaleU7:
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
+			nextState = kReleaseCubeScaleU7;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
 		break;
 	case kReleaseCubeScaleU7:
+		if (a_CollectorArm.CubePresent()){
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kTurnToSwitchU7;
+			a_CollectorArm.Clamp();
+			a_DiffDrive.UpdateVal(0,0);
+		}
+		a_CollectorArm.UpdateRollers(0.5);
+		a_CollectorArm.Release();
+		a_DiffDrive.UpdateVal(0,0);
 		break;
 	case kTurnToSwitchU7:
 		// move arm while moving bot
-		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		a_CollectorArm.RollerPos(1); // move to collect pos
 		if (b_left){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 100.0)){
@@ -1073,8 +1101,29 @@ void Autonomous::AutonomousPeriodicU7()
 		}
 		break;
 	case kMoveToSwitchU7:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if (a_UltraSoul.GetFrontRight() < (SEVEN_TO_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
+			if (a_UltraSoul.GetFrontRight() > (0.75 * (SEVEN_TO_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmRestU7;
+		}
+		break;
+	case kMoveArmRestU7:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= REST_ANGLE) {
+			nextState = kCollectCubeU7;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
 		break;
 	case kCollectCubeU7:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		if (a_CollectorArm.CubePresent()){
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kMoveBackU7;
@@ -1086,6 +1135,19 @@ void Autonomous::AutonomousPeriodicU7()
 		a_DiffDrive.UpdateVal(0,0);
 		break;
 	case kMoveBackU7:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if (a_UltraSoul.GetFrontRight() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_UltraSoul.GetFrontRight() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmSwitchU7;
+		}
 		break;
 	case kMoveArmSwitchU7:
 		break;
