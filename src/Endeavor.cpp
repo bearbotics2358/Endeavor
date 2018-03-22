@@ -132,9 +132,9 @@ void Endeavor::TeleopPeriodic()
 	}
 
 	if (a_GamePad.GetRawAxis(3) > 0.00) {
-		a_CollectorArm.UpdateRollers(pow(0.5, a_GamePad.GetRawAxis(3)));
+		a_CollectorArm.UpdateRollers(pow(a_GamePad.GetRawAxis(3), 0.5));
 	} else if ((a_GamePad.GetRawAxis(2) > 0.00)) {  // in
-		a_CollectorArm.UpdateRollers(-1 * pow(0.5, a_GamePad.GetRawAxis(2)));
+		a_CollectorArm.UpdateRollers(-1 * pow(a_GamePad.GetRawAxis(2), 0.5));
 	} else {
 		a_CollectorArm.UpdateRollers(0.0);
 	}
@@ -146,15 +146,15 @@ void Endeavor::TeleopPeriodic()
 	a_DiffDrive.UpdateVal((a_Joystick1.GetRawAxis(1)), (a_Joystick2.GetRawAxis(1)));
 	if (a_GamePad.GetRawButton(2)){ // Change Collector Position
 		// B
-		a_CollectorArm.RollerPos(3);
+		a_CollectorArm.RollerPos(3); // stow
 	}
 	if (a_GamePad.GetRawButton(4)){
 		// Y
-		a_CollectorArm.RollerPos(1);
+		a_CollectorArm.RollerPos(1); // 45
 	}
 	if (a_GamePad.GetRawButton(3)){
 		// X
-		a_CollectorArm.RollerPos(2);
+		a_CollectorArm.RollerPos(2); // flat
 	}
 
 	if (a_Joystick2.GetRawButton(4)){a_DiffDrive.ShiftLow();}
@@ -167,56 +167,7 @@ void Endeavor::TeleopPeriodic()
 		a_Compressor.SetClosedLoopControl(false);
 	}
 	if (a_Joystick2.GetRawButton(8)){
-		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
-	}
-
-	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
-		autonTesting = false;
-	}
-	if (a_Joystick1.GetRawButton(7)){
-		// test autonomous by pressing and holding down the button for the duration of the auto sequence
-		if (autonTesting){
-			a_Auto.PeriodicPathMaster(0);
-		} else {
-			a_Auto.StartPathMaster(0);
-		}
-		autonTesting = true;
-	}
-	if (a_Joystick2.GetRawButton(8)){
-		// test autonomous by pressing and holding down the button for the duration of the auto sequence
-		if (autonTesting){
-			a_Auto.PeriodicPathMaster(1);
-		} else {
-			a_Auto.StartPathMaster(1);
-		}
-		autonTesting = true;
-	}
-	if (a_Joystick2.GetRawButton(9)){
-		// test autonomous by pressing and holding down the button for the duration of the auto sequence
-		if (autonTesting){
-			a_Auto.PeriodicPathMaster(2);
-		} else {
-			a_Auto.StartPathMaster(2);
-		}
-		autonTesting = true;
-	}
-	if (a_Joystick2.GetRawButton(10)){
-		// test autonomous by pressing and holding down the button for the duration of the auto sequence
-		if (autonTesting){
-			a_Auto.PeriodicPathMaster(3);
-		} else {
-			a_Auto.StartPathMaster(3);
-		}
-		autonTesting = true;
-	}
-	if (a_Joystick2.GetRawButton(11)){
-		// test autonomous by pressing and holding down the button for the duration of the auto sequence
-		if (autonTesting){
-			a_Auto.PeriodicPathMaster(7);
-		} else {
-			a_Auto.StartPathMaster(7);
-		}
-		autonTesting = true;
+		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 	}
 }
 
