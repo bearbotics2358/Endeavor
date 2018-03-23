@@ -976,13 +976,19 @@ void Autonomous::AutonomousPeriodicU7()
 		a_DiffDrive.UpdateVal(0,0);
 		a_CollectorArm.UpdateValue(0.0);
 		a_DiffDrive.ZeroEncoders();
+		a_Gyro.Zero();
 		break;
 
 	case kMoveToScaleU7:
-		a_DiffDrive.UpdateVal(0,0);
-		if (a_DiffDrive.GetAvgDistance() < (SEVEN_TO_SCALE_DISTANCE)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.6 * (SEVEN_TO_SCALE_DISTANCE))){
-				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+		if (a_DiffDrive.GetAvgDistance() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.30 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+				if (a_DiffDrive.GetAvgDistance() > (0.10 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.2);
+					a_CollectorArm.RollerPos(1); // 45 deg
+				}
+				else{
+					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+				}
 				a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05); // raise the arm sooner
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -991,6 +997,14 @@ void Autonomous::AutonomousPeriodicU7()
 			a_DiffDrive.ZeroEncoders();
 			a_DiffDrive.UpdateVal(0,0);
 			a_Underglow.GreenLaser();
+			nextState = kMoveArmScaleU7;
+		}
+		break;
+	
+	case kMoveArmScaleU7:
+		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
+		a_CollectorArm.RollerPos(2); // collect
+		if(a_CollectorArm.GetAngle2() >= (0.95 * SCALE_ANGLE)) {
 			nextState = kTurnNinetyU7;
 		}
 		break;
@@ -998,11 +1012,12 @@ void Autonomous::AutonomousPeriodicU7()
 	case kTurnNinetyU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
-		a_CollectorArm.RollerPos(1); // move to middle pos
+		a_DiffDrive.UpdateVal(0,0);
 		if (b_left){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
+				a_time_state = a_DiffDrive.gettime_d();
 				nextState = kMoveToEdgeOfScaleU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
@@ -1019,6 +1034,7 @@ void Autonomous::AutonomousPeriodicU7()
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
+				a_time_state = a_DiffDrive.gettime_d();
 				nextState = kMoveToEdgeOfScaleU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
@@ -1033,6 +1049,7 @@ void Autonomous::AutonomousPeriodicU7()
 			}
 		}
 		break;
+
 	case kMoveToEdgeOfScaleU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
@@ -1045,17 +1062,20 @@ void Autonomous::AutonomousPeriodicU7()
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveArmScaleU7;
-		}
-		break;
-	case kMoveArmScaleU7:
-		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
 			nextState = kReleaseCubeScaleU7;
-			a_time_state = a_DiffDrive.gettime_d();
 		}
 		break;
+
 	case kReleaseCubeScaleU7:
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.7) { // wait 1 sec for collector pos to update
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
+		}
+		// have rollers been running long enough?
+		if(a_DiffDrive.gettime_d() - a_time_state > 1.2) {
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kTurnToSwitchU7;
+		}
+		/*
 		if (a_CollectorArm.CubePresent()){
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kTurnToSwitchU7;
@@ -1065,7 +1085,9 @@ void Autonomous::AutonomousPeriodicU7()
 		a_CollectorArm.UpdateRollers(0.5);
 		a_CollectorArm.Release();
 		a_DiffDrive.UpdateVal(0,0);
+		*/
 		break;
+
 	case kTurnToSwitchU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
