@@ -57,11 +57,6 @@ a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow,
 
 void Endeavor::RobotInit()
 {
-	// for now, using old multiplexer on practice bot
-	// so only using 1 front and 1 rear sensor, hooked to channels A and C (ports 0 and 2)
-	// Disable the other ports
-	a_UltraSoul.DisablePort(1);
-	a_UltraSoul.DisablePort(3);
 	autonTesting = false;
 }
 
@@ -169,6 +164,9 @@ void Endeavor::TeleopPeriodic()
 	if (a_Joystick2.GetRawButton(8)){
 		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 	}
+	if (a_Joystick2.GetRawButton(8)){
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gyro.GetAngle(2) + 10);
+	}
 }
 
 void Endeavor::TestInit(){
@@ -197,6 +195,12 @@ void Endeavor::MasterInit(){
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	a_Lifter.Init();
 	a_UltraSoul.Init();
+	// for now, using old multiplexer on practice bot
+	// so only using 1 front and 1 rear sensor, hooked to channels A and C (ports 0 and 2)
+	// Disable the other ports
+	a_UltraSoul.DisablePort(0);
+	a_UltraSoul.DisablePort(3);
+
 	a_Underglow.Init();
 	// a_Gyro.Cal();
 	a_Gyro.Zero();
@@ -225,7 +229,7 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutBoolean("Is there a Cube?", a_CollectorArm.CubePresent());
 	// SmartDashboard::PutNumber("PDP Things?", a_PDP.GetTotalPower());
 	SmartDashboard::PutNumber("Ultra FrontLeft", a_UltraSoul.GetFrontLeft());
-	SmartDashboard::PutNumber("Ultra FrontRight", a_UltraSoul.GetFrontRight());
+	SmartDashboard::PutNumber("Ultra FrontRight", a_UltraSoul.GetUltraB());
 	SmartDashboard::PutNumber("Ultra LeftSide", a_UltraSoul.GetLeftSide());
 	SmartDashboard::PutNumber("Ultra RightSide", a_UltraSoul.GetRightSide());
 	SmartDashboard::PutNumber("Ultra RearLeft", a_UltraSoul.GetRearLeft());

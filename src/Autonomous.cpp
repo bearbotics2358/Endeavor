@@ -63,7 +63,7 @@ void Autonomous::DecidePath(){
 	 * U4 - Drive straight for a bit, twist in, move to other side of switch, twist again, move to switch, dispense.
 	 * U5 - Drive past switch, twist in, move across field to center of the side edge of scale, twist, backshot
 	 * U6 - Start dead center,  forward, 45 out, forward, 45 in, to front of correct switch.
-	 *
+	 * U7 - Two cubes, nerd.
 	 */
 
 	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){
@@ -73,14 +73,22 @@ void Autonomous::DecidePath(){
 		} else if (b_left && scale){
 			// U3 turn to scale
 			// autoPathMaster = 3;
-			autoPathMaster = 3;
+			if (a_ButtonBox.GetRawButton(5)){
+				autoPathMaster = 7;
+			} else {
+				autoPathMaster = 3;
+			}
 		} else if (b_right && !ourSwitch){ // Indicates Switch on Right and Right RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
 		} else if (b_right && !scale){
 			// U3 turn to scale
 			// autoPathMaster = 3;
-			autoPathMaster = 3;
+			if (a_ButtonBox.GetRawButton(5)){
+				autoPathMaster = 7;
+			} else {
+				autoPathMaster = 3;
+			}
 		}
 		/*
 		 if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
@@ -1003,6 +1011,7 @@ void Autonomous::AutonomousPeriodicU7()
 	
 	case kMoveArmScaleU7:
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
+		a_DiffDrive.UpdateVal(0,0);
 		a_CollectorArm.RollerPos(2); // collect
 		if(a_CollectorArm.GetAngle2() >= (0.95 * SCALE_ANGLE)) {
 			nextState = kTurnNinetyU7;
@@ -1014,11 +1023,11 @@ void Autonomous::AutonomousPeriodicU7()
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
 		a_DiffDrive.UpdateVal(0,0);
 		if (b_left){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				a_time_state = a_DiffDrive.gettime_d();
-				nextState = kMoveToEdgeOfScaleU7;
+				nextState = kReleaseCubeScaleU7;	
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
 				}
@@ -1031,11 +1040,11 @@ void Autonomous::AutonomousPeriodicU7()
 			}
 		}
 		else if (b_right){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				a_time_state = a_DiffDrive.gettime_d();
-				nextState = kMoveToEdgeOfScaleU7;
+				nextState = kReleaseCubeScaleU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
 				}
@@ -1053,8 +1062,8 @@ void Autonomous::AutonomousPeriodicU7()
 	case kMoveToEdgeOfScaleU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
-		if (a_UltraSoul.GetFrontRight() < (EDGE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetFrontRight() > (0.75 * (EDGE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+		if (a_UltraSoul.GetUltraB() < (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_UltraSoul.GetUltraB() > (0.75 * (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1067,15 +1076,17 @@ void Autonomous::AutonomousPeriodicU7()
 		break;
 
 	case kReleaseCubeScaleU7:
-		if(a_DiffDrive.gettime_d() - a_time_state > 0.7) { // wait 1 sec for collector pos to update
+		// time based approach
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.3) { // wait 1 sec for collector pos to update
 			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
 		}
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d() - a_time_state > 1.2) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.8) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kTurnToSwitchU7;
 		}
 		/*
+		// Beam Break Approach
 		if (a_CollectorArm.CubePresent()){
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kTurnToSwitchU7;
