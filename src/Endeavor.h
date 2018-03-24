@@ -16,6 +16,7 @@
 #include <Underglow.h>
 #include <UltrasonicSerial.h>
 #include <LightRingController.h>
+#include <Gunnar.h>
 #include <AutonomousHelper.h>
 #include <Autonomous.h>
 
@@ -58,6 +59,8 @@ private:
 	UltrasonicSerial a_UltraSoul;
 
 	LightRingController a_LRC;
+
+	Gunnar a_Gunnar; // vision over MQTT
 
 	// PowerDistributionPanel a_PDP;
 
