@@ -43,7 +43,7 @@ a_UltraSoul(),
 
 a_LRC(),
 
-a_Gunnar("RIOclient", "localhost", 2358),
+// a_Gunnar("RIOclient", "localhost", 2358),
 
 // a_PDP(PDP_PORT),
 
@@ -54,16 +54,16 @@ a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow,
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
 	a_Gyro.Init();
-	const char *commandString = "~/mosquitto -p 2358 &";
-	int q = system(commandString);
-	printf("The number is: %d", q);
-	mosqpp::lib_init();
+	// const char *commandString = "~/mosquitto -p 2358 &";
+	// int q = system(commandString);
+	// printf("The number is: %d", q);
+	// mosqpp::lib_init();
 	autonTesting = false;
 }
 
 void Endeavor::RobotInit()
 {
-	a_Gunnar.loop_start();
+	// a_Gunnar.loop_start();
 	autonTesting = false;
 }
 
@@ -135,12 +135,12 @@ void Endeavor::TeleopPeriodic()
 
 	if (a_GamePad.GetRawAxis(3) > 0.00) {
 		a_CollectorArm.UpdateRollers(pow(a_GamePad.GetRawAxis(3), 0.5));
-		a_GamePad.SetRumble(GenericHID::RumbleType::kLeftRumble, a_GamePad.GetRawAxis(3));
-		a_GamePad.SetRumble(GenericHID::RumbleType::kRightRumble, a_GamePad.GetRawAxis(3));
+		// a_GamePad.SetRumble(GenericHID::RumbleType::kLeftRumble, a_GamePad.GetRawAxis(3));
+		// a_GamePad.SetRumble(GenericHID::RumbleType::kRightRumble, a_GamePad.GetRawAxis(3));
 	} else if ((a_GamePad.GetRawAxis(2) > 0.00)) {  // in
 		a_CollectorArm.UpdateRollers(-1 * pow(a_GamePad.GetRawAxis(2), 0.5));
-		a_GamePad.SetRumble(GenericHID::RumbleType::kLeftRumble, a_GamePad.GetRawAxis(2));
-		a_GamePad.SetRumble(GenericHID::RumbleType::kRightRumble, a_GamePad.GetRawAxis(2));
+		// a_GamePad.SetRumble(GenericHID::RumbleType::kLeftRumble, a_GamePad.GetRawAxis(2));
+		// a_GamePad.SetRumble(GenericHID::RumbleType::kRightRumble, a_GamePad.GetRawAxis(2));
 	} else {
 		a_CollectorArm.UpdateRollers(0.0);
 	}
@@ -150,6 +150,7 @@ void Endeavor::TeleopPeriodic()
 	}
 
 	a_DiffDrive.UpdateVal((a_Joystick1.GetRawAxis(1)), (a_Joystick2.GetRawAxis(1)));
+
 	if (a_GamePad.GetRawButton(2)){ // Change Collector Position
 		// B
 		a_CollectorArm.RollerPos(3); // stow
@@ -180,7 +181,7 @@ void Endeavor::TeleopPeriodic()
 	}
 
 	if(a_Joystick2.GetRawButton(10)) {
-		a_Gunnar.loop_stop();
+		// a_Gunnar.loop_stop();
 	}
 }
 
@@ -249,8 +250,8 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutNumber("Ultra RightSide", a_UltraSoul.GetRightSide());
 	SmartDashboard::PutNumber("Ultra RearLeft", a_UltraSoul.GetRearLeft());
 	SmartDashboard::PutNumber("Ultra RearRight", a_UltraSoul.GetRearRight());
-	SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
-	SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetAngle());
+	// SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
+	// SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetAngle());
 }
 
 START_ROBOT_CLASS(Endeavor);

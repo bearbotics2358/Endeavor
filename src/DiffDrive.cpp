@@ -123,16 +123,16 @@ bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when i
 	}
 	if ((tarAngle - curAngle) > 0){
 		if (fabs(tarAngle - curAngle) > 5){
-			UpdateVal(0.35, -0.35); // right
+			UpdateVal(0.3, -0.3); // right
 		} else {
-			UpdateVal(0.4, -0.4); // right
+			UpdateVal(0.45, -0.45); // right
 		}
 	}
 	else {
 		if (fabs(tarAngle - curAngle) > 5){
-			UpdateVal(-0.35, 0.35); // left
+			UpdateVal(-0.3, 0.3); // left
 		} else {
-			UpdateVal(-0.4, 0.4); // left
+			UpdateVal(-0.45, 0.45); // left
 		}
 
 	}

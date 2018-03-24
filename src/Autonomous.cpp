@@ -90,12 +90,15 @@ void Autonomous::DecidePath(){
 				autoPathMaster = 3;
 			}
 		}
-		/*
+
 		 if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
-			// U1
-			autoPathMaster = 1; // confirmed correct
+			// U6
+			autoPathMaster = 6; // confirmed correct
 		}
-		 */
+		 if (b_center && ourSwitch){ // Indicates Switch on Right and Center RPos.
+			// U6
+			autoPathMaster = 6; // confirmed correct
+		}
 	}
 
 	if (b_left && b_center && b_right){
@@ -319,7 +322,7 @@ void Autonomous::AutonomousStartU1()
 	a_AutoStateU1 = kMoveToSwitchU1;
 	a_Gyro.Zero();
 	x_T = a_DiffDrive.gettime_d();
-	x_Dist = a_UltraSoul.GetRearRight();
+	x_Dist = a_DiffDrive.GetAvgDistance();
 }
 
 void Autonomous::AutonomousPeriodicU1()
@@ -336,6 +339,7 @@ void Autonomous::AutonomousPeriodicU1()
 	case kMoveToSwitchU1:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		/*
 		if ((a_DiffDrive.gettime_d() - x_T) > 2.5){
 			a_CollectorArm.RollerPos(1); // send to middle
 			a_DiffDrive.UpdateVal(0,0);
@@ -344,14 +348,15 @@ void Autonomous::AutonomousPeriodicU1()
 			a_Underglow.CyanLaser();
 			break;
 		}
+		*/
 
-		if (a_UltraSoul.GetRearRight() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)){
-			if ((a_UltraSoul.GetRearRight() - x_Dist) > 6.0){
-				x_Dist = a_UltraSoul.GetRearRight();
+		if (a_DiffDrive.GetAvgDistance() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)){
+			if ((a_DiffDrive.GetAvgDistance() - x_Dist) > 6.0){
+				x_Dist = a_DiffDrive.GetAvgDistance();
 				x_T = a_DiffDrive.gettime_d();
 			}
 
-			if (a_UltraSoul.GetRearRight() > (0.75 * (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -442,7 +447,7 @@ void Autonomous::AutonomousPeriodicU2()
 				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveToEdgeOfSwitchU2;
+				nextState = kMoveArmU2;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
 				}
@@ -459,7 +464,7 @@ void Autonomous::AutonomousPeriodicU2()
 				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveToEdgeOfSwitchU2;
+				nextState = kMoveArmU2;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
 				}
@@ -853,6 +858,7 @@ void Autonomous::AutonomousPeriodicU5()
 void Autonomous::AutonomousStartU6()
 {
 	a_AutoStateU6 = kMoveForwardThirdU6;
+	a_Gyro.Zero();
 }
 
 void Autonomous::AutonomousPeriodicU6()
@@ -863,84 +869,95 @@ void Autonomous::AutonomousPeriodicU6()
 	case kAutoIdleU6:
 		a_DiffDrive.UpdateVal(0,0);
 		a_DiffDrive.ZeroEncoders();
+		a_Gyro.Zero();
 		break;
 
 	case kMoveForwardThirdU6:
-		if (a_UltraSoul.GetRearRight() < HALF_OF_SWITCH_DISTANCE) {
+		if (a_DiffDrive.GetAvgDistance() < HALF_OF_SWITCH_DISTANCE) {
 			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			SmartDashboard::PutNumber("AutoStateDebug", 1);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
+			SmartDashboard::PutNumber("AutoStateDebug", 2);
 			nextState = kTurnFourtyFiveU6;
 		}
 		break;
 
 	case kTurnFourtyFiveU6:
 		// move arm while moving bot
+		a_DiffDrive.UpdateVal(0,0);
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
 		a_CollectorArm.RollerPos(1); // move to middle pos
-		if (b_left){
+		SmartDashboard::PutNumber("AutoStateDebug", 8);
+		SmartDashboard::PutBoolean("AutoStateLeft", b_left);
+		SmartDashboard::PutBoolean("AutoStateRight", b_right);
+		if (a_AutoBot.GetAllianceSwitch()){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -45.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
+				SmartDashboard::PutNumber("AutoStateDebug", 4);
 				nextState = kMoveDiagU6;
-				if (a_AutoBot.GetAllianceSide()){
-					a_Underglow.BlueLaser();
-				}
-				else{
-					a_Underglow.RedLaser();
-				}
+			} else {
+				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -45.0);
+				// might not be even needed bbecause short-circuit in code makes the motors still run
+			}
+			SmartDashboard::PutNumber("AutoStateDebug", 3);
+		} else if (!a_AutoBot.GetAllianceSwitch()) {
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 45.0)) {
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				SmartDashboard::PutNumber("AutoStateDebug", 4);
+				nextState = kMoveDiagU6;
+			} else {
+				a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 45.0);
+				// might not be even needed because short-circuit in code makes the motors still run
+			}
+			SmartDashboard::PutNumber("AutoStateDebug", 3);
+		}
+		break;
+
+	case kMoveDiagU6:
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		SmartDashboard::PutNumber("AutoStateDebug", 5);
+		if (a_DiffDrive.GetAvgDistance() < FLUSH_WITH_SWITCH) {
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			a_Gyro.Zero();
+			nextState = kTurnFourtyFiveOppositeU6;
+		}
+		break;
+
+	case kTurnFourtyFiveOppositeU6:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if (a_AutoBot.GetAllianceSwitch()){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 45.0)){
+				a_DiffDrive.UpdateVal(0,0);
+				a_DiffDrive.ZeroEncoders();
+				nextState = kMoveToFrontOfSwitchU6;
 			} else {
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
-		}
-		else if (b_right){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 45.0)) {
+		} else if (!a_AutoBot.GetAllianceSwitch()) {
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -45.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
-				nextState = kMoveDiagU6;
-				if (a_AutoBot.GetAllianceSide()){
-					a_Underglow.BlueLaser();
-				}
-				else{
-					a_Underglow.RedLaser();
-				}
-			}
-			else{
+				nextState = kMoveToFrontOfSwitchU6;
+			} else {
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
 		break;
 
-	case kMoveDiagU6:
-		if (a_UltraSoul.GetFrontLeft() > FLUSH_WITH_SWITCH) {
-			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
-		} else {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kTurnFourtyFiveOppositeU6;
-			a_AngleSaved = a_Gyro.GetAngle(2);  // get Z-axis gyro angle
-		}
-		break;
-
-	case kTurnFourtyFiveOppositeU6:
-		// move arm while moving bot
-		a_CollectorArm.UpdateAngle(SWITCH_ANGLE);
-		// a_DiffDrive.ArcTurn(18, 90, true);
-		a_DiffDrive.UpdateVal(-0.25,0.25); // rotate counter-clockwise
-		if((a_Gyro.GetAngle(2) - a_AngleSaved) >= 90) {
-			a_DiffDrive.UpdateVal(0,0);
-			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveToFrontOfSwitchU6;
-		}
-		break;
-
 	case kMoveToFrontOfSwitchU6:
 		// move arm while moving bot
-		a_CollectorArm.UpdateAngle(SWITCH_ANGLE);
-		if (a_UltraSoul.GetRearRight() < FRONT_OF_SWITCH_DISTANCE) {
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if (a_DiffDrive.GetAvgDistance() < FRONT_OF_SWITCH_DISTANCE) {
 			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
@@ -950,8 +967,8 @@ void Autonomous::AutonomousPeriodicU6()
 		break;
 
 	case kMoveArmU6:
-		a_CollectorArm.UpdateAngle(SWITCH_ANGLE);
-		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= (0.95 * SWITCH_ANGLE)) {
 			nextState = kReleaseCubeU6;
 			a_time_state = a_DiffDrive.gettime_d();
 		}
