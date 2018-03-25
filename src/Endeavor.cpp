@@ -211,6 +211,7 @@ void Endeavor::MasterInit(){
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);
 	a_Lifter.Init();
 	a_UltraSoul.Init();
+
 	// for now, using old multiplexer on practice bot
 	// so only using 1 front and 1 rear sensor, hooked to channels A and C (ports 0 and 2)
 	// Disable the other ports

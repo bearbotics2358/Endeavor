@@ -32,6 +32,12 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
 	b_left = false;
 	b_center = false;
 	b_right = false;
+	special = false;
+	playerStation = -1;
+	blue = false;
+	ourSwitch = false;
+	scale = false;
+	oppSwitch = false;
 }
 
 void Autonomous::Init(){
@@ -45,13 +51,14 @@ void Autonomous::DecidePath(){
 	b_left = a_ButtonBox.GetRawButton(2);
 	b_center = a_ButtonBox.GetRawButton(3);
 	b_right = a_ButtonBox.GetRawButton(4);
+	special = a_ButtonBox.GetRawButton(5); // switch with red tape
 
 	// AutoBot Information
-	int playerStation = a_AutoBot.GetAllianceStation();
-	bool blue = a_AutoBot.GetAllianceSide();
-	bool ourSwitch = a_AutoBot.GetAllianceSwitch();
-	bool scale = a_AutoBot.GetAllianceScale();
-	bool oppSwitch = a_AutoBot.GetOpponentSwitch();
+	playerStation = a_AutoBot.GetAllianceStation();
+	blue = a_AutoBot.GetAllianceSide();
+	ourSwitch = a_AutoBot.GetAllianceSwitch();
+	scale = a_AutoBot.GetAllianceScale();
+	oppSwitch = a_AutoBot.GetOpponentSwitch();
 
 	/*
 	 * Auton Path Documentation
@@ -63,17 +70,18 @@ void Autonomous::DecidePath(){
 	 * U4 - Drive straight for a bit, twist in, move to other side of switch, twist again, move to switch, dispense.
 	 * U5 - Drive past switch, twist in, move across field to center of the side edge of scale, twist, backshot
 	 * U6 - Start dead center,  forward, 45 out, forward, 45 in, to front of correct switch.
-	 * U7 - Two cubes, nerd.
+	 * U7 - Two cubes, nerd. This is the one where we go Scale-->Switch
+	 *
 	 */
 
-	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){
+	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){ // checks for driver error
+		// if two switches are down, there's an error, and the program will skip this section.
 		if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
 		} else if (b_left && scale){
-			// U3 turn to scale
-			// autoPathMaster = 3;
-			if (a_ButtonBox.GetRawButton(5)){
+			// U3 or U7 turn to scale
+			if (special){
 				autoPathMaster = 7;
 			} else {
 				autoPathMaster = 3;
@@ -82,28 +90,26 @@ void Autonomous::DecidePath(){
 			// U2, turn to switch
 			autoPathMaster = 2;
 		} else if (b_right && !scale){
-			// U3 turn to scale
-			// autoPathMaster = 3;
-			if (a_ButtonBox.GetRawButton(5)){
+			// U3 or U7 turn to scale
+			if (special){
 				autoPathMaster = 7;
 			} else {
 				autoPathMaster = 3;
 			}
 		}
-
-		 if (b_center && !ourSwitch){ // Indicates Switch on Right and Center RPos.
-			// U6
-			autoPathMaster = 6; // confirmed correct
+		 if (b_center && !ourSwitch){ // Indicates Right of Center RPos and intent to go to front of switch.
+			// U1
+			autoPathMaster = 1;
 		}
-		 if (b_center && ourSwitch){ // Indicates Switch on Right and Center RPos.
+
+		 if (b_center && special){ // Indicates Dead-Center RPos and intent to do the 45-deg turns.
 			// U6
-			autoPathMaster = 6; // confirmed correct
+			autoPathMaster = 6;
 		}
 	}
 
 	if (b_left && b_center && b_right){
 		// special override to execute U0
-		// please dont use this if we are in front of the switch, it may cause the robot to ram it.
 		autoPathMaster = 0;
 	}
 }
@@ -383,7 +389,7 @@ void Autonomous::AutonomousPeriodicU1()
 
 	case kReleaseCubeU1:
 		if(a_DiffDrive.gettime_d() - a_time_state > 1.0) {
-			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
 		}
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
 		a_DiffDrive.UpdateVal(0,0);
@@ -442,7 +448,7 @@ void Autonomous::AutonomousPeriodicU2()
 			a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
 		}
 		a_CollectorArm.RollerPos(1); // move to middle pos
-		if (b_left){
+		if (b_left && ourSwitch){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)){
 				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
 				a_DiffDrive.UpdateVal(0,0);
@@ -459,7 +465,7 @@ void Autonomous::AutonomousPeriodicU2()
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
-		else if (b_right){
+		else if (b_right && !ourSwitch){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
 				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
 				a_DiffDrive.UpdateVal(0,0);
@@ -485,10 +491,10 @@ void Autonomous::AutonomousPeriodicU2()
 		}
 		a_CollectorArm.RollerPos(2); // send to collect
 		if (a_UltraSoul.GetRearRight() < (EDGE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (b_left){
+			if (a_UltraSoul.GetRearRight() > (0.8 * (EDGE_OF_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), -90.0, DRIVE_STRAIGHT_LOW);
 			} else {
-				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 90.0, DRIVE_STRAIGHT_LOW);
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 90.0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
@@ -507,11 +513,11 @@ void Autonomous::AutonomousPeriodicU2()
 		break;
 
 	case kReleaseCubeU2:
-		if(a_DiffDrive.gettime_d() - a_time_state > 1.0) { // wait 1 sec for collector pos to update
-			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.3) { // wait a bit for collector pos to update
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
 		}
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d() - a_time_state > 1.5) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.8) {
 			a_CollectorArm.UpdateRollers(0.0);
 			a_Underglow.GreenLaser();
 			nextState = kAutoIdleU2;
@@ -572,7 +578,7 @@ void Autonomous::AutonomousPeriodicU3()
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
 		a_DiffDrive.UpdateVal(0,0);
-		if (b_left){
+		if (b_left && scale){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -584,7 +590,7 @@ void Autonomous::AutonomousPeriodicU3()
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
 		}
-		else if (b_right){
+		else if (b_right && !scale){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -615,8 +621,8 @@ void Autonomous::AutonomousPeriodicU3()
 		break;
 
 	case kReleaseCubeU3:
-		if(a_DiffDrive.gettime_d() - a_time_state > 0.7) { // wait 1 sec for collector pos to update
-			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.7) { // wait a bit for collector pos to update
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SCALE);
 		}
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 1.2) {
@@ -755,7 +761,7 @@ void Autonomous::AutonomousPeriodicU4()
 
 	case kReleaseCubeU4:
 		if(a_DiffDrive.gettime_d() > 1.0) { // wait 1 sec for collector pos to update
-			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
 		}
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 1.5) {
@@ -892,7 +898,7 @@ void Autonomous::AutonomousPeriodicU6()
 		SmartDashboard::PutNumber("AutoStateDebug", 8);
 		SmartDashboard::PutBoolean("AutoStateLeft", b_left);
 		SmartDashboard::PutBoolean("AutoStateRight", b_right);
-		if (a_AutoBot.GetAllianceSwitch()){
+		if (ourSwitch){ // switch on left side~
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -45.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -903,7 +909,7 @@ void Autonomous::AutonomousPeriodicU6()
 				// might not be even needed bbecause short-circuit in code makes the motors still run
 			}
 			SmartDashboard::PutNumber("AutoStateDebug", 3);
-		} else if (!a_AutoBot.GetAllianceSwitch()) {
+		} else if (!ourSwitch) { // switch on right side~
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 45.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -933,7 +939,7 @@ void Autonomous::AutonomousPeriodicU6()
 	case kTurnFourtyFiveOppositeU6:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if (a_AutoBot.GetAllianceSwitch()){
+		if (ourSwitch){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 45.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -942,7 +948,7 @@ void Autonomous::AutonomousPeriodicU6()
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
-		} else if (!a_AutoBot.GetAllianceSwitch()) {
+		} else if (!ourSwitch) {
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -45.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -975,7 +981,7 @@ void Autonomous::AutonomousPeriodicU6()
 		break;
 
 	case kReleaseCubeU6:
-		a_CollectorArm.UpdateRollers(-1.0);
+		a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.5) {
 			a_CollectorArm.UpdateRollers(0.0);
@@ -1095,7 +1101,7 @@ void Autonomous::AutonomousPeriodicU7()
 	case kReleaseCubeScaleU7:
 		// time based approach
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.3) { // wait 1 sec for collector pos to update
-			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED);
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SCALE);
 		}
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.8) {

@@ -227,9 +227,16 @@ class Autonomous
 	bool b_left = false;
 	bool b_center = false;
 	bool b_right = false;
+	bool special = false;
 
 	float x_T = 0.0;
 	float x_Dist = 0.0;
+
+	int playerStation = -1;
+	bool blue = false;
+	bool ourSwitch = false;
+	bool scale = false;
+	bool oppSwitch = false;
 
 	/* Example internal auto function
 	 * bool DriveStraight(int distance);*/
