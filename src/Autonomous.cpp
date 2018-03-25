@@ -1100,11 +1100,11 @@ void Autonomous::AutonomousPeriodicU7()
 
 	case kReleaseCubeScaleU7:
 		// time based approach
-		if(a_DiffDrive.gettime_d() - a_time_state > 0.3) { // wait 1 sec for collector pos to update
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.1) { // wait a bit for collector pos to update
 			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SCALE);
 		}
 		// have rollers been running long enough?
-		if(a_DiffDrive.gettime_d() - a_time_state > 0.8) {
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.6) {
 			a_CollectorArm.UpdateRollers(0.0);
 			nextState = kTurnToSwitchU7;
 		}
@@ -1210,8 +1210,22 @@ void Autonomous::AutonomousPeriodicU7()
 		}
 		break;
 	case kMoveArmSwitchU7:
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
+			nextState = kReleaseCubeSwitchU7;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
 		break;
 	case kReleaseCubeSwitchU7:
+		// time based approach
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.1) { // wait a bit for collector pos to update
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
+		}
+		// have rollers been running long enough?
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.6) {
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kAutoIdleU7;
+		}
 		break;
 
 	a_AutoStateU7 = nextState;
