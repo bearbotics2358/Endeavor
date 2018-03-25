@@ -177,7 +177,7 @@ void Endeavor::TeleopPeriodic()
 		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 	}
 	if (a_Joystick2.GetRawButton(9)){
-		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gyro.GetAngle(2) + 10);
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gyro.GetAngle(2) + 10); // twist in place
 	}
 
 	if(a_Joystick2.GetRawButton(10)) {
