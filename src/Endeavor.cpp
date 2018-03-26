@@ -80,7 +80,7 @@ void Endeavor::DisabledInit()
 
 void Endeavor::DisabledPeriodic()
 {
-
+	// github?
 }
 
 void Endeavor::AutonomousInit()
