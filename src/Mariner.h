@@ -1,10 +1,15 @@
 #ifndef SRC_MARINER_H_
 #define SRC_MARINER_H_
 
+#include <WPILib.h>
+#include <DiffDrive.h>
+
 class Mariner{
 
 public:
-	Mariner(float mJ, float mV);
+	Mariner(DiffDrive &DiffDrive, float mJ, float mV);
+	void SetMaxJerk(float mJ);
+	void SetMaxVelo(float mV);
 	bool RunPath(float cD, float tD);
 	float GetCurrentPathStatus();
 	float DataCollectionMaxJerk();
