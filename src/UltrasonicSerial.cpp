@@ -1,5 +1,5 @@
 #include <WPILib.h>
-#include <Math.h>
+#include <math.h>
 #include "UltrasonicSerial.h"
 
 // return all distances in inches

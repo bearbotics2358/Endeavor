@@ -1,7 +1,7 @@
 #include <WPILib.h>
 #include "DiffDrive.h"
 #include "ctre/Phoenix.h"
-#include <Math.h>
+#include <math.h>
 #include <pathfinder.h>
 #include <stdlib.h> // labs()
 #include <sys/time.h>

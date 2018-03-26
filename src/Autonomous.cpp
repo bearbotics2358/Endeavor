@@ -1,5 +1,5 @@
 #include <WPILib.h>
-#include <Math.h>
+#include <math.h>
 #include "Autonomous.h"
 
 Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul)

@@ -1,6 +1,6 @@
 #include <Mariner.h>
 #include <WPILib.h>
-#include <Math.h>
+#include <math.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
