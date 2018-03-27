@@ -31,7 +31,7 @@ void Gunnar::on_message(const struct mosquitto_message *message)
 {
 	char buf[255];
 
-	if(!strcmp(message->topic, "temp")){
+	if(!strcmp(message->topic, "PI/CV/SHOOT/DATA")){
 		memset(buf, 0, 255*sizeof(char));
 		/* Copy N-1 bytes to ensure always 0 terminated. */
 		memcpy(buf, message->payload, 254*sizeof(char));
