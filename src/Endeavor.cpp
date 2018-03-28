@@ -49,7 +49,7 @@ a_Gunnar("RIOclient", "localhost", 2358),
 
 a_AutoBot(), // AutoBot Methods return true for left.
 
-a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow, a_UltraSoul)
+a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow, a_UltraSoul, a_Gunnar)
 
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd

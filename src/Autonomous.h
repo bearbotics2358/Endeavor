@@ -12,6 +12,7 @@
 #include <AutonomousHelper.h>
 #include <Underglow.h>
 #include <UltrasonicSerial.h>
+#include <Gunnar.h>
 
 
 enum AutoStateU0 {
@@ -91,6 +92,7 @@ enum AutoStateU7
 	kTurnToSwitchU7,
 	kMoveToSwitchU7,
 	kMoveArmRestU7,
+	kTurnToCubeGunnarU7,
 	kCollectCubeU7,
 	kMoveBackU7,
 	kMoveArmSwitchU7,
@@ -173,7 +175,7 @@ enum AutoStateV5
 class Autonomous
 {
  public:
-	Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul);
+	Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul, Gunnar &Gunnar);
 	virtual ~Autonomous() = default;
 	void Init();
 	void DecidePath();
@@ -223,6 +225,8 @@ class Autonomous
 	Underglow &a_Underglow;
 
 	UltrasonicSerial &a_UltraSoul;
+
+	Gunnar &a_Gunnar;
 
 	AutoStateVx a_AutoStateVx;
 	AutoStateU0 a_AutoStateU0;

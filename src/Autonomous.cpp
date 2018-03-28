@@ -2,7 +2,7 @@
 #include <math.h>
 #include "Autonomous.h"
 
-Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul)
+Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul, Gunnar &Gunnar)
 : a_AutoBot(AutoBot),
   a_ButtonBox(ButtonBox),
   a_CollectorArm(CollectorArm),
@@ -10,6 +10,7 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
   a_Gyro(Gyro),
   a_Underglow(Underglow),
   a_UltraSoul(UltraSoul),
+  a_Gunnar(Gunnar),
   a_AutoStateVx(kAutoIdlex),
   a_AutoStateU0(kAutoIdleU0),
   a_AutoStateV0(kAutoIdle0),
@@ -24,7 +25,8 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
   a_AutoStateU5(kAutoIdleU5),
   a_AutoStateV5(kAutoIdle5),
   a_AutoStateU6(kAutoIdleU6),
-  a_AutoStateU7(kAutoIdleU7)
+  a_AutoStateU7(kAutoIdleU7),
+  a_AutoStateU8(kAutoIdleU8)
 {
 	a_AngleSaved = 0.0;
 	a_time_state = 0;
@@ -1181,6 +1183,8 @@ void Autonomous::AutonomousPeriodicU7()
 			nextState = kCollectCubeU7;
 			a_time_state = a_DiffDrive.gettime_d();
 		}
+		break;
+	case kTurnToCubeGunnarU7:
 		break;
 	case kCollectCubeU7:
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
