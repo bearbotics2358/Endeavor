@@ -245,6 +245,10 @@ class Autonomous
 	AutoStateU7 a_AutoStateU7;
 	AutoStateU8 a_AutoStateU8;
 
+	AutoStateU3 a_AutoStateAlocksis;
+	AutoStateU7 a_AutoStateSixela;
+	bool isUSevenDead = false;
+
 	float a_AngleSaved;
 	double a_time_state = 0;
 	int autoPathMaster;

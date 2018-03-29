@@ -43,7 +43,7 @@ a_UltraSoul(),
 
 a_LRC(),
 
-a_Gunnar("RIOclient", "localhost", 2358),
+a_Gunnar("RIOclient", "localhost", 1183),
 
 // a_PDP(PDP_PORT),
 
@@ -54,7 +54,7 @@ a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow,
 {
 	SmartDashboard::init();  // dont forget, shuffleboard over sd
 	a_Gyro.Init();
-	const char *commandString = "~/mosquitto -p 2358 &";
+	const char *commandString = "/usr/local/sbin/mosquitto -p 1183 &"; // ampersand makes it run in the background!
 	int q = system(commandString);
 	printf("The number is: %d", q);
 	mosqpp::lib_init();
@@ -177,11 +177,15 @@ void Endeavor::TeleopPeriodic()
 		a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 	}
 	if (a_Joystick2.GetRawButton(9)){
-		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gyro.GetAngle(2) + 10); // twist in place
+		a_Gyro.Zero();
 	}
 
 	if(a_Joystick2.GetRawButton(10)) {
 		a_Gunnar.loop_stop();
+	}
+
+	if(a_Joystick2.GetRawButton(11)) {
+		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gunnar.GetAngle());
 	}
 }
 
@@ -252,7 +256,7 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutNumber("Ultra RearLeft", a_UltraSoul.GetRearLeft());
 	SmartDashboard::PutNumber("Ultra RearRight", a_UltraSoul.GetRearRight());
 	SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetDistance());
-	SmartDashboard::PutNumber("Vision Distance:", a_Gunnar.GetAngle());
+	SmartDashboard::PutNumber("Vision Angle:", a_Gunnar.GetAngle());
 }
 
 START_ROBOT_CLASS(Endeavor);
