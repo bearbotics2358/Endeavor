@@ -1235,10 +1235,8 @@ void Autonomous::AutonomousPeriodicU7()
 			nextState = kAutoIdleU7;
 		}
 		break;
-
-	a_AutoStateU7 = nextState;
-
 	}
+	a_AutoStateU7 = nextState;
 }
 
 void Autonomous::AutonomousPeriodicV0()
