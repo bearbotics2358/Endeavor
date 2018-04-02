@@ -26,7 +26,8 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
   a_AutoStateV5(kAutoIdle5),
   a_AutoStateU6(kAutoIdleU6),
   a_AutoStateU7(kAutoIdleU7),
-  a_AutoStateU8(kAutoIdleU8)
+  a_AutoStateU8(kAutoIdleU8),
+  a_AutoStateCol(kAutoIdleCol)
 {
 	a_AngleSaved = 0.0;
 	a_time_state = 0;
@@ -112,6 +113,9 @@ void Autonomous::DecidePath(){
 
 	if (b_left && b_center && b_right){
 		// special override to execute U0
+		if (special){ // even more special override to execute the collect sequence
+			autoPathMaster = 14;
+		}
 		autoPathMaster = 0;
 	}
 }
@@ -170,8 +174,12 @@ void Autonomous::StartPathMaster(){
 		case 7:
 			SmartDashboard::PutBoolean("Auto Started", true);
 			a_Underglow.RedLaser();
-			// AutonomousStartU7();
-			AutonomousStartU3();
+			AutonomousStartU7();
+			break;
+		case 14:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.RedLaser();
+			AutonomousStartCol();
 			break;
 	}
 }
@@ -223,6 +231,11 @@ void Autonomous::StartPathMaster(int path){
 			a_Underglow.RedLaser();
 			AutonomousStartU7();
 			break;
+		case 14:
+			SmartDashboard::PutBoolean("Auto Started", true);
+			a_Underglow.RedLaser();
+			AutonomousStartCol();
+			break;
 	}
 }
 
@@ -255,6 +268,9 @@ void Autonomous::PeriodicPathMaster(){
 		case 7:
 			AutonomousPeriodicU7();
 			break;
+		case 14:
+			AutonomousPeriodicCol();
+			break;
 	}
 }
 
@@ -286,6 +302,9 @@ void Autonomous::PeriodicPathMaster(int path){
 			break;
 		case 7:
 			AutonomousPeriodicU7();
+			break;
+		case 14:
+			AutonomousPeriodicCol();
 			break;
 	}
 }
@@ -1245,6 +1264,102 @@ void Autonomous::AutonomousPeriodicU7()
 		break;
 	}
 	a_AutoStateU7 = nextState;
+}
+
+void Autonomous::AutonomousStartCol(){
+	a_AutoStateCol = kMoveDistCol;
+	a_DiffDrive.ZeroEncoders();
+	a_Gyro.Zero();
+}
+
+void Autonomous::AutonomousPeriodicCol(){
+	AutoStateCol nextState = a_AutoStateCol;
+
+	switch(a_AutoStateCol){
+	case kAutoIdleCol:
+		a_DiffDrive.UpdateVal(0,0);
+		a_Gyro.Zero();
+		break;
+	case kMoveDistCol:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if (a_DiffDrive.GetAvgDistance() < (COL_MOVE_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (COL_MOVE_DIST - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmRestCol;
+		}
+		break;
+	case kMoveArmRestCol:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= REST_ANGLE) {
+			nextState = kCollectCubeCol;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+	case kTurnToCubeGunnarCol:
+		if (a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gunnar.GetAngle())){
+			a_Gyro.Zero();
+			nextState = kCollectCubeCol;
+		}
+		break;
+	case kCollectCubeCol:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if (a_CollectorArm.CubePresent()){
+			a_CollectorArm.UpdateRollers(0.0);
+			a_CollectorArm.Clamp();
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveBackCol;
+		} else if (fabs(a_Gunnar.GetAngle()) > 3.5){ // error is too great, go to turn state to correct
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kTurnToCubeGunnarCol;
+		} else {
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW); // move forward slowly until cube or error
+		}
+		a_CollectorArm.UpdateRollers(0.5);
+		a_CollectorArm.Release();
+		break;
+	case kMoveBackCol:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if (a_DiffDrive.GetAvgDistance() < (COL_MOVE_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (COL_MOVE_DIST - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmSwitchCol;
+		}
+		break;
+	case kMoveArmSwitchCol:
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
+			nextState = kReleaseCubeSwitchCol;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+	case kReleaseCubeSwitchCol:
+		// time based approach
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.1) { // wait a bit for collector pos to update
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
+		}
+		// have rollers been running long enough?
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.6) {
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kAutoIdleCol;
+		}
+		break;
+	}
+	a_AutoStateCol = nextState;
 }
 
 void Autonomous::AutonomousPeriodicV0()

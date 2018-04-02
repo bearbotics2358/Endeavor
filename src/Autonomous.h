@@ -117,6 +117,18 @@ enum AutoStateU8
 	kReleaseCubeScaleDiagU8
 };
 
+enum AutoStateCol
+{
+	kAutoIdleCol = 0,
+	kMoveDistCol,
+	kMoveArmRestCol,
+	kTurnToCubeGunnarCol,
+	kCollectCubeCol,
+	kMoveBackCol,
+	kMoveArmSwitchCol,
+	kReleaseCubeSwitchCol
+};
+
 enum AutoStateVx {
 	kAutoIdlex = 0,
 	kMoveToSwitchInitx,
@@ -210,6 +222,9 @@ class Autonomous
 	void AutonomousPeriodicU7();
 	void AutonomousStartU8();
 	void AutonomousPeriodicU8();
+	void AutonomousStartCol();
+	void AutonomousPeriodicCol();
+
 
  private:
 	AutonomousHelper &a_AutoBot;
@@ -244,6 +259,7 @@ class Autonomous
 	AutoStateU6 a_AutoStateU6;
 	AutoStateU7 a_AutoStateU7;
 	AutoStateU8 a_AutoStateU8;
+	AutoStateCol a_AutoStateCol;
 
 	float a_AngleSaved;
 	double a_time_state = 0;
