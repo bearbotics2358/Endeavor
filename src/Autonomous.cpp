@@ -253,10 +253,7 @@ void Autonomous::PeriodicPathMaster(){
 			AutonomousPeriodicU6();
 			break;
 		case 7:
-			// AutonomousPeriodicU7();
-			if (a_AutoStateAlocksis == kAutoIdleU3){
-				AutonomousStartU7();
-			}
+			AutonomousPeriodicU7();
 			break;
 	}
 }
@@ -542,7 +539,6 @@ void Autonomous::AutonomousStartU3()
 void Autonomous::AutonomousPeriodicU3()
 {
 	AutoStateU3 nextState = a_AutoStateU3;
-	a_AutoStateAlocksis = nextState;
 
 	switch(a_AutoStateU3){
 	case kAutoIdleU3:
@@ -1112,6 +1108,7 @@ void Autonomous::AutonomousPeriodicU7()
 		// have rollers been running long enough?
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.6) {
 			a_CollectorArm.UpdateRollers(0.0);
+			a_Gyro.Zero();
 			nextState = kTurnToSwitchU7; // short circuit to make it like U3
 		}
 		/*
@@ -1136,6 +1133,7 @@ void Autonomous::AutonomousPeriodicU7()
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 100.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
+				a_Gyro.Zero();
 				nextState = kMoveToSwitchU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
@@ -1152,6 +1150,7 @@ void Autonomous::AutonomousPeriodicU7()
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 100.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
+				a_Gyro.Zero();
 				nextState = kMoveToSwitchU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
@@ -1189,24 +1188,33 @@ void Autonomous::AutonomousPeriodicU7()
 		}
 		break;
 	case kTurnToCubeGunnarU7:
+		if (a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gunnar.GetAngle())){
+			a_Gyro.Zero();
+			nextState = kCollectCubeU7;
+		}
 		break;
 	case kCollectCubeU7:
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		if (a_CollectorArm.CubePresent()){
 			a_CollectorArm.UpdateRollers(0.0);
-			nextState = kMoveBackU7;
 			a_CollectorArm.Clamp();
 			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveBackU7;
+		} else if (fabs(a_Gunnar.GetAngle()) > 3.5){ // error is too great, go to turn state to correct
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kTurnToCubeGunnarU7;
+		} else {
+			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW); // move forward slowly until cube or error
 		}
 		a_CollectorArm.UpdateRollers(0.5);
 		a_CollectorArm.Release();
-		a_DiffDrive.UpdateVal(0,0);
 		break;
 	case kMoveBackU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if (a_UltraSoul.GetFrontRight() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetFrontRight() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
