@@ -8,6 +8,12 @@
 
 #define WHEEL_DISTANCE 24 // distance in inches pls
 
+// this is for high gear!!
+// UPDATE AT COMP PLS
+#define TICKS_PER_INCH 97.89435898
+#define TICKS_PER_INCH_LEFT 97.646154
+#define TICKS_PER_INCH_RIGHT 98.142564
+
 #define TICKS_PER_INCH_HIGH_GEAR 35.918
 #define TICKS_PER_INCH_LOW_GEAR 90.992
 
