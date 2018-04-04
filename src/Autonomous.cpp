@@ -82,25 +82,29 @@ void Autonomous::DecidePath(){
 		if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
-		} else if (b_left && scale){
-			// U3 or U7 turn to scale
-			if (special){
-				autoPathMaster = 7;
-			} else {
-				autoPathMaster = 3;
-			}
 		} else if (b_right && !ourSwitch){ // Indicates Switch on Right and Right RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
-		} else if (b_right && !scale){
+		}
+
+		if (b_left && scale){
 			// U3 or U7 turn to scale
 			if (special){
-				autoPathMaster = 7;
+				autoPathMaster = 7; // two cube
 			} else {
 				autoPathMaster = 3;
 			}
 		}
-		 if (b_center && !ourSwitch){ // Indicates Right of Center RPos and intent to go to front of switch.
+		if (b_right && !scale){
+			// U3 or U7 turn to scale
+			if (special){
+				autoPathMaster = 7; // two cube
+			} else {
+				autoPathMaster = 3;
+			}
+		}
+
+		if (b_center && !ourSwitch){ // Indicates Right of Center RPos and intent to go to front of switch.
 			// U1
 			autoPathMaster = 1;
 		}
