@@ -187,6 +187,60 @@ void Endeavor::TeleopPeriodic()
 	if(a_Joystick2.GetRawButton(11)) {
 		a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gunnar.GetAngle());
 	}
+
+	if (a_Joystick1.GetRawButton(6)){ // reset autonomous :: must be hit after button 7 is hit to ensure proper auton execution.
+		autonTesting = false;
+	}
+	if (a_Joystick1.GetRawButton(7)){
+		// test autonomous by pressing and holding down the button for the duration of the auto sequence
+		if (autonTesting){
+			a_Auto.UpdateGameData();
+			a_Auto.PeriodicPathMaster(0);
+		} else {
+			a_Auto.StartPathMaster(0);
+		}
+		autonTesting = true;
+	}
+	if (a_Joystick1.GetRawButton(8)){
+		// test autonomous by pressing and holding down the button for the duration of the auto sequence
+		if (autonTesting){
+			a_Auto.UpdateGameData();
+			a_Auto.PeriodicPathMaster(2);
+		} else {
+			a_Auto.StartPathMaster(2);
+		}
+		autonTesting = true;
+	}
+	if (a_Joystick1.GetRawButton(9)){
+		// test autonomous by pressing and holding down the button for the duration of the auto sequence
+		if (autonTesting){
+			a_Auto.UpdateGameData();
+			a_Auto.PeriodicPathMaster(3);
+		} else {
+			a_Auto.StartPathMaster(3);
+		}
+		autonTesting = true;
+	}
+	if (a_Joystick1.GetRawButton(10)){
+		// test autonomous by pressing and holding down the button for the duration of the auto sequence
+		if (autonTesting){
+			a_Auto.UpdateGameData();
+			a_Auto.PeriodicPathMaster(6);
+		} else {
+			a_Auto.StartPathMaster(6);
+		}
+		autonTesting = true;
+	}
+	if (a_Joystick1.GetRawButton(11)){
+		// test autonomous by pressing and holding down the button for the duration of the auto sequence
+		if (autonTesting){
+			a_Auto.UpdateGameData();
+			a_Auto.PeriodicPathMaster(7);
+		} else {
+			a_Auto.StartPathMaster(7);
+		}
+		autonTesting = true;
+	}
 }
 
 void Endeavor::TestInit(){
