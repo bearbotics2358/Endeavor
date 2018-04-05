@@ -189,6 +189,19 @@ void DiffDrive::DriveStraightGyro(float tarAngle, float curAngle, float speed){
 	}
 }
 
+void DiffDrive::DriveStraightGyroRev(float tarAngle, float curAngle, float speed){
+	if(fabs(curAngle - tarAngle) < 0.10) {
+		// close enough
+		UpdateVal(speed, speed);
+	} else if((curAngle - tarAngle) > 0) {
+		// turn back right
+		UpdateVal(((11.0/7.0) * speed), ((7.0/11.0) * speed));
+	} else {
+		// turn back left
+		UpdateVal(((7.0/11.0) * speed), ((11.0/7.0) * speed));
+	}
+}
+
 double DiffDrive::gettime_d(){
 	// return time in seconds as a double
 	double t0;
