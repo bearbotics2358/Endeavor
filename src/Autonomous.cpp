@@ -1123,6 +1123,9 @@ void Autonomous::AutonomousPeriodicU7()
 		}
 		break;
 
+// BD - we had discussed scaling the power of the rollers based on distance from the outer wall
+// This applies to U3 also
+// Is this not needed?
 	case kReleaseCubeScaleU7:
 		// time based approach
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.1) { // wait a bit for collector pos to update
@@ -1170,6 +1173,7 @@ void Autonomous::AutonomousPeriodicU7()
 			}
 		}
 		else if (b_right){
+// BD - I think this should be -100.0
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 100.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
@@ -1188,6 +1192,11 @@ void Autonomous::AutonomousPeriodicU7()
 			}
 		}
 		break;
+
+
+// BD - in this state, we should be driving based on the camera angle
+// But we can't, the camera isn't facing forward yet
+// So I suggest driving only part of the way based on the gyro
 	case kMoveToSwitchU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
@@ -1203,6 +1212,8 @@ void Autonomous::AutonomousPeriodicU7()
 			nextState = kMoveArmRestU7;
 		}
 		break;
+
+// BD - Then make sure ARM is done (kMoveArmRestU7 as it is).
 	case kMoveArmRestU7:
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		if(a_CollectorArm.GetAngle2() >= REST_ANGLE) {
@@ -1210,12 +1221,17 @@ void Autonomous::AutonomousPeriodicU7()
 			a_time_state = a_DiffDrive.gettime_d();
 		}
 		break;
+
+// BD - Then DriveStraightGyro() based on camera, don't just Turn
+// Move on to the next state when cube is in collector (beam break)
 	case kTurnToCubeGunnarU7:
 		if (a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gunnar.GetAngle())){
 			a_Gyro.Zero();
 			nextState = kCollectCubeU7;
 		}
 		break;
+
+// BD - I think we only need the first if block? and 2 lines after the if blocks
 	case kCollectCubeU7:
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		if (a_CollectorArm.CubePresent()){
@@ -1233,6 +1249,10 @@ void Autonomous::AutonomousPeriodicU7()
 		a_CollectorArm.UpdateRollers(0.5);
 		a_CollectorArm.Release();
 		break;
+
+// BD - do the DriveStraightGyro() lines cause the bot to drive backwards?
+// Doesn't the speed need to be negative (e.g., -DRIVE_STRAIGHT_LOW)
+// I think distance targets in the if's will need to flip also ("<" becomes ">", and negate target)
 	case kMoveBackU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
@@ -1248,6 +1268,7 @@ void Autonomous::AutonomousPeriodicU7()
 			nextState = kMoveArmSwitchU7;
 		}
 		break;
+
 	case kMoveArmSwitchU7:
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
 		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
@@ -1255,6 +1276,12 @@ void Autonomous::AutonomousPeriodicU7()
 			a_time_state = a_DiffDrive.gettime_d();
 		}
 		break;
+
+// BD - I think we need to move forward first to ensure the collector is the over fence
+// i.e., add another state
+// Then release the cube
+//
+// And High Five's all around!!
 	case kReleaseCubeSwitchU7:
 		// time based approach
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.1) { // wait a bit for collector pos to update
