@@ -93,6 +93,9 @@ void Autonomous::DecidePath(){
 
 	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){ // checks for driver error
 		// if two switches are down, there's an error, and the program will skip this section.
+
+		autoPathMaster = 0; // makes it be zero as a failsafe.
+
 		if (b_left && ourSwitch){ // Indicates Switch on Left and Left RPos.
 			// U2, turn to switch
 			autoPathMaster = 2;
@@ -586,9 +589,9 @@ void Autonomous::AutonomousPeriodicU3()
 
 	case kMoveToSideOfScaleU3:
 		if (a_DiffDrive.GetAvgDistance() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.30 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
-				if (a_DiffDrive.GetAvgDistance() > (0.10 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
-					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, 0.2);
+			if (a_DiffDrive.GetAvgDistance() > (0.80 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+				if (a_DiffDrive.GetAvgDistance() > (0.90 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW_LOW);
 					a_CollectorArm.RollerPos(1); // 45 deg
 				}
 				else{
@@ -1057,8 +1060,8 @@ void Autonomous::AutonomousPeriodicU7()
 
 	case kMoveToScaleU7:
 		if (a_DiffDrive.GetAvgDistance() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.30 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
-				if (a_DiffDrive.GetAvgDistance() > (0.10 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+			if (a_DiffDrive.GetAvgDistance() > (0.80 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+				if (a_DiffDrive.GetAvgDistance() > (0.90 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
 					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW_LOW);
 					SmartDashboard::PutNumber("AutoStateDebug", 14);
 					a_CollectorArm.RollerPos(1); // 45 deg
@@ -1126,7 +1129,7 @@ void Autonomous::AutonomousPeriodicU7()
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
 		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.25 * (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS))){
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1146,7 +1149,7 @@ void Autonomous::AutonomousPeriodicU7()
 		if(a_DiffDrive.gettime_d() - a_time_state > 0.6) {
 			a_CollectorArm.UpdateRollers(0.0);
 			a_Gyro.Zero();
-			nextState = kTurnToSwitchU7; // short circuit to make it like U3
+			nextState = kTurnToSwitchU7;
 		}
 		/*
 		// Beam Break Approach
@@ -1167,11 +1170,11 @@ void Autonomous::AutonomousPeriodicU7()
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		a_CollectorArm.RollerPos(1); // move to collect pos
 		if (b_left){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 100.0)){
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 125.0)){
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				a_Gyro.Zero();
-				nextState = kMoveToSwitchU7;
+				nextState = kMoveArmRestU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
 				}
@@ -1184,11 +1187,11 @@ void Autonomous::AutonomousPeriodicU7()
 			}
 		}
 		else if (b_right){
-			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -100.0)) {
+			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -125.0)) {
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				a_Gyro.Zero();
-				nextState = kMoveToSwitchU7;
+				nextState = kMoveArmRestU7;
 				if (a_AutoBot.GetAllianceSide()){
 					a_Underglow.BlueLaser();
 				}
@@ -1200,6 +1203,15 @@ void Autonomous::AutonomousPeriodicU7()
 				// a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0);
 				// might not be even needed because short-circuit in code makes the motors still run
 			}
+		}
+		break;
+
+	case kMoveArmRestU7:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		a_DiffDrive.UpdateVal(0.0,0.0);
+		if(a_CollectorArm.GetAngle2() >= REST_ANGLE) {
+			nextState = kCollectCubeU7;
+			a_time_state = a_DiffDrive.gettime_d();
 		}
 		break;
 
@@ -1215,20 +1227,12 @@ void Autonomous::AutonomousPeriodicU7()
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
-			nextState = kMoveArmRestU7;
-		}
-		break;
-
-	case kMoveArmRestU7:
-		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
-		if(a_CollectorArm.GetAngle2() >= REST_ANGLE) {
 			nextState = kCollectCubeU7;
-			a_time_state = a_DiffDrive.gettime_d();
 		}
 		break;
 
 	case kTurnToCubeGunnarU7:
-		if (a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), a_Gunnar.GetAngle())){
+		if (a_DiffDrive.UpdateAngle(0.0, a_Gunnar.GetAngle())){
 			a_Gyro.Zero();
 			nextState = kCollectCubeU7;
 		}
@@ -1242,11 +1246,11 @@ void Autonomous::AutonomousPeriodicU7()
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveBackU7;
-		} else if (fabs(a_Gunnar.GetAngle()) > 3.5){ // error is too great, go to turn state to correct
+		} else if (fabs(a_Gunnar.GetAngle()) > 10.0){ // error is too great, go to turn state to correct
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kTurnToCubeGunnarU7;
 		} else {
-			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), a_Gunnar.GetAngle(), DRIVE_STRAIGHT_LOW); // move forward slowly until cube or error
+			a_DiffDrive.DriveStraightGyro(0.0, a_Gunnar.GetAngle(), DRIVE_STRAIGHT_LOW); // move forward slowly until cube or error
 		}
 		a_CollectorArm.UpdateRollers(0.5);
 		a_CollectorArm.Release();
@@ -1270,8 +1274,9 @@ void Autonomous::AutonomousPeriodicU7()
 
 	case kMoveArmSwitchU7:
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		a_DiffDrive.UpdateVal(0,0);
 		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
-			nextState = kReleaseCubeSwitchU7;
+			nextState = kMoveForwardSwitchU7;
 			a_time_state = a_DiffDrive.gettime_d();
 		}
 		break;
@@ -1282,6 +1287,22 @@ void Autonomous::AutonomousPeriodicU7()
 //
 // And High Five's all around!!
 // and ice cream??
+
+	case kMoveForwardSwitchU7:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kReleaseCubeSwitchU7;
+		}
+		break;
 
 	case kReleaseCubeSwitchU7:
 		// time based approach

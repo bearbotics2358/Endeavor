@@ -126,19 +126,19 @@ void Endeavor::TeleopPeriodic()
 	a_DiffDrive.UpdateDistance();
 	a_Lifter.Update(0.0);
 
-	if (a_GamePad.GetRawButton(6)){ // flip on comp bot
+	if (a_GamePad.GetRawButton(5)){ // flip on comp bot
 		a_CollectorArm.Release();
 	}
-	if (a_GamePad.GetRawButton(5)){
+	if (a_GamePad.GetRawButton(6)){
 		a_CollectorArm.Clamp();
 	}
 
 	if (a_GamePad.GetRawAxis(3) > 0.00) {
-		a_CollectorArm.UpdateRollers(pow(a_GamePad.GetRawAxis(3), 0.5));
+		a_CollectorArm.UpdateRollers(pow(a_GamePad.GetRawAxis(3), 2));
 		// a_GamePad.SetRumble(GenericHID::RumbleType::kLeftRumble, a_GamePad.GetRawAxis(3));
 		// a_GamePad.SetRumble(GenericHID::RumbleType::kRightRumble, a_GamePad.GetRawAxis(3));
 	} else if ((a_GamePad.GetRawAxis(2) > 0.00)) {  // in
-		a_CollectorArm.UpdateRollers(-1 * pow(a_GamePad.GetRawAxis(2), 0.5));
+		a_CollectorArm.UpdateRollers(-1 * pow(a_GamePad.GetRawAxis(2), 2));
 		// a_GamePad.SetRumble(GenericHID::RumbleType::kLeftRumble, a_GamePad.GetRawAxis(2));
 		// a_GamePad.SetRumble(GenericHID::RumbleType::kRightRumble, a_GamePad.GetRawAxis(2));
 	} else {
@@ -273,8 +273,8 @@ void Endeavor::MasterInit(){
 	// for now, using old multiplexer on practice bot
 	// so only using 1 front and 1 rear sensor, hooked to channels A and C (ports 0 and 2)
 	// Disable the other ports
-	a_UltraSoul.DisablePort(0);
-	a_UltraSoul.DisablePort(3);
+	// a_UltraSoul.DisablePort(0);
+	// a_UltraSoul.DisablePort(3);
 
 	a_Underglow.Init();
 	// a_Gyro.Cal();

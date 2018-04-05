@@ -96,6 +96,7 @@ enum AutoStateU7
 	kCollectCubeU7,
 	kMoveBackU7,
 	kMoveArmSwitchU7,
+	kMoveForwardSwitchU7,
 	kReleaseCubeSwitchU7
 };
 
