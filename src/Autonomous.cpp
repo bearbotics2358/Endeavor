@@ -47,6 +47,20 @@ void Autonomous::Init(){
 	a_Gyro.Zero();
 }
 
+void Autonomous::UpdateGameData(){
+	b_left = a_ButtonBox.GetRawButton(2);
+	b_center = a_ButtonBox.GetRawButton(3);
+	b_right = a_ButtonBox.GetRawButton(4);
+	special = a_ButtonBox.GetRawButton(5); // switch with red tape
+
+	// AutoBot Information
+	playerStation = a_AutoBot.GetAllianceStation();
+	blue = a_AutoBot.GetAllianceSide();
+	ourSwitch = a_AutoBot.GetAllianceSwitch();
+	scale = a_AutoBot.GetAllianceScale();
+	oppSwitch = a_AutoBot.GetOpponentSwitch();
+}
+
 void Autonomous::DecidePath(){
 	autoPathMaster = -1; // makes sure we start on a clean value
 	// ButtonBox Information

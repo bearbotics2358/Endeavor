@@ -190,6 +190,7 @@ class Autonomous
 	Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, CollectorArm &CollectorArm, DiffDrive &DiffDrive, JrimmyGyro &Gyro, Underglow &Underglow, UltrasonicSerial &UltraSoul, Gunnar &Gunnar);
 	virtual ~Autonomous() = default;
 	void Init();
+	void UpdateGameData();
 	void DecidePath();
 	void DecidePath(int intent);
 	int GetCurrentPath();
