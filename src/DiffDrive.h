@@ -4,7 +4,7 @@
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
 #include <pathfinder.h>
-#include <PracticePrefs.h>
+#include <CompPrefs.h>
 
 class DiffDrive
 {

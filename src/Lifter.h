@@ -3,7 +3,7 @@
 
 #include <WPILib.h>
 #include "ctre/Phoenix.h"
-#include <PracticePrefs.h>
+#include <CompPrefs.h>
 
 class Lifter
 {

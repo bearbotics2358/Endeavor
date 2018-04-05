@@ -2,7 +2,7 @@
 #define SRC_UNDERGLOW_H_
 
 #include <WPILib.h>
-#include <PracticePrefs.h>
+#include <CompPrefs.h>
 
 class Underglow
 {
