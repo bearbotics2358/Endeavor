@@ -122,14 +122,14 @@ bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when i
 		return true;
 	}
 	if ((tarAngle - curAngle) > 0){
-		if (fabs(tarAngle - curAngle) > 5){
+		if (fabs(tarAngle - curAngle) > (0.3 * fabs(tarAngle - curAngle))){
 			UpdateVal(0.3, -0.3); // right
 		} else {
 			UpdateVal(0.5, -0.5); // right
 		}
 	}
 	else {
-		if (fabs(tarAngle - curAngle) > 5){
+		if (fabs(tarAngle - curAngle) > (0.3 * fabs(tarAngle - curAngle))){
 			UpdateVal(-0.3, 0.3); // left
 		} else {
 			UpdateVal(-0.5, 0.5); // left
@@ -139,6 +139,29 @@ bool DiffDrive::UpdateAngle(float curAngle, float tarAngle){ // rets true when i
 	return false;
 }
 
+bool DiffDrive::UpdateAngle(float curAngle, float tarAngle, float speed){ // rets true when its right.
+	// third speed param is a scalar for the original twist speeds
+	if (fabs(curAngle - tarAngle) < 3.0){
+		UpdateVal(0,0);
+		return true;
+	}
+	if ((tarAngle - curAngle) > 0){
+		if (fabs(tarAngle - curAngle) > (0.3 * fabs(tarAngle - curAngle))){
+			UpdateVal((0.3 * speed), (-0.3 * speed)); // right
+		} else {
+			UpdateVal((0.5 * speed), (-0.5 * speed)); // right
+		}
+	}
+	else {
+		if (fabs(tarAngle - curAngle) > (0.3 * fabs(tarAngle - curAngle))){
+			UpdateVal((-0.3 * speed), (0.3 * speed)); // left
+		} else {
+			UpdateVal((-0.5 * speed), (0.5 * speed)); // left
+		}
+
+	}
+	return false;
+}
 void DiffDrive::ShiftLow(){
 	a_DriveSolenoid.Set(DoubleSolenoid::kForward);
 }

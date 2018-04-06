@@ -22,6 +22,7 @@ public:
 	void Update(Joystick &stick1, Joystick &stick2, Joystick &stick3, Joystick &stick4);
 	void UpdateVal(float left, float right);
 	bool UpdateAngle(float curAngle, float tarAngle);
+	bool UpdateAngle(float curAngle, float tarAngle, float speed);
 	void ShiftLow();
 	void ShiftHigh();
 	bool GetShiftState();

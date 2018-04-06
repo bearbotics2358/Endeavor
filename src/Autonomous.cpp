@@ -93,6 +93,9 @@ void Autonomous::DecidePath(){
 
 	if (!((b_left && b_center) || (b_center && b_right) || (b_left && b_right))){ // checks for driver error
 		// if two switches are down, there's an error, and the program will skip this section.
+		// the way priority works is top-->down
+		// the lower a check is, the higher the priority.
+		// i.e. scale is more important than switch, thus scale comes later in the code.
 
 		autoPathMaster = 0; // makes it be zero as a failsafe.
 
@@ -194,7 +197,7 @@ void Autonomous::StartPathMaster(){
 			break;
 		case 7:
 			SmartDashboard::PutBoolean("Auto Started", true);
-			a_Underglow.RedLaser();
+			a_Underglow.GreenLaser();
 			AutonomousStartU7();
 			break;
 		case 14:
@@ -249,7 +252,7 @@ void Autonomous::StartPathMaster(int path){
 			break;
 		case 7:
 			SmartDashboard::PutBoolean("Auto Started", true);
-			a_Underglow.RedLaser();
+			a_Underglow.GreenLaser();
 			AutonomousStartU7();
 			break;
 		case 14:
@@ -358,6 +361,7 @@ void Autonomous::AutonomousPeriodicU0()
 			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetDistanceLeft());
 			SmartDashboard::PutNumber("ENCODER DUMP Right", a_DiffDrive.GetDistanceRight());
 			SmartDashboard::PutNumber("Ultradump right", a_UltraSoul.GetRearRight());
+			a_Underglow.YellowLaser();
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kAutoIdleU0;
 		}
@@ -388,6 +392,7 @@ void Autonomous::AutonomousPeriodicU1()
 	case kMoveToSwitchU1:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+
 		/*
 		if ((a_DiffDrive.gettime_d() - x_T) > 2.5){
 			a_CollectorArm.RollerPos(1); // send to middle
@@ -924,6 +929,7 @@ void Autonomous::AutonomousPeriodicU6()
 	case kMoveForwardThirdU6:
 		if (a_DiffDrive.GetAvgDistance() < HALF_OF_SWITCH_DISTANCE) {
 			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			a_Underglow.CyanLaser();
 			SmartDashboard::PutNumber("AutoStateDebug", 1);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
