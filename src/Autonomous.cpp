@@ -358,7 +358,7 @@ void Autonomous::AutonomousPeriodicU0()
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
-			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetDistanceLeft());
 			SmartDashboard::PutNumber("ENCODER DUMP Right", a_DiffDrive.GetDistanceRight());
 			SmartDashboard::PutNumber("Ultradump right", a_UltraSoul.GetRearRight());
 			a_Underglow.YellowLaser();
@@ -375,7 +375,7 @@ void Autonomous::AutonomousStartU1()
 	a_AutoStateU1 = kMoveToSwitchU1;
 	a_Gyro.Zero();
 	x_T = a_DiffDrive.gettime_d();
-	x_Dist = a_DiffDrive.GetAvgDistance();
+	x_Dist = a_DiffDrive.GetDistanceLeft();
 }
 
 void Autonomous::AutonomousPeriodicU1()
@@ -397,20 +397,20 @@ void Autonomous::AutonomousPeriodicU1()
 		if ((a_DiffDrive.gettime_d() - x_T) > 2.5){
 			a_CollectorArm.RollerPos(1); // send to middle
 			a_DiffDrive.UpdateVal(0,0);
-			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP 222", a_DiffDrive.GetDistanceLeft());
 			nextState = kMoveArmU1;
 			a_Underglow.CyanLaser();
 			break;
 		}
 		*/
 
-		if (a_DiffDrive.GetAvgDistance() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)){
-			if ((a_DiffDrive.GetAvgDistance() - x_Dist) > 6.0){
-				x_Dist = a_DiffDrive.GetAvgDistance();
+		if (a_DiffDrive.GetDistanceLeft() < (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)){
+			if ((a_DiffDrive.GetDistanceLeft() - x_Dist) > 6.0){
+				x_Dist = a_DiffDrive.GetDistanceLeft();
 				x_T = a_DiffDrive.gettime_d();
 			}
 
-			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+			if (a_DiffDrive.GetDistanceLeft() > (0.75 * (SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -418,7 +418,7 @@ void Autonomous::AutonomousPeriodicU1()
 		} else {
 			a_CollectorArm.RollerPos(1); // send to middle
 			a_DiffDrive.UpdateVal(0,0);
-			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetDistanceLeft());
 			SmartDashboard::PutNumber("ENCODER DUMP Right", a_DiffDrive.GetDistanceRight());
 			SmartDashboard::PutNumber("Ultradump right", a_UltraSoul.GetRearRight());
 			nextState = kMoveArmU1;
@@ -480,7 +480,7 @@ void Autonomous::AutonomousPeriodicU2()
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
 			}
 		} else {
-			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetAvgDistance());
+			SmartDashboard::PutNumber("ENCODER DUMP LEFt", a_DiffDrive.GetDistanceLeft());
 			SmartDashboard::PutNumber("ENCODER DUMP Right", a_DiffDrive.GetDistanceRight());
 			SmartDashboard::PutNumber("Ultradump right", a_UltraSoul.GetRearRight());
 			a_DiffDrive.ZeroEncoders();
@@ -498,7 +498,7 @@ void Autonomous::AutonomousPeriodicU2()
 		a_CollectorArm.RollerPos(1); // move to middle pos
 		if (b_left && ourSwitch){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), -90.0)){
-				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
+				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetDistanceLeft());
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveArmU2;
@@ -515,7 +515,7 @@ void Autonomous::AutonomousPeriodicU2()
 		}
 		else if (b_right && !ourSwitch){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)) {
-				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetAvgDistance());
+				SmartDashboard::PutNumber("ENCODER DUMP 111", a_DiffDrive.GetDistanceLeft());
 				a_DiffDrive.UpdateVal(0,0);
 				a_DiffDrive.ZeroEncoders();
 				nextState = kMoveArmU2;
@@ -593,9 +593,9 @@ void Autonomous::AutonomousPeriodicU3()
 		break;
 
 	case kMoveToSideOfScaleU3:
-		if (a_DiffDrive.GetAvgDistance() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.80 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
-				if (a_DiffDrive.GetAvgDistance() > (0.90 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.80 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+				if (a_DiffDrive.GetDistanceLeft() > (0.90 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
 					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW_LOW);
 					a_CollectorArm.RollerPos(1); // 45 deg
 				}
@@ -927,7 +927,7 @@ void Autonomous::AutonomousPeriodicU6()
 		break;
 
 	case kMoveForwardThirdU6:
-		if (a_DiffDrive.GetAvgDistance() < HALF_OF_SWITCH_DISTANCE) {
+		if (a_DiffDrive.GetDistanceLeft() < HALF_OF_SWITCH_DISTANCE) {
 			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			a_Underglow.CyanLaser();
 			SmartDashboard::PutNumber("AutoStateDebug", 1);
@@ -975,7 +975,7 @@ void Autonomous::AutonomousPeriodicU6()
 	case kMoveDiagU6:
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
 		SmartDashboard::PutNumber("AutoStateDebug", 5);
-		if (a_DiffDrive.GetAvgDistance() < FLUSH_WITH_SWITCH) {
+		if (a_DiffDrive.GetDistanceLeft() < FLUSH_WITH_SWITCH) {
 			if (ourSwitch){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 65, DRIVE_STRAIGHT_LOW);
 			} else {
@@ -1017,7 +1017,7 @@ void Autonomous::AutonomousPeriodicU6()
 	case kMoveToFrontOfSwitchU6:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if ((a_DiffDrive.GetAvgDistance() < FRONT_OF_SWITCH_DISTANCE) && (a_DiffDrive.gettime_d() - a_time_state < 3.5)){
+		if ((a_DiffDrive.GetDistanceLeft() < FRONT_OF_SWITCH_DISTANCE) && (a_DiffDrive.gettime_d() - a_time_state < 3.5)){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 		} else {
 			a_DiffDrive.UpdateVal(0,0);
@@ -1071,9 +1071,9 @@ void Autonomous::AutonomousPeriodicU7()
 		break;
 
 	case kMoveToScaleU7:
-		if (a_DiffDrive.GetAvgDistance() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.80 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
-				if (a_DiffDrive.GetAvgDistance() > (0.90 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.80 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
+				if (a_DiffDrive.GetDistanceLeft() > (0.90 * (SIDE_OF_SCALE_DISTANCE - BOT_LENGTH_BUMPERS))){
 					a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW_LOW);
 					SmartDashboard::PutNumber("AutoStateDebug", 14);
 					a_CollectorArm.RollerPos(1); // 45 deg
@@ -1140,8 +1140,8 @@ void Autonomous::AutonomousPeriodicU7()
 	case kMoveToEdgeOfScaleU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.75 * (SEVEN_MOVE_BACK_SCALE_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1235,8 +1235,8 @@ void Autonomous::AutonomousPeriodicU7()
 	case kMoveToSwitchU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() < (SEVEN_TO_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_TO_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (SEVEN_TO_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.75 * (SEVEN_TO_SWITCH_DISTANCE - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1278,8 +1278,8 @@ void Autonomous::AutonomousPeriodicU7()
 		// move arm while moving bot
 		a_CollectorArm.Clamp();
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() > (-1 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))) {
-			if (a_DiffDrive.GetAvgDistance() < (-0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() > (-1 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))) {
+			if (a_DiffDrive.GetDistanceLeft() < (-0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyroRev(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyroRev(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1309,8 +1309,8 @@ void Autonomous::AutonomousPeriodicU7()
 	case kMoveForwardSwitchU7:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1356,8 +1356,8 @@ void Autonomous::AutonomousPeriodicCol(){
 	case kMoveDistCol:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() < (COL_MOVE_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.75 * (COL_MOVE_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (COL_MOVE_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.75 * (COL_MOVE_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1401,8 +1401,8 @@ void Autonomous::AutonomousPeriodicCol(){
 	case kMoveBackCol:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() > (-1 * SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() < (-0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() > (-1 * SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() < (-0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyroRev(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyroRev(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1424,8 +1424,8 @@ void Autonomous::AutonomousPeriodicCol(){
 	case kMoveForwardCol:
 		// move arm while moving bot
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
-		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
-			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+		if (a_DiffDrive.GetDistanceLeft() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetDistanceLeft() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
@@ -1457,7 +1457,7 @@ void Autonomous::AutonomousPeriodicV0()
 
     switch(a_AutoStateV0){
     case kMoveToSwitch0:
-        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < SWITCH_DISTANCE) {
 			a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1478,7 +1478,7 @@ void Autonomous::AutonomousPeriodicV1()
 
     switch(a_AutoStateV1){
     case kMoveToSwitch1:
-        if (a_DiffDrive.GetAvgDistance() < SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < SWITCH_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1507,7 +1507,7 @@ void Autonomous::AutonomousPeriodicV2()
 
     switch(a_AutoStateV2){
     case kMoveToSideOfSwitch:
-        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < SIDE_OF_SWITCH_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1520,7 +1520,7 @@ void Autonomous::AutonomousPeriodicV2()
         nextState = kMoveToEdgeOfSwitch;
         break;
     case kMoveToEdgeOfSwitch:
-        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < EDGE_OF_SWITCH_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
 			a_DiffDrive.UpdateVal(0,0);
@@ -1549,7 +1549,7 @@ void Autonomous::AutonomousPeriodicV3()
 
     switch(a_AutoStateV3){
     case kMoveToSideOfScale:
-        if (a_DiffDrive.GetAvgDistance() < SIDE_OF_SCALE_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < SIDE_OF_SCALE_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1563,7 +1563,7 @@ void Autonomous::AutonomousPeriodicV3()
         nextState = kMoveToEdgeOfScale;
         break;
     case kMoveToEdgeOfScale:
-        if (a_DiffDrive.GetAvgDistance() < EDGE_OF_SCALE_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < EDGE_OF_SCALE_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
                 } else {
             		a_DiffDrive.UpdateVal(0,0);
@@ -1593,7 +1593,7 @@ void Autonomous::AutonomousPeriodicV4()
 
     switch (a_AutoStateV4) {
     case kMoveHalfToSwitch:
-        if (a_DiffDrive.GetAvgDistance() < HALF_OF_SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < HALF_OF_SWITCH_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1607,7 +1607,7 @@ void Autonomous::AutonomousPeriodicV4()
         nextState = kMoveFlushWithSwitch;
         break;
     case kMoveFlushWithSwitch:
-        if (a_DiffDrive.GetAvgDistance() < FLUSH_WITH_SWITCH) {
+        if (a_DiffDrive.GetDistanceLeft() < FLUSH_WITH_SWITCH) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1621,7 +1621,7 @@ void Autonomous::AutonomousPeriodicV4()
         nextState = kMoveToFrontOfSwitch;
         break;
     case kMoveToFrontOfSwitch:
-        if (a_DiffDrive.GetAvgDistance() < FRONT_OF_SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < FRONT_OF_SWITCH_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1651,7 +1651,7 @@ void Autonomous::AutonomousPeriodicV5()
 
     switch (a_AutoStateV5) {
     case kMoveTopOfSwitch:
-        if (a_DiffDrive.GetAvgDistance() < TOP_OF_SWITCH_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < TOP_OF_SWITCH_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1665,7 +1665,7 @@ void Autonomous::AutonomousPeriodicV5()
         nextState = kMoveFlushWithScale;
         break;
     case kMoveFlushWithScale:
-        if (a_DiffDrive.GetAvgDistance() < FLUSH_WITH_SCALE) {
+        if (a_DiffDrive.GetDistanceLeft() < FLUSH_WITH_SCALE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1679,7 +1679,7 @@ void Autonomous::AutonomousPeriodicV5()
         nextState = kMoveToFrontOfScale;
         break;
     case kMoveToFrontOfScale:
-        if (a_DiffDrive.GetAvgDistance() < FRONT_OF_SCALE_DISTANCE) {
+        if (a_DiffDrive.GetDistanceLeft() < FRONT_OF_SCALE_DISTANCE) {
         	a_DiffDrive.DriveStraightEncoder(LEFT_AGGRO, RIGHT_AGGRO, 0.4);
         } else {
             a_DiffDrive.UpdateVal(0,0);
@@ -1706,7 +1706,7 @@ void Autonomous::AutonomousPeriodicV5()
 
 /* Example internal auto function
  * bool Autonomous::DriveStraight(int distance) {
-	if (a_DiffDrive.GetAvgDistance() < distance) {
+	if (a_DiffDrive.GetDistanceLeft() < distance) {
 		a_DiffDrive.DriveStraight(LEFT_AGGRO, RIGHT_AGGRO);
 		return false;
 	} else {
