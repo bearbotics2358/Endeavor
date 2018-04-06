@@ -351,8 +351,10 @@ void Autonomous::AutonomousPeriodicU0()
 		break;
 
 	case kMoveToSwitchU0:
-		if (a_UltraSoul.GetRearRight() < (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS)) {
-			if (a_UltraSoul.GetRearRight() > (0.50 * (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS))){
+		// left is true
+		float ultaBoy = (ourSwitch) ? a_UltraSoul.GetRearRight() : a_UltraSoul.GetRearLeft();
+		if (ultaBoy < (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS)) {
+			if (ultaBoy > (0.50 * (SWITCH_DISTANCE-BOT_LENGTH_BUMPERS))){
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
 			} else {
 				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
