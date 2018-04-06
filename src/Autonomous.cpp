@@ -1244,6 +1244,7 @@ void Autonomous::AutonomousPeriodicU7()
 		break;
 
 	case kTurnToCubeGunnarU7:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
 		if (a_DiffDrive.UpdateAngle(0.0, a_Gunnar.GetAngle())){
 			a_Gyro.Zero();
 			nextState = kCollectCubeU7;
@@ -1381,11 +1382,11 @@ void Autonomous::AutonomousPeriodicCol(){
 			a_DiffDrive.UpdateVal(0,0);
 			a_DiffDrive.ZeroEncoders();
 			nextState = kMoveBackCol;
-		} else if (fabs(a_Gunnar.GetAngle()) > 3.5){ // error is too great, go to turn state to correct
+		} else if (fabs(a_Gunnar.GetAngle()) > 10.0){ // error is too great, go to turn state to correct
 			a_DiffDrive.UpdateVal(0,0);
 			nextState = kTurnToCubeGunnarCol;
 		} else {
-			a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), a_Gunnar.GetAngle(), DRIVE_STRAIGHT_LOW); // move forward slowly until cube or error
+			a_DiffDrive.DriveStraightGyro(0, a_Gunnar.GetAngle(), DRIVE_STRAIGHT_LOW); // move forward slowly until cube or error
 		}
 		a_CollectorArm.UpdateRollers(0.5);
 		a_CollectorArm.Release();
@@ -1407,9 +1408,25 @@ void Autonomous::AutonomousPeriodicCol(){
 		break;
 	case kMoveArmSwitchCol:
 		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		a_DiffDrive.UpdateVal(0,0);
 		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
-			nextState = kReleaseCubeSwitchCol;
+			nextState = kMoveForwardCol;
 			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+	case kMoveForwardCol:
+		// move arm while moving bot
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		if (a_DiffDrive.GetAvgDistance() < (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS)) {
+			if (a_DiffDrive.GetAvgDistance() > (0.75 * (SEVEN_MOVE_BACK_SWITCH_DIST - BOT_LENGTH_BUMPERS))){
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_LOW);
+			} else {
+				a_DiffDrive.DriveStraightGyro(a_Gyro.GetAngle(2), 0, DRIVE_STRAIGHT_HIGH);
+			}
+		} else {
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kReleaseCubeSwitchCol;
 		}
 		break;
 	case kReleaseCubeSwitchCol:

@@ -127,6 +127,7 @@ enum AutoStateCol
 	kCollectCubeCol,
 	kMoveBackCol,
 	kMoveArmSwitchCol,
+	kMoveForwardCol,
 	kReleaseCubeSwitchCol
 };
 
