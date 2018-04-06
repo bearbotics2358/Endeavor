@@ -12,7 +12,7 @@
 #define SWITCH_DISTANCE 140.0
 
 #define ARM_TIMEOUT_SECONDS 10.0
-#define AUTON_ROLLER_SPEED_SWITCH -0.45
+#define AUTON_ROLLER_SPEED_SWITCH -0.55
 #define AUTON_ROLLER_SPEED_SCALE -0.55
 
 // These numbers are subject to change based on comp bot.
