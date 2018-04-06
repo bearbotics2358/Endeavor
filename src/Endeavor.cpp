@@ -247,12 +247,12 @@ void Endeavor::TestInit(){
 	MasterInit();
 	a_Auto.Init();
 	a_Auto.DecidePath();
+	a_Auto.AutonomousStartU7TESTING();
 	SmartDashboard::PutNumber("AUTOPATHMASTER1", a_Auto.GetCurrentPath());
 }
 
 void Endeavor::TestPeriodic(){
-	a_Auto.DecidePath();
-	SmartDashboard::PutNumber("AUTOPATHMASTER2", a_Auto.GetCurrentPath());
+	a_Auto.AutonomousPeriodicU7();
 	// ShuffleboardPeriodicUpdate();
 }
 
@@ -263,7 +263,7 @@ void Endeavor::MasterInit(){
 	a_DiffDrive.SetDriveType(2);
 	a_DiffDrive.ZeroEncoders();
 	// Change the number to change drivetypes. Refer to diffdrive.cpp for help.
-	// a_DiffDrive.DisableMotorSafetyTraitor();
+	a_DiffDrive.DisableMotorSafetyTraitor();
 	// a_DiffDrive.InvertLeftDrive();
 	// a_DiffDrive.InvertRightDrive();
 	a_CollectorArm.Init(ARM_P, ARM_I, ARM_D, ARM_F);

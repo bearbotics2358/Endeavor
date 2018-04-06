@@ -67,7 +67,7 @@ private:
 	int targetPositionRotations;
 	int kSlotIdx = 0;
 	int kPIDLoopIdx = 0;
-	int kTimeoutMs = 10;
+	int kTimeoutMs = 0;
 
 	long totCountLeft = 0;
 	long totCountRight = 0;

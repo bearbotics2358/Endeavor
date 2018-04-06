@@ -222,6 +222,7 @@ class Autonomous
 	void AutonomousStartU6();
 	void AutonomousPeriodicU6();
 	void AutonomousStartU7();
+	void AutonomousStartU7TESTING();
 	void AutonomousPeriodicU7();
 	void AutonomousStartU8();
 	void AutonomousPeriodicU8();

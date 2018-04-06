@@ -23,7 +23,7 @@ DiffDrive::DiffDrive(int leftDriveOne, int leftDriveTwo, int leftDriveThree, int
 	targetPositionRotations = 10.0 * 4096; /* 10 Rotations in either direction??? */
 	kSlotIdx = 0;
 	kPIDLoopIdx = 0;
-	kTimeoutMs = 10;
+	kTimeoutMs = 0;
 
 	t0 = 0.0;
 	lspeed_target = 0.0;
