@@ -1093,7 +1093,7 @@ void Autonomous::AutonomousPeriodicU7()
 		a_CollectorArm.UpdateArmAngleSimple(SCALE_ANGLE, 0.05);
 		SmartDashboard::PutNumber("AutoStateDebug", 9);
 		a_CollectorArm.RollerPos(2); // collect
-		if(a_CollectorArm.GetAngle2() >= (0.90 * SCALE_ANGLE)){
+		if(a_CollectorArm.GetAngle2() >= (0.95 * SCALE_ANGLE)){
 			SmartDashboard::PutNumber("AutoStateDebug", 15);
 			nextState = kTurnNinetyU7;
 		}
@@ -1106,7 +1106,7 @@ void Autonomous::AutonomousPeriodicU7()
 		if (b_left && scale){
 			if(a_DiffDrive.UpdateAngle(a_Gyro.GetAngle(2), 90.0)){
 				a_DiffDrive.UpdateVal(0,0);
-				a_DiffDrive.ZeroEncoders();	
+				a_DiffDrive.ZeroEncoders();
 				SmartDashboard::PutNumber("AutoStateDebug", 22);
 				a_time_state = a_DiffDrive.gettime_d();
 				nextState = kReleaseCubeScaleU7;
