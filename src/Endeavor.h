@@ -69,6 +69,8 @@ private:
 	Autonomous a_Auto;
 
 	bool autonTesting;
+	double clockSpeed_start;
+	double clockSpeed_delta;
 };
 
 #endif

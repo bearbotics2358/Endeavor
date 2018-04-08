@@ -59,17 +59,20 @@ a_Auto(a_AutoBot, a_ButtonBox, a_CollectorArm, a_DiffDrive, a_Gyro, a_Underglow,
 	printf("The number is: %d", q);
 	mosqpp::lib_init();
 	autonTesting = false;
+	clockSpeed_start = 0.0;
+	clockSpeed_delta = 0.0;
 }
 
 void Endeavor::RobotInit()
 {
-	a_Gunnar.loop_start();
+	// a_Gunnar.loop_start();
 	autonTesting = false;
 }
 
 void Endeavor::RobotPeriodic()
 {
 	a_Gyro.Update();
+	a_UltraSoul.Update();
 	ShuffleboardPeriodicUpdate();
 }
 
@@ -80,6 +83,7 @@ void Endeavor::DisabledInit()
 
 void Endeavor::DisabledPeriodic()
 {
+	a_UltraSoul.Update();
 	// github?
 }
 
@@ -99,6 +103,7 @@ void Endeavor::AutonomousInit()
 
 void Endeavor::AutonomousPeriodic()
 {
+	clockSpeed_start = a_DiffDrive.gettime_d();
 	// get latest values before taking action
 	a_UltraSoul.Update();
 	a_Gyro.Update();
@@ -109,6 +114,8 @@ void Endeavor::AutonomousPeriodic()
 	// a_Auto.AutonomousPeriodicU3();
 	// a_Auto.AutonomousPeriodicU4();
 	// a_Auto.AutonomousPeriodicU5();
+	clockSpeed_delta = a_DiffDrive.gettime_d() - clockSpeed_start;
+	SmartDashboard::PutNumber("Clock Speed", clockSpeed_delta);
 }
 
 void Endeavor::TeleopInit()
@@ -252,6 +259,7 @@ void Endeavor::TestInit(){
 }
 
 void Endeavor::TestPeriodic(){
+	a_UltraSoul.Update();
 	a_Auto.AutonomousPeriodicU7();
 	// ShuffleboardPeriodicUpdate();
 }
@@ -304,7 +312,7 @@ void Endeavor::ShuffleboardPeriodicUpdate(){
 	SmartDashboard::PutBoolean("Is there a Cube?", a_CollectorArm.CubePresent());
 	// SmartDashboard::PutNumber("PDP Things?", a_PDP.GetTotalPower());
 	SmartDashboard::PutNumber("Ultra FrontLeft", a_UltraSoul.GetFrontLeft());
-	SmartDashboard::PutNumber("Ultra FrontRight", a_UltraSoul.GetUltraB());
+	SmartDashboard::PutNumber("Ultra FrontRight", a_UltraSoul.GetFrontRight());
 	SmartDashboard::PutNumber("Ultra LeftSide", a_UltraSoul.GetLeftSide());
 	SmartDashboard::PutNumber("Ultra RightSide", a_UltraSoul.GetRightSide());
 	SmartDashboard::PutNumber("Ultra RearLeft", a_UltraSoul.GetRearLeft());

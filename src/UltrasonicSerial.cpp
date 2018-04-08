@@ -71,7 +71,7 @@ void UltrasonicSerial::Update(){
 						if (dist == 5000){
 							dist = lastC;
 						}
-						lastB = dist;
+						lastC = dist;
 						ultraC = (float)dist/25.4;
 						break;
 
