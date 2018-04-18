@@ -254,13 +254,13 @@ void Endeavor::TestInit(){
 	MasterInit();
 	a_Auto.Init();
 	a_Auto.DecidePath();
-	a_Auto.AutonomousStartU7TESTING();
+	a_Auto.AutonomousStartEyeDemo();
 	SmartDashboard::PutNumber("AUTOPATHMASTER1", a_Auto.GetCurrentPath());
 }
 
 void Endeavor::TestPeriodic(){
 	a_UltraSoul.Update();
-	a_Auto.AutonomousPeriodicU7();
+	a_Auto.AutonomousPeriodicEyeDemo();
 	// ShuffleboardPeriodicUpdate();
 }
 
