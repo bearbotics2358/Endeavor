@@ -27,7 +27,8 @@ Autonomous::Autonomous(AutonomousHelper &AutoBot, Joystick &ButtonBox, Collector
   a_AutoStateU6(kAutoIdleU6),
   a_AutoStateU7(kAutoIdleU7),
   a_AutoStateU8(kAutoIdleU8),
-  a_AutoStateCol(kAutoIdleCol)
+  a_AutoStateCol(kAutoIdleCol),
+  a_AutoStateEyeDemo(kAutoIdleEyeDemo)
 {
 	a_AngleSaved = 0.0;
 	a_time_state = 0;
@@ -1452,6 +1453,73 @@ void Autonomous::AutonomousPeriodicCol(){
 		break;
 	}
 	a_AutoStateCol = nextState;
+}
+
+void Autonomous::AutonomousStartEyeDemo(){
+	a_AutoStateEyeDemo = kMoveArmRestEyeDemo;
+	a_DiffDrive.ZeroEncoders();
+	a_Gyro.Zero();
+}
+
+void Autonomous::AutonomousPeriodicEyeDemo(){
+	AutoStateEyeDemo nextState = a_AutoStateEyeDemo;
+
+	switch(a_AutoStateEyeDemo){
+	case kAutoIdleEyeDemo:
+		a_DiffDrive.UpdateVal(0,0);
+		a_Gyro.Zero();
+		break;
+	case kMoveArmRestEyeDemo:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if(a_CollectorArm.GetAngle2() >= REST_ANGLE) {
+			nextState = kCollectCubeEyeDemo;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+	case kTurnToCubeGunnarEyeDemo:
+		if (a_DiffDrive.UpdateAngle(0.0, a_Gunnar.GetAngle())){
+			a_Gyro.Zero();
+			nextState = kCollectCubeEyeDemo;
+		}
+		break;
+	case kCollectCubeEyeDemo:
+		a_CollectorArm.UpdateArmAngleSimple(REST_ANGLE, 0.05);
+		if (a_CollectorArm.CubePresent()){
+			a_CollectorArm.UpdateRollers(0.0);
+			a_CollectorArm.Clamp();
+			a_DiffDrive.UpdateVal(0,0);
+			a_DiffDrive.ZeroEncoders();
+			nextState = kMoveArmSwitchEyeDemo;
+		} else if (fabs(a_Gunnar.GetAngle()) > 7.0){ // error is too great, go to turn state to correct
+			a_DiffDrive.UpdateVal(0,0);
+			nextState = kTurnToCubeGunnarEyeDemo;
+		} else {
+			// nothing until cube pls
+		}
+		a_CollectorArm.UpdateRollers(0.5);
+		a_CollectorArm.Release();
+		break;
+	case kMoveArmSwitchEyeDemo:
+		a_CollectorArm.UpdateArmAngleSimple(SWITCH_ANGLE, 0.05);
+		a_DiffDrive.UpdateVal(0,0);
+		if(a_CollectorArm.GetAngle2() >= SWITCH_ANGLE) {
+			nextState = kReleaseCubeSwitchEyeDemo;
+			a_time_state = a_DiffDrive.gettime_d();
+		}
+		break;
+	case kReleaseCubeSwitchEyeDemo:
+		// time based approach
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.1) { // wait a bit for collector pos to update
+			a_CollectorArm.UpdateRollers(AUTON_ROLLER_SPEED_SWITCH);
+		}
+		// have rollers been running long enough?
+		if(a_DiffDrive.gettime_d() - a_time_state > 0.6) {
+			a_CollectorArm.UpdateRollers(0.0);
+			nextState = kAutoIdleEyeDemo;
+		}
+		break;
+	}
+	a_AutoStateEyeDemo = nextState;
 }
 
 void Autonomous::AutonomousPeriodicV0()
